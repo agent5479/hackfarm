@@ -26,6 +26,12 @@ const FEATURES = [
     link: '/holistic-horse-rides/',
     btn: 'Learn More',
     paragraphs: [5, 6],
+    backdrop: {
+      img: '/images/uploads/2021/04/Horses-trekking-One-Color.jpg',
+      size: '100%',
+      pos: '50% 50%',
+      opacity: 0.62,
+    },
   },
   {
     title: 'Vaulting Experiences',
@@ -35,6 +41,12 @@ const FEATURES = [
     link: '/vaulting/',
     btn: 'Learn More',
     paragraphs: [8, 9, 10],
+    backdrop: {
+      img: '/images/uploads/2021/02/Sillouette-Vaulting.png',
+      size: '100%',
+      pos: '100% 100%',
+      opacity: 1,
+    },
   },
   {
     title: 'campground, Back Packer & Farmstay',
@@ -49,6 +61,12 @@ const FEATURES = [
     link: '/accommodation/',
     btn: 'View Accommodation',
     paragraphs: [12, 13],
+    backdrop: {
+      img: '/images/uploads/2021/02/Jumping-girl-v2.png',
+      size: '100%',
+      pos: '100% 100%',
+      opacity: 1,
+    },
   },
   {
     title: "Kid's Camps",
@@ -63,6 +81,12 @@ const FEATURES = [
     link: '/special-events/',
     btn: 'Learn More',
     paragraphs: [15],
+    backdrop: {
+      img: '/images/uploads/2021/03/Horsemanship-Sillouette.png',
+      size: '31%',
+      pos: '50% 100%',
+      opacity: 1,
+    },
   },
   {
     title: 'Bring your Own horse!',
@@ -72,6 +96,12 @@ const FEATURES = [
     link: '/accommodation/#horse-stay',
     btn: 'Book Your Horse Stay',
     paragraphs: [17],
+    backdrop: {
+      img: '/images/uploads/2021/03/BYO-horse.png',
+      size: 'cover',
+      pos: '0% 0%',
+      opacity: 0.18,
+    },
   },
 ];
 
@@ -123,6 +153,17 @@ export default function HomePage() {
         const photo = <BackgroundSlideshow images={f.images} />;
         const copy = (
           <div className="feature-stratum__copy">
+            {f.backdrop && (
+              <div
+                className="feature-stratum__backdrop"
+                style={{
+                  backgroundImage: `url(${withBase(f.backdrop.img)})`,
+                  backgroundSize: f.backdrop.size,
+                  backgroundPosition: f.backdrop.pos,
+                  opacity: f.backdrop.opacity,
+                }}
+              />
+            )}
             <h2>{f.title}</h2>
             <p><strong>{f.subtitle}</strong></p>
             {f.paragraphs.map((idx) => (

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { withBase } from '../lib/constants';
 import './Header.css';
 
@@ -43,24 +43,40 @@ const NAV = [
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
+  const woodNav = scrolled || !isHome;
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  const wood = { ['--header-wood' as string]: `url(${withBase('/images/uploads/2021/03/Wooden-Header-small.jpg')})` };
 
   return (
-    <header
-      className="header"
-      style={{ ['--header-wood' as string]: `url(${withBase('/images/uploads/2021/03/Wooden-Header-small.jpg')})` }}
-    >
-      <div className="header__inner">
+    <header className={`header${woodNav ? ' header--wood-nav' : ''}`} style={wood}>
+      <div className="header__brand">
         <Link to="/" className="header__logo">
           <img src={withBase('/images/uploads/2021/02/HackFarm-Logo-Light.png')} alt="Hack Farm" />
         </Link>
-        <button className="header__toggle" onClick={() => setOpen(!open)} aria-label="Menu">
+      </div>
+      <nav className={`header__nav${open ? ' header__nav--open' : ''}`}>
+        <button className="header__toggle" onClick={() => setOpen(!open)} aria-label="Menu" aria-expanded={open}>
           ☰
         </button>
-        <nav className={`header__nav${open ? ' header__nav--open' : ''}`}>
+        <div className="header__links">
           {NAV.map((item) =>
             item.children ? (
               <div key={item.label} className="header__nav-item">
-                <Link to={item.to}>{item.label}</Link>
+                <Link to={item.to} onClick={() => setOpen(false)}>{item.label}</Link>
                 <div className="header__dropdown">
                   {item.children.map((child) => (
                     <Link key={child.label} to={child.to} onClick={() => setOpen(false)}>
@@ -77,8 +93,8 @@ export default function Header() {
               )
             )
           )}
-        </nav>
-      </div>
+        </div>
+      </nav>
     </header>
   );
 }
