@@ -1,5 +1,5 @@
 import scraped from '../content/scraped-content.json';
-import { decodeHtml } from '../lib/constants';
+import { decodeHtml, withBase } from '../lib/constants';
 import PageHero from '../components/PageHero';
 import InstagramGrid from '../components/InstagramGrid';
 import { Link } from 'react-router-dom';
@@ -38,7 +38,7 @@ export default function HomePage() {
         background="/images/uploads/2021/02/20210104_145330-1.jpg"
       />
       <div style={{ textAlign: 'center', padding: '0 1.5rem', marginTop: '-2rem', position: 'relative', zIndex: 1 }}>
-        <img src="/images/uploads/2021/06/TC_2021_L_TRANSPARENT_BG_RGB-01.png" alt="TripAdvisor Travellers Choice 2021" style={{ height: 80, margin: '0 auto' }} />
+        <img src={withBase('/images/uploads/2021/06/TC_2021_L_TRANSPARENT_BG_RGB-01.png')} alt="TripAdvisor Travellers Choice 2021" style={{ height: 80, margin: '0 auto' }} />
       </div>
 
       <section className="section section--cream">
@@ -53,7 +53,7 @@ export default function HomePage() {
           <div className="card-grid">
             {SECTIONS.map((s, i) => (
               <div key={s.id} className="card">
-                <img className="card__image" src={s.img} alt={s.title} />
+                <img className="card__image" src={withBase(s.img)} alt={s.title} />
                 <div className="card__body">
                   <h3>{s.title}</h3>
                   <p>{decodeHtml(content.paragraphs[i + 1] || '')}</p>
@@ -68,7 +68,7 @@ export default function HomePage() {
       {FEATURES.map((f) => (
         <section key={f.title} className="section section--cream">
           <div className="container two-col">
-            <img src={f.img} alt={f.title} style={{ borderRadius: 4 }} />
+            <img src={withBase(f.img)} alt={f.title} style={{ borderRadius: 4 }} />
             <div>
               <h2>{f.title}</h2>
               <p><strong>{f.subtitle}</strong></p>

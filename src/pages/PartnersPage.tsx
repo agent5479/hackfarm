@@ -1,5 +1,5 @@
 import scraped from '../content/scraped-content.json';
-import { decodeHtml } from '../lib/constants';
+import { decodeHtml, withBase } from '../lib/constants';
 import PageHero from '../components/PageHero';
 import ContactForm from '../components/ContactForm';
 import { usePageTitle } from '../hooks/usePageTitle';
@@ -21,13 +21,13 @@ export default function PartnersPage() {
       </section>
       <section className="section section--white">
         <div className="container two-col">
-          <img src="/images/uploads/2021/07/Bijmin_Affiliate_Booking-2.png" alt="Partner booking" />
+          <img src={withBase('/images/uploads/2021/07/Bijmin_Affiliate_Booking-2.png')} alt="Partner booking" />
           <div>
             <h2>Booking Methods</h2>
             <p>Once approved, you'll receive a unique partner link. Any bookings made using your link earn 10% commission.</p>
             <h3>QR Poster</h3>
             <p>Display a poster with your unique QR code to earn 10% automatically.</p>
-            <img src="/images/uploads/2021/09/qrcode_2572792_-1.png" alt="Partner QR code example" style={{ maxWidth: 200, marginTop: '1rem' }} />
+            <img src={withBase('/images/uploads/2021/09/qrcode_2572792_-1.png')} alt="Partner QR code example" style={{ maxWidth: 200, marginTop: '1rem' }} />
           </div>
         </div>
       </section>

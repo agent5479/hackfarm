@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import PageHero from '../components/PageHero';
-import { HORSE_SLUGS } from '../lib/constants';
+import { HORSE_SLUGS, withBase } from '../lib/constants';
 import { usePageTitle } from '../hooks/usePageTitle';
 
 const PAGES = [
@@ -31,7 +31,7 @@ export default function SitemapPage() {
             {PAGES.map((p) => (
               <li key={p.to}>
                 {'external' in p && p.external ? (
-                  <a href={p.to}>{p.label}</a>
+                  <a href={withBase(p.to)}>{p.label}</a>
                 ) : (
                   <Link to={p.to}>{p.label}</Link>
                 )}

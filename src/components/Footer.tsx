@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { CONTACT, SOCIAL } from '../lib/constants';
+import { CONTACT, SOCIAL, withBase } from '../lib/constants';
 import './Footer.css';
 
 const LINK_GROUPS = [
@@ -55,7 +55,7 @@ export default function Footer() {
         <div className="footer__grid">
           <div className="footer__brand">
             <Link to="/">
-              <img src="/images/uploads/2021/03/Hack-Farm-Logo-White.png" alt="Hack Farm" />
+              <img src={withBase('/images/uploads/2021/03/Hack-Farm-Logo-White.png')} alt="Hack Farm" />
             </Link>
             <p>Hack n Stay is dedicated to those who want to enjoy the simple things in life. Bring your own horse or enjoy time with one of ours in Beautiful Golden Bay.</p>
             <div className="footer__social">
@@ -74,7 +74,7 @@ export default function Footer() {
                   {group.links.map((link) => (
                     <li key={link.label}>
                       {'external' in link && link.external ? (
-                        <a href={link.to}>{link.label}</a>
+                        <a href={withBase(link.to)}>{link.label}</a>
                       ) : (
                         <Link to={link.to}>{link.label}</Link>
                       )}

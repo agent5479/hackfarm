@@ -1,5 +1,7 @@
 .header {
-  background: url('/images/uploads/2021/03/Wooden-Header-small.jpg') center/cover;
+  background-image: var(--header-wood);
+  background-position: center;
+  background-size: cover;
   position: sticky;
   top: 0;
   z-index: 100;

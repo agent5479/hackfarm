@@ -1,5 +1,5 @@
 import scraped from '../content/scraped-content.json';
-import { decodeHtml } from '../lib/constants';
+import { decodeHtml, withBase } from '../lib/constants';
 import PageHero from '../components/PageHero';
 import { usePageTitle } from '../hooks/usePageTitle';
 
@@ -27,7 +27,7 @@ export default function AccommodationPage() {
       {SECTIONS.map((s, idx) => (
         <section key={s.id} id={s.id} className={`section ${idx % 2 === 0 ? 'section--white' : 'section--cream'}`}>
           <div className="container two-col">
-            <img src={s.img} alt={s.title} style={{ borderRadius: 4 }} />
+            <img src={withBase(s.img)} alt={s.title} style={{ borderRadius: 4 }} />
             <div>
               <h2>{s.title}</h2>
               {content.paragraphs.slice(idx * 4 + 3, idx * 4 + 7).map((p, i) => (

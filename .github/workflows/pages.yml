@@ -20,24 +20,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+        id: pages
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
       - run: npm ci
-      - name: Build at domain root
+      - name: Build for github.io/hackfarm
         run: npm run build
         env:
-          BASE_URL: /
-      - name: Verify Pages root files
+          BASE_URL: /hackfarm/
+      - name: Verify Pages files
         run: |
           test -f dist/index.html
           test -f dist/404.html
-          test -f dist/CNAME
           test -f dist/.nojekyll
-          grep -q 'www.hackfarm.co.nz' dist/CNAME
-          grep -q 'href="/assets/' dist/index.html
-          grep -q 'src="/assets/' dist/index.html
+          test ! -f dist/CNAME
+          grep -q 'src="/hackfarm/assets/' dist/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -51,11 +50,9 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-      - name: Pin custom domain
+      - name: Keep github.io preview (no custom domain yet)
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api --method PUT repos/${{ github.repository }}/pages \
-            --field cname=www.hackfarm.co.nz \
-            --field https_enforced=true
+          echo '{"cname":null}' | gh api --method PUT repos/${{ github.repository }}/pages --input -

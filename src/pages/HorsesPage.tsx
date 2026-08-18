@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import scraped from '../content/scraped-content.json';
 import PageHero from '../components/PageHero';
+import { withBase } from '../lib/constants';
 import { usePageTitle } from '../hooks/usePageTitle';
 
 const HORSE_IMAGES: Record<string, string> = {
@@ -35,7 +36,7 @@ export default function HorsesPage() {
             {scraped.horses.map((horse) => (
               <Link key={horse.slug} to={`/horse/${horse.slug}/`} className="horse-card">
                 <img
-                  src={HORSE_IMAGES[horse.slug] || '/images/uploads/2021/02/Sillouette-Vaulting.png'}
+                  src={withBase(HORSE_IMAGES[horse.slug] || '/images/uploads/2021/02/Sillouette-Vaulting.png')}
                   alt={horse.title}
                 />
                 <h3>{horse.title}</h3>

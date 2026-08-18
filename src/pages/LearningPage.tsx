@@ -1,5 +1,5 @@
 import scraped from '../content/scraped-content.json';
-import { decodeHtml } from '../lib/constants';
+import { decodeHtml, withBase } from '../lib/constants';
 import PageHero from '../components/PageHero';
 import { usePageTitle } from '../hooks/usePageTitle';
 
@@ -27,7 +27,7 @@ export default function LearningPage() {
       {LESSONS.map((lesson, idx) => (
         <section key={lesson.id} id={lesson.id} className={`section ${idx % 2 === 0 ? 'section--white' : 'section--cream'}`}>
           <div className="container two-col">
-            <img src={lesson.img} alt={lesson.title} style={{ borderRadius: 4 }} />
+            <img src={withBase(lesson.img)} alt={lesson.title} style={{ borderRadius: 4 }} />
             <div>
               <h2>{lesson.title}</h2>
               {content.paragraphs.slice(idx * 5 + 2, idx * 5 + 7).map((p, i) => (

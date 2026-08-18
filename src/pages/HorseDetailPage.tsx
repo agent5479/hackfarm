@@ -1,6 +1,6 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
 import scraped from '../content/scraped-content.json';
-import { decodeHtml, HORSE_SLUGS, type HorseSlug } from '../lib/constants';
+import { decodeHtml, HORSE_SLUGS, withBase, type HorseSlug } from '../lib/constants';
 import PageHero from '../components/PageHero';
 import { usePageTitle } from '../hooks/usePageTitle';
 
@@ -36,7 +36,7 @@ export default function HorseDetailPage() {
       <section className="section section--cream">
         <div className="container two-col">
           <img
-            src={HORSE_IMAGES[slug] || '/images/uploads/2021/02/Sillouette-Vaulting.png'}
+            src={withBase(HORSE_IMAGES[slug] || '/images/uploads/2021/02/Sillouette-Vaulting.png')}
             alt={horse.title}
             style={{ borderRadius: 4 }}
           />
@@ -56,7 +56,7 @@ export default function HorseDetailPage() {
           <div className="horse-grid">
             {scraped.horses.filter((h) => h.slug !== slug).slice(0, 6).map((h) => (
               <Link key={h.slug} to={`/horse/${h.slug}/`} className="horse-card">
-                <img src={HORSE_IMAGES[h.slug] || '/images/uploads/2021/02/Sillouette-Vaulting.png'} alt={h.title} />
+                <img src={withBase(HORSE_IMAGES[h.slug] || '/images/uploads/2021/02/Sillouette-Vaulting.png')} alt={h.title} />
                 <h3>{h.title}</h3>
               </Link>
             ))}

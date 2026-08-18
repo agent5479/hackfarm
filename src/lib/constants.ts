@@ -26,6 +26,13 @@ export const MAPS = {
 
 export const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || '';
 
+export function withBase(path: string): string {
+  if (!path || /^(https?:|mailto:|tel:|data:)/.test(path)) return path;
+  return `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`;
+}
+
+export const routerBasename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
+
 export function decodeHtml(html: string): string {
   const txt = document.createElement('textarea');
   txt.innerHTML = html;

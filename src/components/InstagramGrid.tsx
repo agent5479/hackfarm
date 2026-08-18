@@ -1,3 +1,5 @@
+import { withBase } from '../lib/constants';
+
 const INSTAGRAM_POSTS = [
   { img: '/images/uploads/sb-instagram-feed-images/701538039_27449228651328956_2737825085368841951_nlow.jpg', url: 'https://www.instagram.com/p/DYaZYLOlH34/' },
   { img: '/images/uploads/sb-instagram-feed-images/643562848_18451358485109112_2042575507208599498_nlow.jpg', url: 'https://www.instagram.com/p/DVPqdF5k9Qm/' },
@@ -21,7 +23,7 @@ export default function InstagramGrid() {
         <div className="instagram-grid">
           {INSTAGRAM_POSTS.map((post) => (
             <a key={post.url} href={post.url} target="_blank" rel="noopener noreferrer">
-              <img src={post.img} alt="Hack Farm on Instagram" loading="lazy" />
+              <img src={withBase(post.img)} alt="Hack Farm on Instagram" loading="lazy" />
             </a>
           ))}
         </div>

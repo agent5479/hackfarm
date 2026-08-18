@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { withBase } from '../lib/constants';
 import './Header.css';
 
 const NAV = [
@@ -44,10 +45,13 @@ export default function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="header">
+    <header
+      className="header"
+      style={{ ['--header-wood' as string]: `url(${withBase('/images/uploads/2021/03/Wooden-Header-small.jpg')})` }}
+    >
       <div className="header__inner">
         <Link to="/" className="header__logo">
-          <img src="/images/uploads/2021/02/HackFarm-Logo-Light.png" alt="Hack Farm" />
+          <img src={withBase('/images/uploads/2021/02/HackFarm-Logo-Light.png')} alt="Hack Farm" />
         </Link>
         <button className="header__toggle" onClick={() => setOpen(!open)} aria-label="Menu">
           ☰
@@ -67,7 +71,7 @@ export default function Header() {
               </div>
             ) : (
               item.to.startsWith('/FreshWDL') ? (
-                <a key={item.label} href={item.to}>{item.label}</a>
+                <a key={item.label} href={withBase(item.to)}>{item.label}</a>
               ) : (
                 <Link key={item.label} to={item.to} onClick={() => setOpen(false)}>{item.label}</Link>
               )

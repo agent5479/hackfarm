@@ -1,5 +1,5 @@
 import scraped from '../content/scraped-content.json';
-import { decodeHtml } from '../lib/constants';
+import { decodeHtml, withBase } from '../lib/constants';
 import PageHero from '../components/PageHero';
 import ContactForm from '../components/ContactForm';
 import { usePageTitle } from '../hooks/usePageTitle';
@@ -49,7 +49,7 @@ export default function RidesPage() {
                 <div key={ride} className="card">
                   <img
                     className="card__image"
-                    src={Object.entries(RIDE_IMAGES).find(([k]) => ride.includes(k))?.[1] || '/images/uploads/2021/02/Hack-Track-Poster-copy.jpg'}
+                    src={withBase(Object.entries(RIDE_IMAGES).find(([k]) => ride.includes(k))?.[1] || '/images/uploads/2021/02/Hack-Track-Poster-copy.jpg')}
                     alt={ride}
                   />
                   <div className="card__body">

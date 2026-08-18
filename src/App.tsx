@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { routerBasename } from './lib/constants';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import AccommodationPage from './pages/AccommodationPage';
@@ -18,7 +19,7 @@ import HorseSlashRedirect from './pages/HorseSlashRedirect';
 
 export default function App() {
   return (
-    <BrowserRouter basename="/">
+    <BrowserRouter basename={routerBasename}>
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />

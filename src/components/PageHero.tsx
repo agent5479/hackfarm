@@ -1,3 +1,5 @@
+import { withBase } from '../lib/constants';
+
 interface PageHeroProps {
   title: string;
   subtitle?: string;
@@ -7,7 +9,7 @@ interface PageHeroProps {
 export default function PageHero({ title, subtitle, background }: PageHeroProps) {
   if (background) {
     return (
-      <div className="hero-banner" style={{ backgroundImage: `url(${background})` }}>
+      <div className="hero-banner" style={{ backgroundImage: `url(${withBase(background)})` }}>
         <div className="hero-banner__overlay">
           <h1 className="hero-banner__title">{title}</h1>
           {subtitle && <p style={{ color: 'var(--color-secondary)', fontSize: '1.1rem' }}>{subtitle}</p>}

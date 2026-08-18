@@ -1,14 +1,31 @@
-import { copyFileSync, existsSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const public404 = join(root, 'public', '404.html');
-const dist404 = join(root, 'dist', '404.html');
+const base = (process.env.BASE_URL || '/hackfarm/').replace(/\/?$/, '/');
+const keep = base.split('/').filter(Boolean).length;
 
-if (existsSync(public404)) {
-  copyFileSync(public404, dist404);
-  console.log('Ensured dist/404.html is the SPA redirect (not a copy of index.html)');
-} else {
-  console.warn('public/404.html missing; GitHub Pages deep links may not restore styles');
-}
+const html = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Hack n Stay Golden Bay</title>
+    <script>
+      var pathSegmentsToKeep = ${keep};
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
+`;
+
+writeFileSync(join(root, 'dist', '404.html'), html);
+console.log(`Wrote dist/404.html with pathSegmentsToKeep=${keep} (base ${base})`);
