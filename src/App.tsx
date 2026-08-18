@@ -18,7 +18,7 @@ import HorseSlashRedirect from './pages/HorseSlashRedirect';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/">
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />

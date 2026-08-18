@@ -12,19 +12,32 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - name: Build at domain root
+        run: npm run build
+        env:
+          BASE_URL: /
+      - name: Verify Pages root files
+        run: |
+          test -f dist/index.html
+          test -f dist/404.html
+          test -f dist/CNAME
+          test -f dist/.nojekyll
+          grep -q 'www.hackfarm.co.nz' dist/CNAME
+          grep -q 'href="/assets/' dist/index.html
+          grep -q 'src="/assets/' dist/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -38,3 +51,11 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+      - name: Pin custom domain
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --method PUT repos/${{ github.repository }}/pages \
+            --field cname=www.hackfarm.co.nz \
+            --field https_enforced=true

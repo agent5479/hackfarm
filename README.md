@@ -38,13 +38,13 @@ Copy `.env.example` to `.env.local` and set:
 
 ## Deployment
 
-GitHub Actions workflow (`.github/workflows/pages.yml`) builds and deploys on push to `main`.
+GitHub Actions workflow (`.github/workflows/pages.yml`) builds and deploys **from `main`** at the **domain root**. CSS and images are always `/assets/...` and `/images/...` so they keep working on `https://www.hackfarm.co.nz/` after DNS is live.
 
-1. Enable GitHub Pages → Source: **GitHub Actions**
-2. Push to `github.com/agent5479/hackfarm`
-3. Point DNS: `www.hackfarm.co.nz` CNAME → `agent5479.github.io`
+1. Pages source is already **GitHub Actions**
+2. In the repo: **Settings → Pages → Custom domain** = `www.hackfarm.co.nz`, then enable **Enforce HTTPS**
+3. DNS: `www` CNAME → `agent5479.github.io` (apex A records as GitHub lists)
 
-`public/CNAME` is set to `www.hackfarm.co.nz`.
+Do not preview the site at `https://agent5479.github.io/hackfarm/` — that project URL has no styles because this build is for the custom domain root, not `/hackfarm/`. After DNS, use `https://www.hackfarm.co.nz/`.
 
 ## Features preserved
 
