@@ -4,6 +4,7 @@ import { decodeHtml, withBase } from '../lib/constants';
 import BackgroundSlideshow from '../components/BackgroundSlideshow';
 import InstagramGrid from '../components/InstagramGrid';
 import { usePageTitle } from '../hooks/usePageTitle';
+import HeroHeadline from '../components/HeroHeadline';
 
 const content = scraped.pages.home;
 
@@ -121,11 +122,7 @@ export default function HomePage() {
         className="home-hero"
         style={{ backgroundImage: `url(${withBase('/images/uploads/2021/02/IMG_6067-scaled.jpg')})` }}
       >
-        <img
-          className="home-hero__badge"
-          src={withBase('/images/uploads/2021/06/TC_2021_L_TRANSPARENT_BG_RGB-01.png')}
-          alt="TripAdvisor Travellers Choice 2021"
-        />
+        <HeroHeadline />
       </section>
 
       <section className="section section--cream">
