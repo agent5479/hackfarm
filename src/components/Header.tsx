@@ -1,0 +1,80 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import './Header.css';
+
+const NAV = [
+  {
+    label: 'Stay',
+    to: '/accommodation/',
+    children: [
+      { label: 'Farmstay', to: '/accommodation/#homestead' },
+      { label: 'Camping', to: '/accommodation/#camp-ground' },
+      { label: 'Horse Stay', to: '/accommodation/#horse-stay' },
+    ],
+  },
+  {
+    label: 'Ride',
+    to: '/holistic-horse-rides/',
+    children: [
+      { label: 'Short Rides', to: '/holistic-horse-rides/#short-rides' },
+      { label: 'Full Day Rides', to: '/holistic-horse-rides/#full-day' },
+      { label: 'Multiday Experiences', to: '/holistic-horse-rides/#multi-day' },
+      { label: 'Interactive Trail Map', to: '/hack-farm-trails/' },
+      { label: 'Gift Voucher', to: '/horse-riding-holiday-gift-vouchers/' },
+    ],
+  },
+  { label: 'Our Horses', to: '/our-horses/' },
+  {
+    label: 'Learn',
+    to: '/learning-experiences/',
+    children: [
+      { label: 'Riding Lessons', to: '/learning-experiences/#lessons' },
+      { label: 'Horsemanship', to: '/learning-experiences/#horsemanship' },
+      { label: 'Vaulting', to: '/learning-experiences/#vaulting' },
+      { label: 'Kids Camps', to: '/special-events/' },
+    ],
+  },
+  { label: 'Vaulting Team', to: '/vaulting/' },
+  { label: 'Gift Voucher', to: '/horse-riding-holiday-gift-vouchers/' },
+  { label: 'Weather Station', to: '/FreshWDL/FreshWDL.html' },
+  { label: 'Contact', to: '/contact/' },
+];
+
+export default function Header() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <header className="header">
+      <div className="header__inner">
+        <Link to="/" className="header__logo">
+          <img src="/images/uploads/2021/02/HackFarm-Logo-Light.png" alt="Hack Farm" />
+        </Link>
+        <button className="header__toggle" onClick={() => setOpen(!open)} aria-label="Menu">
+          ☰
+        </button>
+        <nav className={`header__nav${open ? ' header__nav--open' : ''}`}>
+          {NAV.map((item) =>
+            item.children ? (
+              <div key={item.label} className="header__nav-item">
+                <Link to={item.to}>{item.label}</Link>
+                <div className="header__dropdown">
+                  {item.children.map((child) => (
+                    <Link key={child.label} to={child.to} onClick={() => setOpen(false)}>
+                      {child.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              item.to.startsWith('/FreshWDL') ? (
+                <a key={item.label} href={item.to}>{item.label}</a>
+              ) : (
+                <Link key={item.label} to={item.to} onClick={() => setOpen(false)}>{item.label}</Link>
+              )
+            )
+          )}
+        </nav>
+      </div>
+    </header>
+  );
+}

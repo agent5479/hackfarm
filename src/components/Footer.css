@@ -1,0 +1,74 @@
+.footer {
+  background: var(--color-secondary);
+  color: #ccc;
+  padding: 3rem 0 1.5rem;
+  margin-top: 2rem;
+}
+
+.footer a { color: #ddd; }
+.footer a:hover { color: var(--color-primary); }
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer__brand img {
+  height: 60px;
+  margin-bottom: 1rem;
+}
+
+.footer__social {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.footer__social a {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.footer__links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+}
+
+.footer__links h4 {
+  color: #fff;
+  font-family: var(--font-nav);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.footer__links ul {
+  list-style: none;
+}
+
+.footer__links li {
+  margin-bottom: 0.35rem;
+  font-size: 0.85rem;
+}
+
+.footer__contact li {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.footer__bottom {
+  border-top: 1px solid rgba(255,255,255,0.15);
+  padding-top: 1.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #999;
+}
+
+@media (max-width: 768px) {
+  .footer__grid { grid-template-columns: 1fr; }
+}
