@@ -26,6 +26,11 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      - name: Refresh tide cache
+        continue-on-error: true
+        env:
+          NIWA_API_KEY: ${{ secrets.NIWA_API_KEY }}
+        run: npm run tides
       - name: Build for github.io/hackfarm
         run: npm run build
         env:

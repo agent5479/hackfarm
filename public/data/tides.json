@@ -1,0 +1,5 @@
+{
+  "generatedAt": null,
+  "note": "Optional NIWA tide extremes cache. Run `npm run tides` with NIWA_API_KEY, or set VITE_NIWA_API_KEY for live fetch.",
+  "extremes": []
+}

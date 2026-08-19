@@ -78,6 +78,17 @@
 .book-card__bar h2 {
   margin: 0;
   font-size: 1.6rem;
+  flex: 1;
+}
+
+.book-card__back {
+  border: none;
+  background: transparent;
+  color: var(--color-secondary);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  text-decoration: underline;
 }
 
 .book-card__close {

@@ -35,6 +35,12 @@ Downloads images, fonts, FreshWDL weather files, and page copy from the live sit
 Copy `.env.example` to `.env.local` and set:
 
 - `VITE_FORM_ENDPOINT` — form submission URL (defaults to FormSubmit)
+- `VITE_NIWA_API_KEY` — optional live NIWA tide fetch in the Book a Ride planner
+- Or set `NIWA_API_KEY` and run `npm run tides` to write `public/data/tides.json` without exposing the key
+
+## Ride planner
+
+**Book a Ride** opens a sunrise / tide / weather prequel for Paton’s Rock, then continues into the existing FareHarbor ride widget. Stay booking is unchanged.
 
 ## Deployment
 
@@ -49,6 +55,7 @@ Do not leave a custom domain set in Pages (or a `CNAME` file) until DNS actually
 ## Features preserved
 
 - FareHarbor booking (ride, stay, gift vouchers)
+- Book a Ride planner (sunrise, tides, weather) before FareHarbor
 - FreshWDL weather station (`/FreshWDL/FreshWDL.html`)
 - Google My Maps trail map
 - Instagram grid (cached images)
@@ -57,4 +64,4 @@ Do not leave a custom domain set in Pages (or a `CNAME` file) until DNS actually
 
 ## Future
 
-`src/booking/` stub reserved for the calendar applet (Google Apps Script, weather/tides, horse availability).
+Horse availability / Apps Script can plug into the Book a Ride planner later.

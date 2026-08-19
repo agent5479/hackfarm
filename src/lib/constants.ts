@@ -3,7 +3,17 @@ export const BOOKING = {
   stay: 'https://fareharbor.com/embeds/book/hackfarm/?full-items=yes&flow=543323',
   gift: 'https://fareharbor.com/embeds/book/hackfarm/items/294930/?full-items=yes&flow=542642',
   cart: 'https://fareharbor.com/embeds/cart/?u=ff5d693b-0d79-4cd7-83ce-d3c61d45cc32&from-ssl=yes&g4=no&cp=no&csp=no',
+  rideFlow: '543158',
 };
+
+export function fareHarborRideUrl(itemId?: string, date?: string): string {
+  const base = itemId
+    ? `https://fareharbor.com/embeds/book/hackfarm/items/${itemId}/`
+    : 'https://fareharbor.com/embeds/book/hackfarm/';
+  const params = new URLSearchParams({ 'full-items': 'yes', flow: BOOKING.rideFlow });
+  if (date) params.set('date', date);
+  return `${base}?${params.toString()}`;
+}
 
 export const CONTACT = {
   phone: '+64 27 525 9434',

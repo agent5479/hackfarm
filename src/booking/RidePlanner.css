@@ -1,0 +1,99 @@
+.ride-planner {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ride-planner__lead,
+.ride-planner__hint,
+.ride-planner__status {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.ride-planner__status--warn {
+  color: #8a5a2b;
+}
+
+.ride-planner__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+}
+
+.ride-planner__field select {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.ride-planner__days {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ride-planner__day {
+  width: 100%;
+  text-align: left;
+  border: 1px solid #e4dcc8;
+  border-radius: 8px;
+  padding: 0.7rem 0.85rem;
+  background: #fff;
+  cursor: pointer;
+  display: grid;
+  gap: 0.15rem;
+  font-family: var(--font-body);
+}
+
+.ride-planner__day:hover {
+  border-color: var(--color-green);
+}
+
+.ride-planner__day--ok {
+  border-left: 4px solid var(--color-green);
+}
+
+.ride-planner__day--caution {
+  border-left: 4px solid var(--color-orange);
+}
+
+.ride-planner__day--unsuitable {
+  border-left: 4px solid #c26e93;
+  opacity: 0.85;
+}
+
+.ride-planner__when {
+  font-weight: 600;
+  color: var(--color-secondary);
+}
+
+.ride-planner__summary {
+  font-size: 0.9rem;
+  color: var(--color-secondary);
+}
+
+.ride-planner__why {
+  font-size: 0.78rem;
+  color: var(--color-text);
+}
+
+.ride-planner__skip {
+  align-self: center;
+  margin-top: 0.25rem;
+  border: none;
+  background: none;
+  color: var(--color-secondary);
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+}
