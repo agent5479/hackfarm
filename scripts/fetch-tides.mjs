@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+import { parseNiwaExtremes } from './tide-extremes.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LAT = -40.79;
@@ -14,40 +15,74 @@ if (!key) {
 }
 
 const startDate = new Date().toISOString().slice(0, 10);
-const params = new URLSearchParams({
-  lat: String(LAT),
-  long: String(LON),
-  startDate,
-  numberOfDays: String(DAYS),
-  datum: 'LAT',
-  interval: '0',
-});
 
-const res = await fetch(`https://api.niwa.co.nz/tides/data?${params}`, {
-  headers: { 'x-apikey': key },
-});
-if (!res.ok) {
-  console.error(`NIWA ${res.status}: ${await res.text()}`);
-  process.exit(1);
+async function niwaFetch(includeInterval) {
+  const params = new URLSearchParams({
+    lat: String(LAT),
+    long: String(LON),
+    startDate,
+    numberOfDays: String(DAYS),
+    datum: 'LAT',
+  });
+  if (includeInterval) params.set('interval', '10');
+
+  const res = await fetch(`https://api.niwa.co.nz/tides/data?${params}`, {
+    headers: { 'x-apikey': key },
+  });
+  if (!res.ok) {
+    throw new Error(`NIWA ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
 }
 
-const data = await res.json();
-const values = (data.values ?? data.extremes ?? []) as { time?: string; date?: string; value?: number; height?: number }[];
-const extremes = values.map((v, i) => {
-  const height = Number(v.value ?? v.height ?? 0);
-  const prev = Number(values[i - 1]?.value ?? values[i - 1]?.height ?? height);
-  const next = Number(values[i + 1]?.value ?? values[i + 1]?.height ?? height);
-  return {
-    time: v.time || v.date,
-    height,
-    type: height >= prev && height >= next ? 'high' : 'low',
-  };
-});
+let data;
+let source = 'niwa-extremes';
 
+try {
+  data = await niwaFetch(false);
+} catch (err) {
+  console.warn('NIWA without interval failed, retrying with interval=10:', err.message);
+  data = await niwaFetch(true);
+  source = 'niwa-series-fallback';
+}
+
+let { extremes, source: parseSource } = parseNiwaExtremes(data, DAYS);
+if (parseSource === 'niwa-series-derived') source = parseSource;
+
+if (!extremes.length && source !== 'niwa-series-fallback') {
+  console.warn('No extremes from primary call; retrying with interval=10');
+  data = await niwaFetch(true);
+  ({ extremes, source: parseSource } = parseNiwaExtremes(data, DAYS));
+  source = parseSource === 'niwa-series-derived' ? 'niwa-series-fallback' : parseSource;
+}
+
+const highs = extremes.filter((e) => e.type === 'high').length;
+const lows = extremes.filter((e) => e.type === 'low').length;
+
+const meta = data.metadata ?? {};
 const outDir = join(ROOT, 'public', 'data');
 await mkdir(outDir, { recursive: true });
-await writeFile(join(outDir, 'tides.json'), JSON.stringify({
-  generatedAt: new Date().toISOString(),
-  extremes,
-}, null, 2));
-console.log(`Wrote ${extremes.length} tide extremes to public/data/tides.json`);
+await writeFile(
+  join(outDir, 'tides.json'),
+  JSON.stringify(
+    {
+      generatedAt: new Date().toISOString(),
+      metadata: {
+        latitude: meta.latitude ?? LAT,
+        longitude: meta.longitude ?? LON,
+        datum: meta.datum ?? 'LAT',
+        source,
+        days: DAYS,
+      },
+      extremes: extremes.map((e) => ({
+        time: e.time,
+        height: e.height,
+        type: e.type,
+      })),
+    },
+    null,
+    2,
+  ),
+);
+
+console.log(`Wrote ${extremes.length} tide extremes (${highs} highs, ${lows} lows) to public/data/tides.json`);

@@ -1,0 +1,409 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tide Forecasting API",
+    "description": "API for NIWA's tide model. Data (json or CSV) and charts (SVG or PNG)\
+    \ for coastal and ocean waters around New Zealand’s EEZ. It also predicts historical tides back to 1830.\n\nThis current version does not cover tides\
+    \ inside harbours and estuaries. If you try specifying a harbour or dry-land location\
+    \ that is not part of the model domain the nearest valid open-coast location will\
+    \ be used. The response from the API will include the coordinates that have been\
+    \ used.\n\n\nAll coordinates used by the Tide API are in [NZGD1949](https://www.linz.govt.nz/data/geodetic-system/datums-projections-and-heights/geodetic-datums/new-zealand-geodetic-datum-1949-nzgd1949),\
+    \ which has a latitude difference of about 200m from [WGS84](https://www.linz.govt.nz/data/geodetic-system/datums-projections-and-heights/geodetic-datums/world-geodetic-system-1984-wgs84).\n\
+    \n\nThe Tide Forecaster uses a computer tide model developed by NIWA under various\
+    \ contracts from the New Zealand Foundation for Research, Science & Technology\
+    \ and with assistance from LINZ. For most coastal locations the forecasts of high\
+    \ and low tides will be accurate within 0.1 m in height and 5-10 minutes in time.\n\
+    \n\nA simple [PHP example script](https://github.com/niwa/nexttides) is available\
+    \ on GitHub.",
+    "version": "3.0.0"
+  },
+    "servers": [
+      {
+        "url": "https://api.niwa.co.nz/tides"
+      }
+    ],
+  "paths": {
+    "/data": {
+      "get": {
+        "summary": "Get tide data in JSON format",
+        "description": "Returns tide data in JSON format",
+        "operationId": "get_tide_data_data_get",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Lat"
+            }
+          },
+          {
+            "name": "long",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Long"
+            }
+          },
+          {
+            "name": "numberOfDays",
+            "in": "query",
+            "required": false,
+            "schema": {
+                  "type": "integer",
+                  "maximum": 31,
+                  "minimum": 1,
+                  "nullable": true,
+              "default": 7,
+              "title": "Numberofdays"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+                  "type": "string",
+                  "nullable": true,
+              "title": "Startdate"
+            }
+          },
+          {
+            "name": "datum",
+            "in": "query",
+            "required": false,
+            "schema": {
+                  "enum": [
+                    "LAT",
+                    "MSL"
+                  ],
+                  "type": "string",
+                  "nullable": true,
+              "default": "LAT",
+              "title": "Datum"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+                  "type": "integer",
+                  "maximum": 1440,
+                  "minimum": 10,
+                  "nullable": true,
+              "title": "Interval"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/data.csv": {
+      "get": {
+        "summary": "Get tide data in CSV format",
+        "description": "Returns tide data in CSV format with NIWA header",
+        "operationId": "get_tide_data_csv_data_csv_get",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Lat"
+            }
+          },
+          {
+            "name": "long",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Long"
+            }
+          },
+          {
+            "name": "numberOfDays",
+            "in": "query",
+            "required": false,
+            "schema": {
+                  "type": "integer",
+                  "maximum": 31,
+                  "minimum": 1,
+                  "nullable": true,
+              "default": 7,
+              "title": "Numberofdays"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+                  "type": "string",
+                  "nullable": true,
+              "title": "Startdate"
+            }
+          },
+          {
+            "name": "datum",
+            "in": "query",
+            "required": false,
+            "schema": {
+                  "enum": [
+                    "LAT",
+                    "MSL"
+                  ],
+                  "type": "string",
+                  "nullable": true,
+              "default": "LAT",
+              "title": "Datum"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+                  "type": "integer",
+                  "maximum": 1440,
+                  "minimum": 10,
+                  "nullable": true,
+              "title": "Interval"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chart.{format}": {
+      "get": {
+        "summary": "Generate tide chart",
+        "description": "Returns tide chart in PNG or SVG format",
+        "operationId": "get_tide_chart_chart__format__get",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "png",
+                "svg"
+              ],
+              "type": "string",
+              "title": "Format"
+            }
+          },
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Lat"
+            }
+          },
+          {
+            "name": "long",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Long"
+            }
+          },
+          {
+            "name": "numberOfDays",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 31,
+                  "minimum": 1
+                }
+              ],
+              "default": 7,
+              "title": "Numberofdays"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                }
+              ],
+              "title": "Startdate"
+            }
+          },
+          {
+            "name": "datum",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "LAT",
+                    "MSL"
+                  ],
+                  "type": "string"
+                }
+              ],
+              "default": "LAT",
+              "title": "Datum"
+            }
+          },
+          {
+            "name": "debug",
+            "in": "query",
+            "required": false,
+            "schema": {
+                  "type": "boolean",
+                  "nullable": true,
+              "default": false,
+              "title": "Debug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "name": "x-apikey",
+        "in": "header"
+      },
+      "APIKeyQueryParam": {
+        "type": "apiKey",
+        "name": "apikey",
+        "in": "query"
+      }
+    }
+  },
+  "security": [
+    {
+      "APIKeyHeader": []
+    },
+    {
+      "APIKeyQueryParam": []
+    }
+  ]
+}
