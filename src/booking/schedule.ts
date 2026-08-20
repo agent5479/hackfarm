@@ -4,18 +4,30 @@ import {
   SUNRISE_RIDE_WEEKDAYS,
   TIDE_AFTER_HIGH_HOURS,
   TIDE_BEFORE_HIGH_HOURS,
+  TIDE_HORIZON_DAYS,
   WEATHER_HORIZON_DAYS,
 } from './location';
 import { type RideType, SUNRISE_RIDE } from './rides';
 import { sunTimesForDate } from './sun';
 import {
-  dateKeyInTz,
   estimateTideHeightAt,
   highTidesNear,
   lowTidesNear,
+  tideFlowAt,
+  tidesCoverDate,
   type TideExtreme,
+  type TideFlow,
 } from './tides';
 import { weatherImpact, weatherLabel, type DayWeather } from './weather';
+import {
+  addCalendarDays,
+  calendarDaysBetween,
+  dateKeyInTz,
+  nzNoon,
+  todayKeyNz,
+} from './nzTime';
+
+export { todayKeyNz };
 
 export function formatClock(date: Date): string {
   return new Intl.DateTimeFormat('en-NZ', {
@@ -31,7 +43,7 @@ export function formatDayLabel(dateKey: string): string {
     weekday: 'short',
     day: 'numeric',
     month: 'short',
-  }).format(new Date(`${dateKey}T12:00:00`));
+  }).format(nzNoon(dateKey));
 }
 
 const MS_HOUR = 3_600_000;
@@ -55,6 +67,7 @@ export interface SunriseDaySchedule {
   weatherLabel?: string;
   weatherAffectsStatus: boolean;
   tideHeightAtRide?: number;
+  tideFlow?: TideFlow;
   nearestHighHeight?: number;
   tideBlocked?: boolean;
   weatherBlocked?: boolean;
@@ -79,23 +92,18 @@ function addMinutes(date: Date, minutes: number): Date {
 }
 
 function addDays(dateKey: string, days: number): string {
-  const d = new Date(`${dateKey}T12:00:00`);
-  d.setDate(d.getDate() + days);
-  return dateKeyInTz(d);
+  return addCalendarDays(dateKey, days);
 }
 
 export function daysFromToday(dateKey: string): number {
-  const today = dateKeyInTz(new Date());
-  const a = new Date(`${today}T12:00:00`);
-  const b = new Date(`${dateKey}T12:00:00`);
-  return Math.round((b.getTime() - a.getTime()) / 86400000);
+  return calendarDaysBetween(todayKeyNz(), dateKey);
 }
 
 export function weekdayInTz(dateKey: string): number {
   const label = new Intl.DateTimeFormat('en-US', {
     timeZone: PATONS_ROCK.timezone,
     weekday: 'short',
-  }).format(new Date(`${dateKey}T12:00:00`));
+  }).format(nzNoon(dateKey));
   return WD[label] ?? 0;
 }
 
@@ -117,11 +125,11 @@ export function formatWeekRange(weekStartKey: string): string {
       timeZone: PATONS_ROCK.timezone,
       day: 'numeric',
       month: 'short',
-    }).format(new Date(`${key}T12:00:00`));
+    }).format(nzNoon(key));
   const year = new Intl.DateTimeFormat('en-NZ', {
     timeZone: PATONS_ROCK.timezone,
     year: 'numeric',
-  }).format(new Date(`${weekStartKey}T12:00:00`));
+  }).format(nzNoon(weekStartKey));
   return `${fmt(weekStartKey)} – ${fmt(endKey)} ${year}`;
 }
 
@@ -172,6 +180,47 @@ export function monthGridDates(monthKey: string): MonthGridCell[] {
 
 export function dayOfMonth(dateKey: string): number {
   return Number(dateKey.slice(8, 10));
+}
+
+const WEEKDAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+export function shiftDateKey(dateKey: string, days: number): string {
+  return addDays(dateKey, days);
+}
+
+export function maxHorizonWindowStart(todayKey: string = todayKeyNz()): string {
+  return addDays(todayKey, Math.max(0, TIDE_HORIZON_DAYS - PLANNER_DAYS));
+}
+
+export function rollingHorizonDates(startKey: string, count: number = PLANNER_DAYS): string[] {
+  return Array.from({ length: count }, (_, i) => addDays(startKey, i));
+}
+
+export function weekdayHeadersFrom(startKey: string): string[] {
+  const startWd = weekdayInTz(startKey);
+  return Array.from({ length: 7 }, (_, i) => WEEKDAY_SHORT[(startWd + i) % 7]);
+}
+
+export function formatHorizonRange(startKey: string, count: number = PLANNER_DAYS): string {
+  const endKey = addDays(startKey, count - 1);
+  const fmt = (key: string) =>
+    new Intl.DateTimeFormat('en-NZ', {
+      timeZone: PATONS_ROCK.timezone,
+      day: 'numeric',
+      month: 'short',
+    }).format(nzNoon(key));
+  const year = new Intl.DateTimeFormat('en-NZ', {
+    timeZone: PATONS_ROCK.timezone,
+    year: 'numeric',
+  }).format(nzNoon(endKey));
+  return `${fmt(startKey)} – ${fmt(endKey)} ${year}`;
+}
+
+export function shortMonth(dateKey: string): string {
+  return new Intl.DateTimeFormat('en-NZ', {
+    timeZone: PATONS_ROCK.timezone,
+    month: 'short',
+  }).format(nzNoon(dateKey));
 }
 
 export function forbiddenZoneForHigh(high: Date): ForbiddenZone {
@@ -292,8 +341,7 @@ export function buildSunriseDaySchedule(
     ? ride.scheduleWeekdays.includes(weekday)
     : true;
 
-  const noon = new Date(`${dateKey}T12:00:00`);
-  const sun = sunTimesForDate(noon);
+  const sun = sunTimesForDate(dateKey);
   const rideStart = addMinutes(sun.sunrise, ride.startOffsetMin);
   const rideEnd = addMinutes(rideStart, ride.durationHours * 60);
 
@@ -307,9 +355,11 @@ export function buildSunriseDaySchedule(
   let weatherBlocked = false;
   let weatherCaution = false;
   let tideHeightAtRide: number | undefined;
+  let tideFlow: TideFlow | undefined;
 
+  const fromToday = daysFromToday(dateKey);
   const hasScheduleData =
-    daysFromToday(dateKey) >= 0 && daysFromToday(dateKey) < PLANNER_DAYS;
+    fromToday >= 0 && fromToday < TIDE_HORIZON_DAYS && tidesCoverDate(dateKey, allTides);
 
   reasons.push(`Arrive by ${formatClock(rideStart)}`);
   reasons.push(`Sunrise ${formatClock(sun.sunrise)}`);
@@ -326,6 +376,10 @@ export function buildSunriseDaySchedule(
 
   if (ride.usesTides && hasScheduleData && allTides.length) {
     tideHeightAtRide = estimateTideHeightAt(rideStart, allTides);
+    tideFlow = tideFlowAt(rideStart, allTides);
+    if (tideFlow) {
+      reasons.push(tideFlow === 'incoming' ? 'Tide incoming' : 'Tide outgoing');
+    }
   }
 
   if (ride.usesTides && hasScheduleData) {
@@ -356,7 +410,7 @@ export function buildSunriseDaySchedule(
     }
   } else if (ride.usesTides && isRideDay && !hasScheduleData) {
     if (status !== 'unavailable') status = 'caution';
-    reasons.push('Schedule available closer to the date');
+    reasons.push('Tide times available within three months');
   }
 
   if (dayWx) {
@@ -383,6 +437,7 @@ export function buildSunriseDaySchedule(
     weatherLabel: wxLabel,
     weatherAffectsStatus,
     tideHeightAtRide,
+    tideFlow,
     nearestHighHeight,
     tideBlocked,
     weatherBlocked,
@@ -418,16 +473,30 @@ export function buildSunriseMonthSchedule(
   return map;
 }
 
-export function monthSummary(days: SunriseDaySchedule[], monthKey: string): string {
-  const inMonth = days.filter((d) => d.date.startsWith(monthKey));
-  const rideDays = inMonth.filter((d) => d.isRideDay && d.hasScheduleData);
+export function buildSunriseHorizonSchedule(
+  startKey: string,
+  forecast: DayWeather[],
+  tides: TideExtreme[],
+  ride: RideType = SUNRISE_RIDE,
+  allTides: TideExtreme[] = tides,
+  days: number = PLANNER_DAYS,
+): Map<string, SunriseDaySchedule> {
+  const map = new Map<string, SunriseDaySchedule>();
+  for (const date of rollingHorizonDates(startKey, days)) {
+    map.set(date, buildSunriseDaySchedule(date, forecast, tides, ride, allTides));
+  }
+  return map;
+}
+
+export function horizonSummary(days: SunriseDaySchedule[]): string {
+  const rideDays = days.filter((d) => d.isRideDay && d.hasScheduleData);
   const rideable = rideDays.filter((d) => d.status === 'rideable').length;
   const caution = rideDays.filter((d) => d.status === 'caution').length;
   const blocked = rideDays.filter((d) => d.status === 'unavailable').length;
   const parts = [`${rideable} rideable`];
   if (caution) parts.push(`${caution} check conditions`);
   if (blocked) parts.push(`${blocked} unavailable`);
-  return `This month: ${parts.join(' · ')}`;
+  return `These 4 weeks: ${parts.join(' · ')}`;
 }
 
 export function weekSummary(days: SunriseDaySchedule[]): string {
@@ -447,7 +516,7 @@ export function detailSummary(day: SunriseDaySchedule): string {
     weekday: 'long',
     day: 'numeric',
     month: 'short',
-  }).format(new Date(`${day.date}T12:00:00`));
+  }).format(nzNoon(day.date));
 
   const bits = [
     dateLabel,
@@ -457,6 +526,9 @@ export function detailSummary(day: SunriseDaySchedule): string {
 
   if (day.nearestHigh) {
     bits.push(`High tide ${formatClock(day.nearestHigh)}`);
+  }
+  if (day.tideFlow) {
+    bits.push(day.tideFlow === 'incoming' ? 'Tide incoming' : 'Tide outgoing');
   }
   if (day.nearestLow) {
     bits.push(`Low tide ${formatClock(day.nearestLow)}`);

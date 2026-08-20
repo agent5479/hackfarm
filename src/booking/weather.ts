@@ -78,7 +78,7 @@ export async function fetchForecast(): Promise<DayWeather[]> {
     longitude: String(PATONS_ROCK.lon),
     daily: 'weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max',
     timezone: PATONS_ROCK.timezone,
-    forecast_days: String(PLANNER_DAYS),
+    forecast_days: String(Math.min(PLANNER_DAYS, 16)),
   });
   const res = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
   if (!res.ok) throw new Error('Weather forecast unavailable');

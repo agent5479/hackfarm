@@ -38,8 +38,7 @@ function scheduleStatusToWindow(status: 'rideable' | 'caution' | 'unavailable'):
 }
 
 function legacyWindow(ride: RideType, day: DayWeather, tides: TideExtreme[]): RideWindow {
-  const noon = new Date(`${day.date}T12:00:00`);
-  const sun = sunTimesForDate(noon);
+  const sun = sunTimesForDate(day.date);
   const reasons: string[] = [];
   let status: WindowStatus = 'ok';
 

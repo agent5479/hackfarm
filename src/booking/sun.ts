@@ -1,4 +1,5 @@
 import { PATONS_ROCK } from './location';
+import { nzNoon } from './nzTime';
 
 export interface SunTimes {
   sunrise: Date;
@@ -36,9 +37,13 @@ function julianToDate(j: number): Date {
   return new Date((j - 2440587.5) * 86400000);
 }
 
-export function sunTimesForDate(date: Date, lat = PATONS_ROCK.lat, lon = PATONS_ROCK.lon): SunTimes {
-  const noon = new Date(date);
-  noon.setHours(12, 0, 0, 0);
+/** Sunrise/sunset instants (UTC). Display with Pacific/Auckland so NZST/NZDT apply. */
+export function sunTimesForDate(
+  date: Date | string,
+  lat = PATONS_ROCK.lat,
+  lon = PATONS_ROCK.lon,
+): SunTimes {
+  const noon = typeof date === 'string' ? nzNoon(date) : date;
   const { jTransit, dec } = solarNoonAndDeclination(toJulian(noon), lon);
   const ha = hourAngle(lat, dec);
   const rise = julianToDate(jTransit - (ha * 180) / Math.PI / 360);

@@ -26,17 +26,26 @@ export default function DayCell({ day }: DayCellProps) {
   if (!day.hasScheduleData) {
     return (
       <div className="day-cell day-cell--pending">
-        <p className="day-cell__pending">Schedule closer to date</p>
+        <p className="day-cell__pending">Tide times updating</p>
       </div>
     );
   }
 
   const fillPct = tideFillPct(day.tideHeightAtRide, Boolean(day.tideBlocked));
   const clipId = `tide-wave-${day.date}`;
+  const flow = day.tideFlow;
+  const flowLabel = flow === 'incoming' ? 'Incoming' : flow === 'outgoing' ? 'Outgoing' : undefined;
 
   return (
     <div
-      className={`day-cell${day.tideBlocked ? ' day-cell--blocked' : ''}`}
+      className={[
+        'day-cell',
+        day.tideBlocked ? 'day-cell--blocked' : '',
+        flow === 'incoming' ? 'day-cell--incoming' : '',
+        flow === 'outgoing' ? 'day-cell--outgoing' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       style={{ ['--tide-fill' as string]: `${fillPct * 100}%` }}
     >
       {showWeather && (
@@ -62,6 +71,13 @@ export default function DayCell({ day }: DayCellProps) {
               fill={`url(#${clipId})`}
             />
           </svg>
+          {flow && (
+            <div className="day-cell__chevrons">
+              <span className="day-cell__chevron" />
+              <span className="day-cell__chevron" />
+              <span className="day-cell__chevron" />
+            </div>
+          )}
         </div>
         {day.tideBlocked && (
           <div className="day-cell__tide-overlay">
@@ -79,6 +95,12 @@ export default function DayCell({ day }: DayCellProps) {
           <span className="day-cell__label">Sunrise</span>
           <span>{formatClock(day.sunrise)}</span>
         </p>
+        {flowLabel && (
+          <p className="day-cell__flow">
+            <span className="day-cell__label">Tide</span>
+            <strong>{flowLabel}</strong>
+          </p>
+        )}
       </div>
     </div>
   );

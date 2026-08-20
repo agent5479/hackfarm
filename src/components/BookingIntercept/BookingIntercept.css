@@ -23,10 +23,32 @@
 
 .booking-intercept__sunrise {
   margin-bottom: 3rem;
-  padding: 1.25rem;
   background: #f7faf5;
   border: 2px solid var(--color-green);
   border-radius: 8px;
+  overflow: hidden;
+}
+
+.booking-intercept__sunrise-image {
+  display: block;
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+}
+
+.booking-intercept__sunrise-body {
+  padding: 1.25rem;
+}
+
+.booking-intercept__sunrise-body h3 {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  color: var(--color-secondary);
+}
+
+.booking-intercept__sunrise-copy {
+  margin: 0 0 1.25rem;
 }
 
 .booking-intercept__badge {
@@ -58,7 +80,7 @@
 
 .booking-intercept__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.75rem;
 }
 
@@ -137,7 +159,15 @@
 }
 
 @media (max-width: 600px) {
-  .booking-intercept__sunrise {
+  .booking-intercept__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-intercept__sunrise-image {
+    height: 180px;
+  }
+
+  .booking-intercept__sunrise-body {
     padding: 0.85rem;
   }
 

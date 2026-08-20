@@ -1,11 +1,15 @@
 import { withBase } from '../lib/constants';
-import { PATONS_ROCK } from './location';
+import { dateKeyInTz } from './nzTime';
+
+export { dateKeyInTz };
 
 export interface TideExtreme {
   time: Date;
   height: number;
   type: 'high' | 'low';
 }
+
+export type TideFlow = 'incoming' | 'outgoing';
 
 interface CachedTides {
   generatedAt?: string;
@@ -48,13 +52,11 @@ export async function fetchAllTides(): Promise<TideExtreme[]> {
   return (await fetchCached()) ?? [];
 }
 
-export function dateKeyInTz(date: Date): string {
-  return new Intl.DateTimeFormat('en-CA', {
-    timeZone: PATONS_ROCK.timezone,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(date);
+export function tidesCoverDate(dateKey: string, extremes: TideExtreme[]): boolean {
+  if (!extremes.length) return false;
+  const keys = extremes.map((t) => dateKeyInTz(t.time));
+  return dateKey >= keys.reduce((a, b) => (a < b ? a : b)) &&
+    dateKey <= keys.reduce((a, b) => (a > b ? a : b));
 }
 
 export function tidesOnDay(tides: TideExtreme[], dateKey: string): TideExtreme[] {
@@ -120,4 +122,36 @@ export function estimateTideHeightAt(instant: Date, extremes: TideExtreme[]): nu
     }
   }
   return nearest.height;
+}
+
+function bracketingExtremes(
+  instant: Date,
+  extremes: TideExtreme[],
+): { from: TideExtreme; to: TideExtreme } | undefined {
+  if (extremes.length < 2) return undefined;
+  const sorted = [...extremes].sort((a, b) => a.time.getTime() - b.time.getTime());
+  const t = instant.getTime();
+
+  if (t <= sorted[0].time.getTime()) {
+    return { from: sorted[0], to: sorted[1] };
+  }
+  if (t >= sorted[sorted.length - 1].time.getTime()) {
+    return { from: sorted[sorted.length - 2], to: sorted[sorted.length - 1] };
+  }
+
+  for (let i = 0; i < sorted.length - 1; i++) {
+    if (t >= sorted[i].time.getTime() && t <= sorted[i + 1].time.getTime()) {
+      return { from: sorted[i], to: sorted[i + 1] };
+    }
+  }
+  return undefined;
+}
+
+/** Incoming = rising toward high; outgoing = falling toward low. */
+export function tideFlowAt(instant: Date, extremes: TideExtreme[]): TideFlow | undefined {
+  const pair = bracketingExtremes(instant, extremes);
+  if (!pair) return undefined;
+  const { from, to } = pair;
+  if (from.type === 'low' || to.type === 'high' || to.height > from.height) return 'incoming';
+  return 'outgoing';
 }
