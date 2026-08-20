@@ -41,11 +41,13 @@ export default function BookingIntercept() {
       </div>
 
       <div className="booking-intercept__sunrise">
-        <img
-          className="booking-intercept__sunrise-image"
-          src={withBase(SUNRISE_TWILIGHT_RIDE.image)}
-          alt={SUNRISE_TWILIGHT_RIDE.title}
-        />
+        <div className="booking-intercept__sunrise-media">
+          <img
+            className="booking-intercept__sunrise-image"
+            src={withBase(SUNRISE_TWILIGHT_RIDE.image)}
+            alt={SUNRISE_TWILIGHT_RIDE.title}
+          />
+        </div>
         <div className="booking-intercept__sunrise-body">
           <span className="booking-intercept__badge">Sunrise / Sunset Twilight — schedule checker</span>
           <h3>{SUNRISE_TWILIGHT_RIDE.title}</h3>
