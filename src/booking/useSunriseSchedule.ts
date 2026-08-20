@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { PLANNER_DAYS } from './location';
-import { startOfWeekMonday } from './schedule';
+import { monthKeyFromDate, startOfMonth } from './schedule';
+import { fetchAllTides, fetchTides, type TideExtreme } from './tides';
 import { fetchForecast, type DayWeather } from './weather';
-import { fetchTides, type TideExtreme } from './tides';
 
 export function useSunriseSchedule() {
-  const [weekStart, setWeekStart] = useState(() => startOfWeekMonday(new Date()));
+  const [monthKey, setMonthKey] = useState(() => monthKeyFromDate(new Date()));
   const [forecast, setForecast] = useState<DayWeather[]>([]);
   const [tides, setTides] = useState<TideExtreme[]>([]);
+  const [allTides, setAllTides] = useState<TideExtreme[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [tideNote, setTideNote] = useState('');
@@ -23,11 +24,16 @@ export function useSunriseSchedule() {
         start.setHours(0, 0, 0, 0);
         const end = new Date(start);
         end.setDate(end.getDate() + PLANNER_DAYS);
-        const [wx, tideRows] = await Promise.all([fetchForecast(), fetchTides(start, end)]);
+        const [wx, tideRows, fullTides] = await Promise.all([
+          fetchForecast(),
+          fetchTides(start, end),
+          fetchAllTides(),
+        ]);
         if (cancelled) return;
         setForecast(wx);
         setTides(tideRows);
-        setTideNote(tideRows.length ? '' : 'Tide times are approximate until a NIWA key is added.');
+        setAllTides(fullTides);
+        setTideNote(fullTides.length ? '' : 'Tide times are approximate until a NIWA key is added.');
       } catch {
         if (!cancelled) setError('Could not load weather just now.');
       } finally {
@@ -40,22 +46,26 @@ export function useSunriseSchedule() {
     };
   }, []);
 
-  const shiftWeek = (delta: number) => {
-    setWeekStart((current) => {
-      const d = new Date(`${current}T12:00:00`);
-      d.setDate(d.getDate() + delta * 7);
-      return startOfWeekMonday(d);
+  const shiftMonth = (delta: number) => {
+    setMonthKey((current) => {
+      const [y, m] = current.split('-').map(Number);
+      const d = new Date(y, m - 1 + delta, 1);
+      return monthKeyFromDate(d);
     });
   };
 
   return {
-    weekStart,
-    setWeekStart,
-    shiftWeek,
+    monthKey,
+    setMonthKey,
+    shiftMonth,
     forecast,
     tides,
+    allTides,
     loading,
     error,
     tideNote,
+    // legacy aliases for any remaining week consumers
+    weekStart: startOfMonth(new Date(`${monthKey}-15T12:00:00`)),
+    shiftWeek: (delta: number) => shiftMonth(delta > 0 ? 1 : -1),
   };
 }

@@ -44,6 +44,10 @@ export async function fetchTides(start: Date, end: Date): Promise<TideExtreme[]>
   return cached.filter((t) => t.time >= start && t.time <= end);
 }
 
+export async function fetchAllTides(): Promise<TideExtreme[]> {
+  return (await fetchCached()) ?? [];
+}
+
 export function dateKeyInTz(date: Date): string {
   return new Intl.DateTimeFormat('en-CA', {
     timeZone: PATONS_ROCK.timezone,
@@ -81,4 +85,39 @@ export function lowTidesNear(
   return tides.filter(
     (t) => t.type === 'low' && t.time.getTime() >= from && t.time.getTime() <= to,
   );
+}
+
+/** Sinusoidal interpolation between bracketing extremes — visual tide level only. */
+export function estimateTideHeightAt(instant: Date, extremes: TideExtreme[]): number {
+  if (!extremes.length) return 0;
+  const sorted = [...extremes].sort((a, b) => a.time.getTime() - b.time.getTime());
+  const t = instant.getTime();
+
+  if (t <= sorted[0].time.getTime()) return sorted[0].height;
+  if (t >= sorted[sorted.length - 1].time.getTime()) return sorted[sorted.length - 1].height;
+
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const a = sorted[i];
+    const b = sorted[i + 1];
+    if (t >= a.time.getTime() && t <= b.time.getTime()) {
+      const span = b.time.getTime() - a.time.getTime();
+      if (span === 0) return a.height;
+      const phase = ((t - a.time.getTime()) / span) * Math.PI;
+      const mid = (a.height + b.height) / 2;
+      const amp = Math.abs(b.height - a.height) / 2;
+      const rising = (a.type === 'low' && b.type === 'high') || b.height > a.height;
+      return rising ? mid - amp * Math.cos(phase) : mid + amp * Math.cos(phase);
+    }
+  }
+
+  let nearest = sorted[0];
+  let best = Math.abs(sorted[0].time.getTime() - t);
+  for (const e of sorted) {
+    const d = Math.abs(e.time.getTime() - t);
+    if (d < best) {
+      best = d;
+      nearest = e;
+    }
+  }
+  return nearest.height;
 }

@@ -1,5 +1,6 @@
 import {
   PATONS_ROCK,
+  PLANNER_DAYS,
   SUNRISE_RIDE_WEEKDAYS,
   TIDE_AFTER_HIGH_HOURS,
   TIDE_BEFORE_HIGH_HOURS,
@@ -7,8 +8,14 @@ import {
 } from './location';
 import { type RideType, SUNRISE_RIDE } from './rides';
 import { sunTimesForDate } from './sun';
-import { dateKeyInTz, highTidesNear, lowTidesNear, type TideExtreme } from './tides';
-import { weatherLabel, type DayWeather } from './weather';
+import {
+  dateKeyInTz,
+  estimateTideHeightAt,
+  highTidesNear,
+  lowTidesNear,
+  type TideExtreme,
+} from './tides';
+import { weatherImpact, weatherLabel, type DayWeather } from './weather';
 
 export function formatClock(date: Date): string {
   return new Intl.DateTimeFormat('en-NZ', {
@@ -47,6 +54,18 @@ export interface SunriseDaySchedule {
   tidePhase: TidePhase;
   weatherLabel?: string;
   weatherAffectsStatus: boolean;
+  tideHeightAtRide?: number;
+  nearestHighHeight?: number;
+  tideBlocked?: boolean;
+  weatherBlocked?: boolean;
+  weatherCaution?: boolean;
+  weatherCode?: number;
+  hasScheduleData?: boolean;
+}
+
+export interface MonthGridCell {
+  date: string;
+  inMonth: boolean;
 }
 
 export interface ForbiddenZone {
@@ -104,6 +123,55 @@ export function formatWeekRange(weekStartKey: string): string {
     year: 'numeric',
   }).format(new Date(`${weekStartKey}T12:00:00`));
   return `${fmt(weekStartKey)} – ${fmt(endKey)} ${year}`;
+}
+
+export function startOfMonth(date: Date): string {
+  const key = dateKeyInTz(date);
+  return `${key.slice(0, 7)}-01`;
+}
+
+export function monthKeyFromDate(date: Date): string {
+  return dateKeyInTz(date).slice(0, 7);
+}
+
+export function shiftMonthKey(monthKey: string, delta: number): string {
+  const [y, m] = monthKey.split('-').map(Number);
+  const d = new Date(y, m - 1 + delta, 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
+export function formatMonthTitle(monthKey: string): string {
+  const [y, m] = monthKey.split('-').map(Number);
+  return new Intl.DateTimeFormat('en-NZ', {
+    timeZone: PATONS_ROCK.timezone,
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(y, m - 1, 1));
+}
+
+export function monthGridDates(monthKey: string): MonthGridCell[] {
+  const [y, m] = monthKey.split('-').map(Number);
+  const firstOfMonth = `${monthKey}-01`;
+  const wd = weekdayInTz(firstOfMonth);
+  const mondayOffset = wd === 0 ? -6 : 1 - wd;
+  const gridStart = addDays(firstOfMonth, mondayOffset);
+
+  const lastDay = new Date(y, m, 0).getDate();
+  const lastOfMonth = `${monthKey}-${String(lastDay).padStart(2, '0')}`;
+
+  const cells: MonthGridCell[] = [];
+  for (let i = 0; i < 42; i++) {
+    const date = addDays(gridStart, i);
+    cells.push({
+      date,
+      inMonth: date >= firstOfMonth && date <= lastOfMonth,
+    });
+  }
+  return cells;
+}
+
+export function dayOfMonth(dateKey: string): number {
+  return Number(dateKey.slice(8, 10));
 }
 
 export function forbiddenZoneForHigh(high: Date): ForbiddenZone {
@@ -184,35 +252,32 @@ function applyWeather(
   reasons: string[],
   status: ScheduleStatus,
   affectsStatus: boolean,
-): ScheduleStatus {
+): { status: ScheduleStatus; weatherBlocked: boolean; weatherCaution: boolean } {
   if (!affectsStatus) {
     reasons.push(`Forecast: ${weatherLabel(day.weatherCode)} (may change)`);
-    return status;
+    return { status, weatherBlocked: false, weatherCaution: false };
   }
 
-  let next = status;
+  const impact = weatherImpact(day, ride, status);
   if (day.windMaxKmh > ride.maxWindKmh) {
-    next = 'unavailable';
     reasons.push(`Wind ${Math.round(day.windMaxKmh)} km/h`);
   } else if (day.windMaxKmh > ride.maxWindKmh * 0.75) {
-    if (next !== 'unavailable') next = 'caution';
     reasons.push(`Breezy ${Math.round(day.windMaxKmh)} km/h`);
   }
-
   if (day.rainMm > ride.maxRainMm) {
-    next = 'unavailable';
     reasons.push(`${day.rainMm.toFixed(0)} mm rain`);
   } else if (day.rainMm > ride.maxRainMm * 0.5) {
-    if (next !== 'unavailable') next = 'caution';
     reasons.push(`Showers ${day.rainMm.toFixed(1)} mm`);
   }
-
   if (ride.minTempC != null && day.maxTempC < ride.minTempC) {
-    next = 'unavailable';
     reasons.push(`Cool ${Math.round(day.maxTempC)}°C`);
   }
 
-  return next;
+  return {
+    status: impact.status,
+    weatherBlocked: impact.blocked,
+    weatherCaution: impact.caution,
+  };
 }
 
 export function buildSunriseDaySchedule(
@@ -220,6 +285,7 @@ export function buildSunriseDaySchedule(
   forecast: DayWeather[],
   tides: TideExtreme[],
   ride: RideType = SUNRISE_RIDE,
+  allTides: TideExtreme[] = tides,
 ): SunriseDaySchedule {
   const weekday = weekdayInTz(dateKey);
   const isRideDay = ride.scheduleWeekdays
@@ -235,10 +301,18 @@ export function buildSunriseDaySchedule(
   let status: ScheduleStatus = 'rideable';
   let nearestHigh: Date | undefined;
   let nearestLow: Date | undefined;
+  let nearestHighHeight: number | undefined;
   let tidePhase: TidePhase = 'unknown';
+  let tideBlocked = false;
+  let weatherBlocked = false;
+  let weatherCaution = false;
+  let tideHeightAtRide: number | undefined;
 
+  const hasScheduleData =
+    daysFromToday(dateKey) >= 0 && daysFromToday(dateKey) < PLANNER_DAYS;
+
+  reasons.push(`Arrive by ${formatClock(rideStart)}`);
   reasons.push(`Sunrise ${formatClock(sun.sunrise)}`);
-  reasons.push(`Ride starts ${formatClock(rideStart)}`);
 
   if (!isRideDay) {
     status = 'unavailable';
@@ -248,11 +322,18 @@ export function buildSunriseDaySchedule(
   const dayWx = forecast.find((d) => d.date === dateKey);
   const weatherAffectsStatus = dayWx != null && daysFromToday(dateKey) <= WEATHER_HORIZON_DAYS;
   const wxLabel = dayWx ? weatherLabel(dayWx.weatherCode) : undefined;
+  const weatherCode = dayWx?.weatherCode;
 
-  if (ride.usesTides) {
+  if (ride.usesTides && hasScheduleData && allTides.length) {
+    tideHeightAtRide = estimateTideHeightAt(rideStart, allTides);
+  }
+
+  if (ride.usesTides && hasScheduleData) {
     const highs = highTidesNear(tides, rideStart, rideEnd);
     const lows = lowTidesNear(tides, rideStart, rideEnd);
-    nearestHigh = nearestHighTo(highs, rideStart)?.time;
+    const nearHigh = nearestHighTo(highs, rideStart);
+    nearestHigh = nearHigh?.time;
+    nearestHighHeight = nearHigh?.height;
     nearestLow = nearestTideTo(lows, rideStart)?.time;
     tidePhase = tidePhaseAt(rideStart, highs);
 
@@ -263,6 +344,7 @@ export function buildSunriseDaySchedule(
       const conflict = rideOverlapsForbiddenHighZone(rideStart, rideEnd, highs);
       if (conflict) {
         status = 'unavailable';
+        tideBlocked = true;
         reasons.push(tideReason(conflict, rideStart));
         tidePhase = 'forbidden';
       } else if (nearestHigh) {
@@ -272,10 +354,16 @@ export function buildSunriseDaySchedule(
         reasons.push(`Low tide ${formatClock(nearestLow)}`);
       }
     }
+  } else if (ride.usesTides && isRideDay && !hasScheduleData) {
+    if (status !== 'unavailable') status = 'caution';
+    reasons.push('Schedule available closer to the date');
   }
 
   if (dayWx) {
-    status = applyWeather(dayWx, ride, reasons, status, weatherAffectsStatus);
+    const wx = applyWeather(dayWx, ride, reasons, status, weatherAffectsStatus);
+    status = wx.status;
+    weatherBlocked = wx.weatherBlocked;
+    weatherCaution = wx.weatherCaution;
   } else if (daysFromToday(dateKey) > WEATHER_HORIZON_DAYS) {
     reasons.push('Weather checked closer to the date');
   }
@@ -294,6 +382,13 @@ export function buildSunriseDaySchedule(
     tidePhase,
     weatherLabel: wxLabel,
     weatherAffectsStatus,
+    tideHeightAtRide,
+    nearestHighHeight,
+    tideBlocked,
+    weatherBlocked,
+    weatherCaution,
+    weatherCode,
+    hasScheduleData,
   };
 }
 
@@ -302,10 +397,37 @@ export function buildSunriseWeekSchedule(
   forecast: DayWeather[],
   tides: TideExtreme[],
   ride: RideType = SUNRISE_RIDE,
+  allTides: TideExtreme[] = tides,
 ): SunriseDaySchedule[] {
   return weekDateKeys(weekStartKey).map((dateKey) =>
-    buildSunriseDaySchedule(dateKey, forecast, tides, ride),
+    buildSunriseDaySchedule(dateKey, forecast, tides, ride, allTides),
   );
+}
+
+export function buildSunriseMonthSchedule(
+  monthKey: string,
+  forecast: DayWeather[],
+  tides: TideExtreme[],
+  ride: RideType = SUNRISE_RIDE,
+  allTides: TideExtreme[] = tides,
+): Map<string, SunriseDaySchedule> {
+  const map = new Map<string, SunriseDaySchedule>();
+  for (const cell of monthGridDates(monthKey)) {
+    map.set(cell.date, buildSunriseDaySchedule(cell.date, forecast, tides, ride, allTides));
+  }
+  return map;
+}
+
+export function monthSummary(days: SunriseDaySchedule[], monthKey: string): string {
+  const inMonth = days.filter((d) => d.date.startsWith(monthKey));
+  const rideDays = inMonth.filter((d) => d.isRideDay && d.hasScheduleData);
+  const rideable = rideDays.filter((d) => d.status === 'rideable').length;
+  const caution = rideDays.filter((d) => d.status === 'caution').length;
+  const blocked = rideDays.filter((d) => d.status === 'unavailable').length;
+  const parts = [`${rideable} rideable`];
+  if (caution) parts.push(`${caution} check conditions`);
+  if (blocked) parts.push(`${blocked} unavailable`);
+  return `This month: ${parts.join(' · ')}`;
 }
 
 export function weekSummary(days: SunriseDaySchedule[]): string {
@@ -329,7 +451,7 @@ export function detailSummary(day: SunriseDaySchedule): string {
 
   const bits = [
     dateLabel,
-    `Ride starts ${formatClock(day.rideStart)}`,
+    `Arrive by ${formatClock(day.rideStart)}`,
     `Sunrise ${formatClock(day.sunrise)}`,
   ];
 

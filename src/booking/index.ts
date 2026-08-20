@@ -5,18 +5,32 @@ export {
   SUNRISE_RIDE_WEEKDAYS,
 } from './location';
 export { RIDE_TYPES, SUNRISE_RIDE, getRideType, type RideType } from './rides';
-export { fetchForecast, weatherLabel, type DayWeather } from './weather';
-export { fetchTides, dateKeyInTz, highTidesNear, lowTidesNear, type TideExtreme } from './tides';
+export { fetchForecast, weatherIcon, weatherLabel, type DayWeather } from './weather';
+export {
+  fetchAllTides,
+  fetchTides,
+  dateKeyInTz,
+  estimateTideHeightAt,
+  highTidesNear,
+  lowTidesNear,
+  type TideExtreme,
+} from './tides';
 export { sunTimesForDate } from './sun';
 export {
   buildSunriseDaySchedule,
+  buildSunriseMonthSchedule,
   buildSunriseWeekSchedule,
   detailSummary,
   formatClock,
   formatDayLabel,
+  formatMonthTitle,
   formatWeekRange,
+  monthGridDates,
+  monthSummary,
+  startOfMonth,
   startOfWeekMonday,
   weekSummary,
+  type MonthGridCell,
   type SunriseDaySchedule,
   type ScheduleStatus,
   type TidePhase,

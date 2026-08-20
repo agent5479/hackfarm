@@ -21,6 +21,57 @@ export function weatherLabel(code: number): string {
   return 'Mixed';
 }
 
+export function weatherIcon(code: number): string {
+  if (code === 0) return '☀';
+  if (code <= 3) return '⛅';
+  if (code <= 48) return '🌫';
+  if (code <= 57) return '🌦';
+  if (code <= 67) return '🌧';
+  if (code <= 77) return '❄';
+  if (code <= 82) return '🌦';
+  if (code <= 99) return '⛈';
+  return '🌤';
+}
+
+export interface WeatherImpact {
+  status: 'rideable' | 'caution' | 'unavailable';
+  blocked: boolean;
+  caution: boolean;
+}
+
+export function weatherImpact(
+  day: DayWeather,
+  ride: { maxWindKmh: number; maxRainMm: number; minTempC?: number },
+  priorStatus: 'rideable' | 'caution' | 'unavailable',
+): WeatherImpact {
+  let status = priorStatus;
+  let blocked = false;
+  let caution = false;
+
+  if (day.windMaxKmh > ride.maxWindKmh) {
+    status = 'unavailable';
+    blocked = true;
+  } else if (day.windMaxKmh > ride.maxWindKmh * 0.75) {
+    if (status !== 'unavailable') status = 'caution';
+    caution = true;
+  }
+
+  if (day.rainMm > ride.maxRainMm) {
+    status = 'unavailable';
+    blocked = true;
+  } else if (day.rainMm > ride.maxRainMm * 0.5) {
+    if (status !== 'unavailable') status = 'caution';
+    caution = true;
+  }
+
+  if (ride.minTempC != null && day.maxTempC < ride.minTempC) {
+    status = 'unavailable';
+    blocked = true;
+  }
+
+  return { status, blocked, caution };
+}
+
 export async function fetchForecast(): Promise<DayWeather[]> {
   const params = new URLSearchParams({
     latitude: String(PATONS_ROCK.lat),

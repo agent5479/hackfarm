@@ -30,7 +30,7 @@
 .sunrise-cal__range {
   font-weight: 600;
   color: var(--color-secondary);
-  font-size: 0.95rem;
+  font-size: 1.05rem;
 }
 
 .sunrise-cal__summary {
@@ -50,30 +50,87 @@
   color: #8a5a2b;
 }
 
+.sunrise-cal__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.sunrise-cal__weekday-head {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+  padding: 0.25rem 0;
+}
+
 .sunrise-cal__grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 0.5rem;
+  gap: 0.35rem;
+}
+
+.sunrise-cal__grid--month .sunrise-cal__day {
+  min-height: 168px;
 }
 
 @media (max-width: 900px) {
+  .sunrise-cal__grid--month .sunrise-cal__day {
+    min-height: 130px;
+  }
+
+  .sunrise-cal__weekday-head {
+    font-size: 0.62rem;
+  }
+
+  .day-cell__times {
+    font-size: 0.62rem;
+  }
+}
+
+@media (max-width: 520px) {
   .sunrise-cal__grid {
-    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+
+  .sunrise-cal__grid--month .sunrise-cal__day {
+    min-height: 108px;
+    padding: 0.35rem 0.25rem 0.45rem;
+  }
+
+  .sunrise-cal__date-num {
+    font-size: 0.75rem;
+  }
+
+  .day-cell__wave-wrap {
+    min-height: 36px;
+  }
+
+  .sunrise-cal__pill {
+    display: none;
   }
 }
 
 .sunrise-cal__day {
+  position: relative;
   border: 1px solid #e4dcc8;
-  border-radius: 10px;
+  border-radius: 8px;
   background: #fff;
-  padding: 0.65rem 0.55rem 0.75rem;
+  padding: 0.45rem 0.35rem 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.25rem;
   text-align: left;
   cursor: pointer;
   font-family: var(--font-body);
-  min-height: 140px;
+}
+
+.sunrise-cal__day--outside {
+  opacity: 0.35;
+  pointer-events: none;
+  background: #fafafa;
 }
 
 .sunrise-cal__day--ride {
@@ -81,8 +138,13 @@
 }
 
 .sunrise-cal__day--off {
-  opacity: 0.55;
+  min-height: 52px;
   cursor: default;
+  opacity: 0.7;
+}
+
+.sunrise-cal__day--off .sunrise-cal__date-num {
+  color: var(--color-text);
 }
 
 .sunrise-cal__day--disabled {
@@ -101,31 +163,27 @@
   border-left: 3px solid var(--color-orange);
 }
 
-.sunrise-cal__day--unavailable:not(.sunrise-cal__day--off) {
+.sunrise-cal__day--unavailable:not(.sunrise-cal__day--off),
+.sunrise-cal__day--tide-block:not(.sunrise-cal__day--off) {
   border-left: 3px solid var(--color-pink);
 }
 
-.sunrise-cal__weekday {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-text);
-}
-
-.sunrise-cal__date {
-  font-weight: 600;
-  font-size: 0.85rem;
+.sunrise-cal__date-num {
+  font-weight: 700;
+  font-size: 0.9rem;
   color: var(--color-secondary);
+  line-height: 1;
 }
 
 .sunrise-cal__pill {
   align-self: flex-start;
-  font-size: 0.68rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  padding: 0.15rem 0.45rem;
+  padding: 0.12rem 0.35rem;
   border-radius: 999px;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+  margin-top: auto;
 }
 
 .sunrise-cal__pill--rideable {
@@ -176,7 +234,7 @@
 }
 
 .sunrise-cal__legend {
-  margin: 0.5rem 0 0;
+  margin: 0.35rem 0 0;
   font-size: 0.75rem;
   color: #666;
 }
@@ -197,99 +255,116 @@
   outline-offset: 2px;
 }
 
-/* Day timeline */
-.day-timeline {
+/* Day cell — tide wave */
+.day-cell {
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  min-height: 52px;
+  gap: 0.2rem;
+  min-height: 0;
 }
 
-.day-timeline--off {
+.day-cell--pending {
+  flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
 }
 
-.day-timeline__off-label {
-  font-size: 0.72rem;
-  color: var(--color-text);
+.day-cell__pending {
+  margin: 0;
+  font-size: 0.65rem;
+  color: #888;
+  text-align: center;
+  line-height: 1.3;
 }
 
-.day-timeline__track {
+.day-cell__weather {
+  position: absolute;
+  top: -1.35rem;
+  right: 0;
+  z-index: 4;
+  width: 1.35rem;
+  height: 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.day-cell__weather--block {
+  background: rgba(255, 230, 230, 0.95);
+}
+
+.day-cell__wave-wrap {
   position: relative;
-  height: 36px;
-  background: linear-gradient(180deg, #1a1210 0%, #2c1810 35%, #e8a04c 70%, #ffe8c8 100%);
+  flex: 1;
+  min-height: 48px;
   border-radius: 6px;
   overflow: hidden;
 }
 
-.day-timeline__sky {
+.day-cell__wave {
+  width: 100%;
+  height: 100%;
+  min-height: 48px;
+  display: block;
+}
+
+.day-cell__tide-overlay {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 200, 120, 0.35));
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 107, 181, 0.72);
+  border-radius: 6px;
   pointer-events: none;
 }
 
-.day-timeline__forbidden {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  background: rgba(194, 110, 147, 0.45);
-}
-
-.day-timeline__ride {
-  position: absolute;
-  top: 8px;
-  bottom: 8px;
-  background: rgba(140, 195, 149, 0.85);
-  border-radius: 3px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  z-index: 2;
-}
-
-.day-timeline__sun {
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 0.85rem;
-  z-index: 3;
-  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.4));
-}
-
-.day-timeline__high {
-  position: absolute;
-  bottom: 2px;
-  transform: translateX(-50%);
-  font-size: 0.55rem;
+.day-cell__tide-overlay span {
   color: #fff;
-  z-index: 3;
-  opacity: 0.9;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
-.day-timeline__low {
-  position: absolute;
-  top: 2px;
-  transform: translateX(-50%);
-  font-size: 0.55rem;
-  color: rgba(255, 255, 255, 0.85);
-  z-index: 3;
-}
-
-.day-timeline__labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.65rem;
+.day-cell__times {
+  margin: 0;
+  font-size: 0.68rem;
+  line-height: 1.35;
   color: var(--color-text);
 }
 
+.day-cell__times p {
+  margin: 0;
+}
+
+.day-cell__label {
+  color: #666;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.day-cell__arrive strong {
+  color: var(--color-green);
+}
+
+.sunrise-cal__day--rideable .day-cell__arrive strong {
+  color: #2d6b35;
+}
+
 .ride-planner .sunrise-cal__grid {
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
 .ride-planner .sunrise-cal__day {
-  min-height: auto;
+  min-height: 168px;
 }
