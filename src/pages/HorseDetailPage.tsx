@@ -1,27 +1,12 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
 import scraped from '../content/scraped-content.json';
-import { decodeHtml, HORSE_SLUGS, withBase, type HorseSlug } from '../lib/constants';
+import { decodeHtml, HORSE_SLUGS, type HorseSlug } from '../lib/constants';
+import { horseImage } from '../lib/horse-images';
+import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
 import { JsonLd, breadcrumbJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { horseSeo } from '../seo/routes';
-
-const HORSE_IMAGES: Record<string, string> = {
-  donnie: '/images/uploads/2021/02/IMG_6067-scaled.jpg',
-  buddy: '/images/uploads/2021/02/IMG_1921.jpg',
-  safran: '/images/uploads/2022/04/Manuka.jpg',
-  manuka: '/images/uploads/2022/04/Manuka.jpg',
-  rusty: '/images/uploads/2021/02/IMG_7730.jpg',
-  mcduff: '/images/uploads/2021/02/IMG_6067-scaled.jpg',
-  redwing: '/images/uploads/2021/02/IMG_20200709_113754.jpg',
-  brunner: '/images/uploads/2021/02/IMG_4295-scaled.jpg',
-  ice: '/images/uploads/2021/02/IMG_20190120_122312-scaled.jpg',
-  leonard: '/images/uploads/2021/02/IMG_20190120_122837-scaled.jpg',
-  chloe: '/images/uploads/2021/02/IMG_20190120_121744_1-scaled.jpg',
-  arnie: '/images/uploads/2021/02/IMG_20190402_161433.jpg',
-  jasper: '/images/uploads/2021/02/IMG_20190328_082617.jpg',
-  'brown-acre': '/images/uploads/2021/02/20190818_124033-scaled.jpg',
-};
 
 export default function HorseDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -29,7 +14,7 @@ export default function HorseDetailPage() {
   const seo = horseSeo(slug || 'horse', horse?.title);
   usePageMeta({
     ...seo,
-    image: slug ? HORSE_IMAGES[slug] || seo.image : seo.image,
+    image: slug ? horseImage(slug) : seo.image,
   });
 
   if (!slug || !HORSE_SLUGS.includes(slug as HorseSlug) || !horse) {
@@ -49,9 +34,10 @@ export default function HorseDetailPage() {
       <section className="section section--cream">
         <div className="container two-col">
           <img
-            src={withBase(HORSE_IMAGES[slug] || '/images/uploads/2021/02/Sillouette-Vaulting.png')}
+            src={optimizedUrl(horseImage(slug), 'content')}
             alt={horse.title}
             style={{ borderRadius: 4 }}
+            decoding="async"
           />
           <div>
             {horse.h2s.map((h) => (
@@ -69,7 +55,12 @@ export default function HorseDetailPage() {
           <div className="horse-grid">
             {scraped.horses.filter((h) => h.slug !== slug).slice(0, 6).map((h) => (
               <Link key={h.slug} to={`/horse/${h.slug}/`} className="horse-card">
-                <img src={withBase(HORSE_IMAGES[h.slug] || '/images/uploads/2021/02/Sillouette-Vaulting.png')} alt={h.title} />
+                <img
+                  src={optimizedUrl(horseImage(h.slug), 'thumb')}
+                  alt={h.title}
+                  loading="lazy"
+                  decoding="async"
+                />
                 <h3>{h.title}</h3>
               </Link>
             ))}

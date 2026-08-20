@@ -1,5 +1,6 @@
 import scraped from '../content/scraped-content.json';
-import { decodeHtml, withBase } from '../lib/constants';
+import { decodeHtml } from '../lib/constants';
+import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
 import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
@@ -31,7 +32,13 @@ export default function AccommodationPage() {
       {SECTIONS.map((s, idx) => (
         <section key={s.id} id={s.id} className={`section ${idx % 2 === 0 ? 'section--white' : 'section--cream'}`}>
           <div className="container two-col">
-            <img src={withBase(s.img)} alt={s.title} style={{ borderRadius: 4 }} />
+            <img
+              src={optimizedUrl(s.img, 'content')}
+              alt={s.title}
+              style={{ borderRadius: 4 }}
+              loading="lazy"
+              decoding="async"
+            />
             <div>
               <h2>{s.title}</h2>
               {content.paragraphs.slice(idx * 4 + 3, idx * 4 + 7).map((p, i) => (

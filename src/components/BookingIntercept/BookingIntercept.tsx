@@ -2,7 +2,7 @@ import { OTHER_FAREHARBOR_RIDES, SUNRISE_TWILIGHT_RIDE } from '../../booking/far
 import { formatClock } from '../../booking/schedule';
 import type { SunriseDaySchedule } from '../../booking/schedule';
 import { openFareHarborBooking } from '../../lib/booking-events';
-import { withBase } from '../../lib/constants';
+import { optimizedUrl } from '../../lib/images';
 import SunriseRideCalendar from '../SunriseRideCalendar/SunriseRideCalendar';
 import './BookingIntercept.css';
 
@@ -44,8 +44,9 @@ export default function BookingIntercept() {
         <div className="booking-intercept__sunrise-media">
           <img
             className="booking-intercept__sunrise-image"
-            src={withBase(SUNRISE_TWILIGHT_RIDE.image)}
+            src={optimizedUrl(SUNRISE_TWILIGHT_RIDE.image, 'content')}
             alt={SUNRISE_TWILIGHT_RIDE.title}
+            decoding="async"
           />
         </div>
         <div className="booking-intercept__sunrise-body">
@@ -67,7 +68,13 @@ export default function BookingIntercept() {
         <div className="booking-intercept__grid">
           {OTHER_FAREHARBOR_RIDES.map((ride) => (
             <article key={ride.id} className="booking-intercept__card">
-              <img className="booking-intercept__card-image" src={withBase(ride.image)} alt={ride.title} />
+              <img
+                className="booking-intercept__card-image"
+                src={optimizedUrl(ride.image, 'thumb')}
+                alt={ride.title}
+                loading="lazy"
+                decoding="async"
+              />
               <div className="booking-intercept__card-body">
                 <h4>{ride.title}</h4>
                 <p className="booking-intercept__meta">{ride.meta}</p>

@@ -1,7 +1,9 @@
 import { CONTACT, SOCIAL } from '../lib/constants';
 import { PATONS_ROCK } from '../booking/location';
 import {
+  absoluteAssetUrl,
   absoluteUrl,
+  DEFAULT_OG_IMAGE,
   SITE_ALT_NAME,
   SITE_NAME,
 } from '../seo/site';
@@ -51,7 +53,7 @@ function buildDefaultGraph() {
         address,
         geo,
         sameAs,
-        image: absoluteUrl('images/uploads/2021/02/IMG_6067-scaled.jpg'),
+        image: absoluteAssetUrl(DEFAULT_OG_IMAGE),
         description:
           'Eco farmstay, animal-friendly campground, and holistic horse experiences near Paton\'s Rock, Golden Bay, New Zealand.',
       },

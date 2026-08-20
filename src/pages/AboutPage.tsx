@@ -1,5 +1,6 @@
 import scraped from '../content/scraped-content.json';
-import { decodeHtml, withBase } from '../lib/constants';
+import { decodeHtml } from '../lib/constants';
+import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
@@ -55,9 +56,11 @@ export default function AboutPage() {
           </div>
           <div>
             <img
-              src={withBase('/images/uploads/2021/02/IMG_20190120_122312-scaled.jpg')}
+              src={optimizedUrl('/images/uploads/2021/02/IMG_20190120_122312-scaled.jpg', 'content')}
               alt="Vaulting at Hack Farm"
               style={{ borderRadius: 4, width: '100%', height: 'auto', objectFit: 'cover' }}
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>

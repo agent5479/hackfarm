@@ -1,5 +1,6 @@
 import scraped from '../content/scraped-content.json';
-import { decodeHtml, withBase } from '../lib/constants';
+import { decodeHtml } from '../lib/constants';
+import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
@@ -21,7 +22,13 @@ export default function EventsPage() {
       </section>
       <section className="section section--white">
         <div className="container two-col">
-          <img src={withBase('/images/uploads/2021/03/VaultingHorseClubDay.jpg')} alt="Kids camp" style={{ borderRadius: 4 }} />
+          <img
+            src={optimizedUrl('/images/uploads/2021/03/VaultingHorseClubDay.jpg', 'content')}
+            alt="Kids camp"
+            style={{ borderRadius: 4 }}
+            loading="lazy"
+            decoding="async"
+          />
           <div>
             <h2>Vaulting Sessions</h2>
             {content.paragraphs.slice(10, 15).map((p, i) => (

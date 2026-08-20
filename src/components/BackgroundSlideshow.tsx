@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { withBase } from '../lib/constants';
+import { useEffect, useRef, useState } from 'react';
+import { optimizedUrl } from '../lib/images';
 
 interface BackgroundSlideshowProps {
   images: string[];
@@ -13,24 +13,42 @@ export default function BackgroundSlideshow({
   className = '',
 }: BackgroundSlideshowProps) {
   const [index, setIndex] = useState(0);
+  const [inView, setInView] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (images.length < 2) return;
+    const el = rootRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: '200px 0px', threshold: 0.01 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView || images.length < 2) return;
     const id = window.setInterval(() => {
       setIndex((i) => (i + 1) % images.length);
     }, intervalMs);
     return () => window.clearInterval(id);
-  }, [images.length, intervalMs]);
+  }, [images.length, intervalMs, inView]);
+
+  const nextIndex = images.length > 1 ? (index + 1) % images.length : index;
 
   return (
-    <div className={`photo-stratum ${className}`}>
-      {images.map((src, i) => (
-        <div
-          key={src}
-          className={`photo-stratum__slide${i === index ? ' photo-stratum__slide--active' : ''}`}
-          style={{ backgroundImage: `url(${withBase(src)})` }}
-        />
-      ))}
+    <div ref={rootRef} className={`photo-stratum ${className}`}>
+      {images.map((src, i) => {
+        const shouldLoad = inView && (i === index || i === nextIndex);
+        return (
+          <div
+            key={src}
+            className={`photo-stratum__slide${i === index ? ' photo-stratum__slide--active' : ''}`}
+            style={shouldLoad ? { backgroundImage: `url(${optimizedUrl(src, 'content')})` } : undefined}
+          />
+        );
+      })}
     </div>
   );
 }

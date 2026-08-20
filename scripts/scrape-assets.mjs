@@ -43,7 +43,6 @@ const BRAND_ASSETS = [
   '/wp-content/uploads/2021/03/Hack-Farm-Logo-White.png',
   '/wp-content/uploads/2021/03/Wooden-Header-small.jpg',
   '/wp-content/uploads/2021/02/Jumping-girl-v2.png',
-  '/wp-content/uploads/2021/02/Trails-Sillouette.png',
   '/wp-content/uploads/2021/03/Horsemanship-Sillouette.png',
   '/wp-content/uploads/2021/03/BYO-horse.png',
   '/wp-content/uploads/2021/02/Camping-Border-bottom-hackfarm.png',

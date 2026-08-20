@@ -1,5 +1,6 @@
 import scraped from '../content/scraped-content.json';
-import { decodeHtml, withBase } from '../lib/constants';
+import { decodeHtml } from '../lib/constants';
+import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
@@ -32,8 +33,10 @@ export default function VaultingPage() {
               return (
                 <img
                   key={num}
-                  src={withBase(`/images/uploads/2022/06/Hack-Vaulties${num}.jpg`)}
+                  src={optimizedUrl(`/images/uploads/2022/06/Hack-Vaulties${num}.jpg`, 'thumb')}
                   alt={`Hack Vaulties ${num}`}
+                  loading="lazy"
+                  decoding="async"
                   style={{ borderRadius: 4, width: '100%', height: 200, objectFit: 'cover' }}
                 />
               );

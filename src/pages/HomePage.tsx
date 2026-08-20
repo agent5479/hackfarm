@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import scraped from '../content/scraped-content.json';
-import { decodeHtml, withBase } from '../lib/constants';
+import { decodeHtml } from '../lib/constants';
+import { optimizedUrl } from '../lib/images';
 import BackgroundSlideshow from '../components/BackgroundSlideshow';
 import InstagramGrid from '../components/InstagramGrid';
 import { usePageMeta } from '../hooks/usePageTitle';
@@ -121,7 +122,7 @@ export default function HomePage() {
     <>
       <section
         className="home-hero"
-        style={{ backgroundImage: `url(${withBase('/images/uploads/2021/02/IMG_6067-scaled.jpg')})` }}
+        style={{ backgroundImage: `url(${optimizedUrl('/images/uploads/2021/02/IMG_6067-scaled.jpg', 'hero')})` }}
       >
         <HeroHeadline />
       </section>
@@ -138,7 +139,7 @@ export default function HomePage() {
           <div
             key={s.id}
             className="photo-tile"
-            style={{ backgroundImage: `url(${withBase(s.img)})` }}
+            style={{ backgroundImage: `url(${optimizedUrl(s.img, 'content')})` }}
           >
             <h2>{s.title}</h2>
             <p>{decodeHtml(content.paragraphs[i + 1] || '')}</p>
@@ -155,7 +156,7 @@ export default function HomePage() {
               <div
                 className="feature-stratum__backdrop"
                 style={{
-                  backgroundImage: `url(${withBase(f.backdrop.img)})`,
+                  backgroundImage: `url(${optimizedUrl(f.backdrop.img, 'content')})`,
                   backgroundSize: f.backdrop.size,
                   backgroundPosition: f.backdrop.pos,
                   opacity: f.backdrop.opacity,
