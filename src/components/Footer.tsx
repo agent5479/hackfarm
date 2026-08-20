@@ -14,15 +14,17 @@ const LINK_GROUPS = [
   {
     title: 'Short Rides',
     links: [
+      { label: 'Book a ride', to: '/holistic-horse-rides/#book-rides' },
       { label: 'The Hack Track', to: '/holistic-horse-rides/#short-rides' },
       { label: "Paton's Rock Beach Ride", to: '/holistic-horse-rides/#short-rides' },
-      { label: 'Sunset Ride', to: '/holistic-horse-rides/#short-rides' },
-      { label: 'Swimming with Horses', to: '/holistic-horse-rides/#short-rides' },
+      { label: 'Sunset Ride', to: '/holistic-horse-rides/#book-rides' },
+      { label: 'Swimming with Horses', to: '/holistic-horse-rides/#book-rides' },
     ],
   },
   {
     title: 'Full Day Rides',
     links: [
+      { label: 'Book a ride', to: '/holistic-horse-rides/#book-rides' },
       { label: 'The Rangi Ride', to: '/holistic-horse-rides/#full-day' },
       { label: 'Ale Trail - Mussel Inn', to: '/holistic-horse-rides/#full-day' },
       { label: 'Collingwood Explorer', to: '/holistic-horse-rides/#full-day' },

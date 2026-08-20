@@ -13,12 +13,13 @@ import DayTimeline from './DayTimeline';
 import WeekSummary from './WeekSummary';
 import './SunriseRideCalendar.css';
 
-type CalendarMode = 'browse' | 'book';
+type CalendarMode = 'browse' | 'book' | 'intercept';
 
 interface SunriseRideCalendarProps {
   mode?: CalendarMode;
   onSelectDay?: (day: SunriseDaySchedule) => void;
   onContinue?: (day: SunriseDaySchedule) => void;
+  onBookDay?: (day: SunriseDaySchedule) => void;
 }
 
 const STATUS_LABEL: Record<SunriseDaySchedule['status'], string> = {
@@ -33,6 +34,7 @@ export default function SunriseRideCalendar({
   mode = 'browse',
   onSelectDay,
   onContinue,
+  onBookDay,
 }: SunriseRideCalendarProps) {
   const { weekStart, shiftWeek, forecast, tides, loading, error, tideNote } = useSunriseSchedule();
   const [selected, setSelected] = useState<string | null>(null);
@@ -45,14 +47,17 @@ export default function SunriseRideCalendar({
   const selectedDay = days.find((d) => d.date === selected);
 
   const pickDay = (day: SunriseDaySchedule) => {
-    if (mode === 'book' && day.status === 'unavailable') return;
-    if (mode === 'book' && !day.isRideDay) return;
+    if ((mode === 'book' || mode === 'intercept') && day.status === 'unavailable') return;
+    if ((mode === 'book' || mode === 'intercept') && !day.isRideDay) return;
     setSelected(day.date);
     onSelectDay?.(day);
+    if (mode === 'intercept' && day.isRideDay && day.status !== 'unavailable') {
+      onBookDay?.(day);
+    }
   };
 
   return (
-    <div className="sunrise-cal">
+    <div className={`sunrise-cal${mode === 'intercept' ? ' sunrise-cal--intercept' : ''}`}>
       <div className="sunrise-cal__nav">
         <button type="button" className="sunrise-cal__nav-btn" onClick={() => shiftWeek(-1)}>
           ← Previous week
@@ -75,6 +80,7 @@ export default function SunriseRideCalendar({
             mode === 'browse' ||
             (day.isRideDay && day.status !== 'unavailable');
           const isSelected = selected === day.date;
+          const bookable = mode === 'intercept' && selectable && day.isRideDay;
 
           return (
             <button
@@ -86,6 +92,7 @@ export default function SunriseRideCalendar({
                 `sunrise-cal__day--${day.status}`,
                 isSelected ? 'sunrise-cal__day--selected' : '',
                 !selectable ? 'sunrise-cal__day--disabled' : '',
+                bookable ? 'sunrise-cal__day--bookable' : '',
               ]
                 .filter(Boolean)
                 .join(' ')}
@@ -112,6 +119,9 @@ export default function SunriseRideCalendar({
               <li key={r}>{r}</li>
             ))}
           </ul>
+          {mode === 'intercept' && selectedDay.isRideDay && selectedDay.status !== 'unavailable' && (
+            <p className="sunrise-cal__book-hint">Click this day again or use FareHarbor to complete booking for this date.</p>
+          )}
           {mode === 'book' && selectedDay.status !== 'unavailable' && (
             <button
               type="button"
@@ -127,7 +137,13 @@ export default function SunriseRideCalendar({
       <p className="sunrise-cal__footnote">
         Sunrise rides run Wed, Fri & Sun · start 1 hour before sunrise · beach access needs 3h+ before high tide or 2h+ after.
         {mode === 'browse' && ' Weather affects suitability within the next 7 days only.'}
+        {mode === 'intercept' && ' Click a rideable day to open booking for the Sunrise/Sunset Twilight Ride.'}
       </p>
+      {mode === 'intercept' && (
+        <p className="sunrise-cal__legend">
+          ☀ sunrise · ▲ high tide · ▼ low tide · red bar = unsafe tide window · green = rideable
+        </p>
+      )}
     </div>
   );
 }

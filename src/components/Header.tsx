@@ -17,6 +17,7 @@ const NAV = [
     label: 'Ride',
     to: '/holistic-horse-rides/',
     children: [
+      { label: 'Book a ride', to: '/holistic-horse-rides/#book-rides' },
       { label: 'Short Rides', to: '/holistic-horse-rides/#short-rides' },
       { label: 'Full Day Rides', to: '/holistic-horse-rides/#full-day' },
       { label: 'Multiday Experiences', to: '/holistic-horse-rides/#multi-day' },

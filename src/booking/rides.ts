@@ -26,6 +26,7 @@ export const RIDE_TYPES: RideType[] = [
     maxRainMm: 8,
     startOffsetMin: -60,
     scheduleWeekdays: [0, 3, 5],
+    fareharborItemId: '294945',
     hint: 'Wed, Fri & Sun · starts an hour before sunrise · tide must clear high water.',
   },
   {

@@ -10,7 +10,7 @@ const content = scraped.pages.home;
 
 const TILES = [
   { id: 'stay', title: 'Stay', img: '/images/uploads/2021/02/20210221_125542-copy.jpg', link: '/accommodation/', btn: 'View Accommodation', color: 'btn--pink' },
-  { id: 'ride', title: 'Ride', img: '/images/uploads/2021/03/127142963_3918021201543032_3894975841806055644_n.jpg', link: '/holistic-horse-rides/', btn: 'View Rides', color: 'btn--green' },
+  { id: 'ride', title: 'Ride', img: '/images/uploads/2021/03/127142963_3918021201543032_3894975841806055644_n.jpg', link: '/holistic-horse-rides/#book-rides', btn: 'Book a Ride', color: 'btn--green' },
   { id: 'learn', title: 'Learn', img: '/images/uploads/2021/03/107601229_1530595257120739_3780438784627968956_o-1.jpg', link: '/learning-experiences/', btn: 'View Lessons', color: 'btn--orange' },
 ];
 
@@ -24,8 +24,8 @@ const FEATURES = [
       '/images/uploads/2021/02/IMG_1921.jpg',
     ],
     imageSide: 'left' as const,
-    link: '/holistic-horse-rides/',
-    btn: 'Learn More',
+    link: '/holistic-horse-rides/#book-rides',
+    btn: 'Book a ride',
     paragraphs: [5, 6],
     backdrop: {
       img: '/images/uploads/2021/04/Horses-trekking-One-Color.jpg',

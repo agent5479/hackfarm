@@ -1,21 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { BOOKING, fareHarborRideUrl } from '../lib/constants';
-import { OPEN_RIDE_BOOKING_EVENT } from '../lib/booking-events';
-import RidePlanner from '../booking/RidePlanner';
+import {
+  OPEN_FAREHARBOR_BOOKING_EVENT,
+  OPEN_RIDE_BOOKING_EVENT,
+  type FareHarborBookingDetail,
+} from '../lib/booking-events';
 import './BookCtas.css';
 
 type BookingKind = 'ride' | 'stay';
-type RideStep = 'planner' | 'fareharbor';
 
 const LABELS: Record<BookingKind, string> = {
   ride: 'Book a Ride',
   stay: 'Book your Stay',
 };
 
+const RIDES_BOOKING_PATH = '/holistic-horse-rides/#book-rides';
+
+function scrollToBookRides() {
+  const el = document.getElementById('book-rides');
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
 export default function BookCtas() {
+  const navigate = useNavigate();
+  const { pathname, hash } = useLocation();
   const [open, setOpen] = useState<BookingKind | null>(null);
-  const [rideStep, setRideStep] = useState<RideStep>('planner');
   const [rideSrc, setRideSrc] = useState(BOOKING.ride);
+  const [rideTitle, setRideTitle] = useState<string | undefined>();
 
   useEffect(() => {
     if (!open) return;
@@ -31,27 +45,49 @@ export default function BookCtas() {
     };
   }, [open]);
 
-  useEffect(() => {
-    const openRide = () => openKind('ride');
-    window.addEventListener(OPEN_RIDE_BOOKING_EVENT, openRide);
-    return () => window.removeEventListener(OPEN_RIDE_BOOKING_EVENT, openRide);
+  const goToRideBooking = useCallback(() => {
+    const onRidesPage = pathname.replace(/\/$/, '') === '/holistic-horse-rides';
+    if (onRidesPage && hash === '#book-rides') {
+      scrollToBookRides();
+      return;
+    }
+    navigate(RIDES_BOOKING_PATH);
+  }, [hash, navigate, pathname]);
+
+  const openFareHarbor = useCallback((detail: FareHarborBookingDetail = {}) => {
+    setRideSrc(fareHarborRideUrl(detail.itemId, detail.date, detail.rideStart));
+    setRideTitle(detail.title);
+    setOpen('ride');
   }, []);
 
-  const openKind = (kind: BookingKind) => {
-    setRideStep('planner');
-    setRideSrc(BOOKING.ride);
-    setOpen(kind);
-  };
+  useEffect(() => {
+    const onRideBooking = () => goToRideBooking();
+    const onFareHarbor = (e: Event) => {
+      openFareHarbor((e as CustomEvent<FareHarborBookingDetail>).detail ?? {});
+    };
+    window.addEventListener(OPEN_RIDE_BOOKING_EVENT, onRideBooking);
+    window.addEventListener(OPEN_FAREHARBOR_BOOKING_EVENT, onFareHarbor);
+    return () => {
+      window.removeEventListener(OPEN_RIDE_BOOKING_EVENT, onRideBooking);
+      window.removeEventListener(OPEN_FAREHARBOR_BOOKING_EVENT, onFareHarbor);
+    };
+  }, [goToRideBooking, openFareHarbor]);
 
-  const title = open === 'ride' && rideStep === 'planner' ? 'Sunrise ride — pick a day' : open ? LABELS[open] : '';
+  useEffect(() => {
+    if (hash === '#book-rides' && pathname.replace(/\/$/, '') === '/holistic-horse-rides') {
+      requestAnimationFrame(scrollToBookRides);
+    }
+  }, [hash, pathname]);
+
+  const title = open === 'ride' ? rideTitle ?? LABELS.ride : open ? LABELS[open] : '';
 
   return (
     <>
       <div className="book-ctas">
-        <button type="button" className="book-ctas__ride" onClick={() => openKind('ride')}>
+        <button type="button" className="book-ctas__ride" onClick={goToRideBooking}>
           Book a Ride
         </button>
-        <button type="button" className="book-ctas__stay" onClick={() => openKind('stay')}>
+        <button type="button" className="book-ctas__stay" onClick={() => setOpen('stay')}>
           Book your Stay
         </button>
       </div>
@@ -62,32 +98,20 @@ export default function BookCtas() {
           <div className="book-card__panel">
             <div className="book-card__bar">
               <h2>{title}</h2>
-              {open === 'ride' && rideStep === 'fareharbor' && (
-                <button type="button" className="book-card__back" onClick={() => setRideStep('planner')}>
-                  Back
-                </button>
-              )}
               <button type="button" className="book-card__close" onClick={() => setOpen(null)} aria-label="Close">
                 ×
               </button>
             </div>
-            {open === 'ride' && rideStep === 'planner' ? (
-              <RidePlanner
-                onContinue={({ itemId, date, rideStart }) => {
-                  setRideSrc(fareHarborRideUrl(itemId, date, rideStart));
-                  setRideStep('fareharbor');
-                }}
-              />
-            ) : (
-              <iframe
-                title={LABELS[open]}
-                src={open === 'ride' ? rideSrc : BOOKING.stay}
-                className="book-card__frame"
-              />
-            )}
+            <iframe
+              title={title}
+              src={open === 'ride' ? rideSrc : BOOKING.stay}
+              className="book-card__frame"
+            />
           </div>
         </div>
       )}
     </>
   );
 }
+
+export { RIDES_BOOKING_PATH, scrollToBookRides };

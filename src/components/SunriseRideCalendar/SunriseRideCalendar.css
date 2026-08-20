@@ -175,6 +175,28 @@
   line-height: 1.45;
 }
 
+.sunrise-cal__legend {
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.sunrise-cal__book-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: var(--color-green);
+  font-weight: 500;
+}
+
+.sunrise-cal--intercept .sunrise-cal__day--bookable {
+  cursor: pointer;
+}
+
+.sunrise-cal--intercept .sunrise-cal__day--bookable:hover {
+  outline: 2px solid var(--color-green);
+  outline-offset: 2px;
+}
+
 /* Day timeline */
 .day-timeline {
   flex: 1;
