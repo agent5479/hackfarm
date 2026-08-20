@@ -1,11 +1,29 @@
-export { PATONS_ROCK, PLANNER_DAYS } from './location';
-export { RIDE_TYPES, getRideType, type RideType } from './rides';
+export {
+  PATONS_ROCK,
+  PLANNER_DAYS,
+  WEATHER_HORIZON_DAYS,
+  SUNRISE_RIDE_WEEKDAYS,
+} from './location';
+export { RIDE_TYPES, SUNRISE_RIDE, getRideType, type RideType } from './rides';
 export { fetchForecast, weatherLabel, type DayWeather } from './weather';
-export { fetchTides, type TideExtreme } from './tides';
+export { fetchTides, dateKeyInTz, highTidesNear, type TideExtreme } from './tides';
 export { sunTimesForDate } from './sun';
 export {
-  buildWindows,
+  buildSunriseDaySchedule,
+  buildSunriseWeekSchedule,
+  detailSummary,
   formatClock,
+  formatDayLabel,
+  formatWeekRange,
+  startOfWeekMonday,
+  weekSummary,
+  type SunriseDaySchedule,
+  type ScheduleStatus,
+  type TidePhase,
+} from './schedule';
+export { useSunriseSchedule } from './useSunriseSchedule';
+export {
+  buildWindows,
   formatDay,
   type RideWindow,
   type WindowStatus,

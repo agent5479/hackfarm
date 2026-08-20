@@ -68,14 +68,28 @@ export async function fetchTides(start: Date, end: Date): Promise<TideExtreme[]>
   return [];
 }
 
+export function dateKeyInTz(date: Date): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: PATONS_ROCK.timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date);
+}
+
 export function tidesOnDay(tides: TideExtreme[], dateKey: string): TideExtreme[] {
-  return tides.filter((t) => {
-    const nz = new Intl.DateTimeFormat('en-CA', {
-      timeZone: PATONS_ROCK.timezone,
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    }).format(t.time);
-    return nz === dateKey;
-  });
+  return tides.filter((t) => dateKeyInTz(t.time) === dateKey);
+}
+
+export function highTidesNear(
+  tides: TideExtreme[],
+  windowStart: Date,
+  windowEnd: Date,
+): TideExtreme[] {
+  const pad = 36 * 3_600_000;
+  const from = windowStart.getTime() - pad;
+  const to = windowEnd.getTime() + pad;
+  return tides.filter(
+    (t) => t.type === 'high' && t.time.getTime() >= from && t.time.getTime() <= to,
+  );
 }

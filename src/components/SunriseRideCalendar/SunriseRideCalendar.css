@@ -1,0 +1,264 @@
+.sunrise-cal {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sunrise-cal__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.sunrise-cal__nav-btn {
+  border: 1px solid #d4cbb5;
+  background: #fff;
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--color-secondary);
+}
+
+.sunrise-cal__nav-btn:hover {
+  border-color: var(--color-green);
+}
+
+.sunrise-cal__range {
+  font-weight: 600;
+  color: var(--color-secondary);
+  font-size: 0.95rem;
+}
+
+.sunrise-cal__summary {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-secondary);
+  font-weight: 500;
+}
+
+.sunrise-cal__status {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--color-text);
+}
+
+.sunrise-cal__status--warn {
+  color: #8a5a2b;
+}
+
+.sunrise-cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+@media (max-width: 900px) {
+  .sunrise-cal__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sunrise-cal__day {
+  border: 1px solid #e4dcc8;
+  border-radius: 10px;
+  background: #fff;
+  padding: 0.65rem 0.55rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-body);
+  min-height: 140px;
+}
+
+.sunrise-cal__day--ride {
+  border-top: 3px solid var(--color-green);
+}
+
+.sunrise-cal__day--off {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.sunrise-cal__day--disabled {
+  cursor: not-allowed;
+}
+
+.sunrise-cal__day--selected {
+  box-shadow: 0 0 0 2px var(--color-green);
+}
+
+.sunrise-cal__day--rideable:not(.sunrise-cal__day--off) {
+  border-left: 3px solid var(--color-green);
+}
+
+.sunrise-cal__day--caution:not(.sunrise-cal__day--off) {
+  border-left: 3px solid var(--color-orange);
+}
+
+.sunrise-cal__day--unavailable:not(.sunrise-cal__day--off) {
+  border-left: 3px solid var(--color-pink);
+}
+
+.sunrise-cal__weekday {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+}
+
+.sunrise-cal__date {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-secondary);
+}
+
+.sunrise-cal__pill {
+  align-self: flex-start;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.sunrise-cal__pill--rideable {
+  background: rgba(140, 195, 149, 0.25);
+  color: #3d6b45;
+}
+
+.sunrise-cal__pill--caution {
+  background: rgba(239, 156, 103, 0.25);
+  color: #8a4a1a;
+}
+
+.sunrise-cal__pill--unavailable {
+  background: rgba(194, 110, 147, 0.2);
+  color: #7a3a55;
+}
+
+.sunrise-cal__detail {
+  border: 1px solid #e4dcc8;
+  border-radius: 10px;
+  background: var(--color-cream);
+  padding: 1rem 1.1rem;
+}
+
+.sunrise-cal__detail-text {
+  margin: 0 0 0.5rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+  font-size: 0.92rem;
+}
+
+.sunrise-cal__detail-reasons {
+  margin: 0 0 0.75rem;
+  padding-left: 1.1rem;
+  font-size: 0.82rem;
+  color: var(--color-text);
+}
+
+.sunrise-cal__continue {
+  margin-top: 0.25rem;
+}
+
+.sunrise-cal__footnote {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--color-text);
+  line-height: 1.45;
+}
+
+/* Day timeline */
+.day-timeline {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-height: 52px;
+}
+
+.day-timeline--off {
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+}
+
+.day-timeline__off-label {
+  font-size: 0.72rem;
+  color: var(--color-text);
+}
+
+.day-timeline__track {
+  position: relative;
+  height: 36px;
+  background: linear-gradient(180deg, #1a1210 0%, #2c1810 35%, #e8a04c 70%, #ffe8c8 100%);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.day-timeline__sky {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 200, 120, 0.35));
+  pointer-events: none;
+}
+
+.day-timeline__forbidden {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgba(194, 110, 147, 0.45);
+}
+
+.day-timeline__ride {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  background: rgba(140, 195, 149, 0.85);
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  z-index: 2;
+}
+
+.day-timeline__sun {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.85rem;
+  z-index: 3;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.4));
+}
+
+.day-timeline__high {
+  position: absolute;
+  bottom: 2px;
+  transform: translateX(-50%);
+  font-size: 0.55rem;
+  color: #fff;
+  z-index: 3;
+  opacity: 0.9;
+}
+
+.day-timeline__labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--color-text);
+}
+
+.ride-planner .sunrise-cal__grid {
+  grid-template-columns: 1fr;
+}
+
+.ride-planner .sunrise-cal__day {
+  min-height: auto;
+}

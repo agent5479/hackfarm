@@ -1,7 +1,9 @@
 import scraped from '../content/scraped-content.json';
 import { decodeHtml, withBase } from '../lib/constants';
+import { openRideBooking } from '../lib/booking-events';
 import PageHero from '../components/PageHero';
 import ContactForm from '../components/ContactForm';
+import SunriseRideCalendar from '../components/SunriseRideCalendar/SunriseRideCalendar';
 import { usePageTitle } from '../hooks/usePageTitle';
 
 const content = scraped.pages.rides;
@@ -40,8 +42,28 @@ export default function RidesPage() {
         </div>
       </section>
 
+      <section id="sunrise-rides" className="section section--white">
+        <div className="container">
+          <h2>Sunrise Beach Rides at Paton&apos;s Rock</h2>
+          <p>
+            Our signature east-coast experience — golden hour on the beach before the day begins.
+            Sunrise rides run <strong>Wednesday, Friday & Sunday</strong>, starting one hour before sunrise,
+            when the tide allows safe access (at least 3 hours before high tide or 2 hours after).
+          </p>
+          <p className="sunrise-cal__owner-note">
+            This calendar is the shared schedule for guests and the farm — sunrise, tide state, and rideability at a glance.
+          </p>
+          <SunriseRideCalendar mode="browse" />
+          <p style={{ marginTop: '1.25rem' }}>
+            <button type="button" className="btn btn--green" onClick={openRideBooking}>
+              Book a sunrise ride
+            </button>
+          </p>
+        </div>
+      </section>
+
       {RIDE_SECTIONS.map((section, sIdx) => (
-        <section key={section.id} id={section.id} className={`section ${sIdx % 2 === 0 ? 'section--white' : 'section--cream'}`}>
+        <section key={section.id} id={section.id} className={`section ${sIdx % 2 === 0 ? 'section--cream' : 'section--white'}`}>
           <div className="container">
             <h2>{section.title}</h2>
             <div className="card-grid">
@@ -66,7 +88,10 @@ export default function RidesPage() {
       <section className="section section--white">
         <div className="container">
           <h2>Booking Request Form</h2>
-          <p>Please note that all our rides are subject to tide times and weather. Fill in the details below and we will get back to you with the perfect time for your horse riding experience.</p>
+          <p>
+            Use the sunrise calendar above for tide-aware Wed/Fri/Sun slots, or book online.
+            All beach rides depend on tide and weather — we will confirm the perfect time for your experience.
+          </p>
           <ContactForm type="ride-request" />
         </div>
       </section>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BOOKING, fareHarborRideUrl } from '../lib/constants';
+import { OPEN_RIDE_BOOKING_EVENT } from '../lib/booking-events';
 import RidePlanner from '../booking/RidePlanner';
 import './BookCtas.css';
 
@@ -30,13 +31,19 @@ export default function BookCtas() {
     };
   }, [open]);
 
+  useEffect(() => {
+    const openRide = () => openKind('ride');
+    window.addEventListener(OPEN_RIDE_BOOKING_EVENT, openRide);
+    return () => window.removeEventListener(OPEN_RIDE_BOOKING_EVENT, openRide);
+  }, []);
+
   const openKind = (kind: BookingKind) => {
     setRideStep('planner');
     setRideSrc(BOOKING.ride);
     setOpen(kind);
   };
 
-  const title = open === 'ride' && rideStep === 'planner' ? 'When looks good to ride?' : open ? LABELS[open] : '';
+  const title = open === 'ride' && rideStep === 'planner' ? 'Sunrise ride — pick a day' : open ? LABELS[open] : '';
 
   return (
     <>
@@ -66,8 +73,8 @@ export default function BookCtas() {
             </div>
             {open === 'ride' && rideStep === 'planner' ? (
               <RidePlanner
-                onContinue={({ itemId, date }) => {
-                  setRideSrc(fareHarborRideUrl(itemId, date));
+                onContinue={({ itemId, date, rideStart }) => {
+                  setRideSrc(fareHarborRideUrl(itemId, date, rideStart));
                   setRideStep('fareharbor');
                 }}
               />
