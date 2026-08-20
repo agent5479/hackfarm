@@ -1,12 +1,13 @@
 import scraped from '../content/scraped-content.json';
 import { decodeHtml, BOOKING } from '../lib/constants';
 import PageHero from '../components/PageHero';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { usePageMeta } from '../hooks/usePageTitle';
+import { getPageSeo } from '../seo/routes';
 
 const content = scraped.pages.gifts;
 
 export default function GiftsPage() {
-  usePageTitle('Horse Riding Holiday Gift Vouchers');
+  usePageMeta(getPageSeo('/horse-riding-holiday-gift-vouchers/')!);
 
   return (
     <>

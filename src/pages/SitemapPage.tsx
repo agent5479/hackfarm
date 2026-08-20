@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import PageHero from '../components/PageHero';
 import { HORSE_SLUGS, withBase } from '../lib/constants';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { usePageMeta } from '../hooks/usePageTitle';
+import { getPageSeo } from '../seo/routes';
 
 const PAGES = [
   { label: 'Home', to: '/' },
+  { label: 'About', to: '/about/' },
   { label: 'Accommodation', to: '/accommodation/' },
   { label: 'Holistic Horse Rides', to: '/holistic-horse-rides/' },
   { label: 'Hack Farm Trails', to: '/hack-farm-trails/' },
@@ -20,7 +22,7 @@ const PAGES = [
 ];
 
 export default function SitemapPage() {
-  usePageTitle('Sitemap');
+  usePageMeta(getPageSeo('/sitemap/')!);
 
   return (
     <>

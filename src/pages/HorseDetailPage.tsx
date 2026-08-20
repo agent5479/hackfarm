@@ -2,7 +2,9 @@ import { useParams, Link, Navigate } from 'react-router-dom';
 import scraped from '../content/scraped-content.json';
 import { decodeHtml, HORSE_SLUGS, withBase, type HorseSlug } from '../lib/constants';
 import PageHero from '../components/PageHero';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { JsonLd, breadcrumbJsonLd } from '../components/JsonLd';
+import { usePageMeta } from '../hooks/usePageTitle';
+import { horseSeo } from '../seo/routes';
 
 const HORSE_IMAGES: Record<string, string> = {
   donnie: '/images/uploads/2021/02/IMG_6067-scaled.jpg',
@@ -24,7 +26,11 @@ const HORSE_IMAGES: Record<string, string> = {
 export default function HorseDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const horse = scraped.horses.find((h) => h.slug === slug);
-  usePageTitle(horse?.title || 'Horse');
+  const seo = horseSeo(slug || 'horse', horse?.title);
+  usePageMeta({
+    ...seo,
+    image: slug ? HORSE_IMAGES[slug] || seo.image : seo.image,
+  });
 
   if (!slug || !HORSE_SLUGS.includes(slug as HorseSlug) || !horse) {
     return <Navigate to="/our-horses/" replace />;
@@ -32,6 +38,13 @@ export default function HorseDetailPage() {
 
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: 'Home', path: '/' },
+          { name: 'Our Horses', path: '/our-horses/' },
+          { name: horse.title, path: seo.path },
+        ])}
+      />
       <PageHero title={horse.title} />
       <section className="section section--cream">
         <div className="container two-col">

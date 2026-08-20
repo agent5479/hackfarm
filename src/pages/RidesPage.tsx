@@ -5,7 +5,9 @@ import { decodeHtml } from '../lib/constants';
 import PageHero from '../components/PageHero';
 import ContactForm from '../components/ContactForm';
 import BookingIntercept from '../components/BookingIntercept/BookingIntercept';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { usePageMeta } from '../hooks/usePageTitle';
+import { getPageSeo } from '../seo/routes';
+import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 
 const content = scraped.pages.rides;
 
@@ -21,7 +23,8 @@ const RIDE_SECTIONS = [
 ];
 
 export default function RidesPage() {
-  usePageTitle('Holistic Horseback Experiences');
+  const seo = getPageSeo('/holistic-horse-rides/')!;
+  usePageMeta(seo);
   const { hash } = useLocation();
 
   useEffect(() => {
@@ -32,6 +35,13 @@ export default function RidesPage() {
 
   return (
     <>
+      <JsonLd
+        data={serviceJsonLd(
+          'Holistic Horse Rides',
+          seo.description,
+          '/holistic-horse-rides/',
+        )}
+      />
       <PageHero
         title="Holistic Horseback Experiences"
         subtitle="Learn while you ride on stunning coastal trails"

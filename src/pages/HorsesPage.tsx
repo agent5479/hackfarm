@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import scraped from '../content/scraped-content.json';
 import PageHero from '../components/PageHero';
 import { withBase } from '../lib/constants';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { usePageMeta } from '../hooks/usePageTitle';
+import { getPageSeo } from '../seo/routes';
 
 const HORSE_IMAGES: Record<string, string> = {
   donnie: '/images/uploads/2021/02/IMG_6067-scaled.jpg',
@@ -22,7 +23,7 @@ const HORSE_IMAGES: Record<string, string> = {
 };
 
 export default function HorsesPage() {
-  usePageTitle('Our Horses');
+  usePageMeta(getPageSeo('/our-horses/')!);
 
   return (
     <>

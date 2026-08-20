@@ -1,0 +1,48 @@
+import { HORSE_SLUGS } from '../lib/constants';
+
+/** Canonical site origin without trailing slash (e.g. https://agent5479.github.io). */
+export function getSiteOrigin(): string {
+  const raw =
+    (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SITE_ORIGIN) ||
+    'https://agent5479.github.io';
+  return String(raw).replace(/\/$/, '');
+}
+
+/** Vite base path with leading and trailing slash (e.g. /hackfarm/ or /). */
+export function getBasePath(): string {
+  const raw =
+    (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/hackfarm/';
+  let base = String(raw).trim() || '/hackfarm/';
+  if (!base.startsWith('/')) base = `/${base}`;
+  if (!base.endsWith('/')) base = `${base}/`;
+  return base;
+}
+
+/** Absolute URL for a site path like `/about/` or `about/`. */
+export function absoluteUrl(path: string): string {
+  const origin = getSiteOrigin();
+  const base = getBasePath();
+  const normalized = path.replace(/^\//, '');
+  if (!normalized) return `${origin}${base}`;
+  return `${origin}${base}${normalized}`;
+}
+
+/** Absolute URL for an asset path under the site base. */
+export function absoluteAssetUrl(assetPath: string): string {
+  if (/^https?:\/\//i.test(assetPath)) return assetPath;
+  return absoluteUrl(assetPath.replace(/^\//, ''));
+}
+
+export const SITE_NAME = 'Hack n Stay Golden Bay';
+export const SITE_ALT_NAME = 'Hack Farm';
+export const DEFAULT_DESCRIPTION =
+  'Hack n Stay Golden Bay - Beach Horse Rides, Campground and Farmstay accommodation in Golden Bay, New Zealand.';
+export const DEFAULT_OG_IMAGE = '/images/uploads/2021/02/IMG_6067-scaled.jpg';
+
+export function horsePath(slug: string): string {
+  return `/horse/${slug}/`;
+}
+
+export function allHorsePaths(): string[] {
+  return HORSE_SLUGS.map((slug) => horsePath(slug));
+}

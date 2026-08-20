@@ -1,7 +1,8 @@
 import scraped from '../content/scraped-content.json';
 import { decodeHtml, withBase } from '../lib/constants';
 import PageHero from '../components/PageHero';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { usePageMeta } from '../hooks/usePageTitle';
+import { getPageSeo } from '../seo/routes';
 
 const content = scraped.pages.learning;
 
@@ -12,7 +13,7 @@ const LESSONS = [
 ];
 
 export default function LearningPage() {
-  usePageTitle('Learning Experiences');
+  usePageMeta(getPageSeo('/learning-experiences/')!);
 
   return (
     <>

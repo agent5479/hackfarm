@@ -3,7 +3,8 @@ import scraped from '../content/scraped-content.json';
 import { decodeHtml, withBase } from '../lib/constants';
 import BackgroundSlideshow from '../components/BackgroundSlideshow';
 import InstagramGrid from '../components/InstagramGrid';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { usePageMeta } from '../hooks/usePageTitle';
+import { getPageSeo } from '../seo/routes';
 import HeroHeadline from '../components/HeroHeadline';
 
 const content = scraped.pages.home;
@@ -114,7 +115,7 @@ const TESTIMONIALS = [
 ];
 
 export default function HomePage() {
-  usePageTitle('Home | Hack n Stay Golden Bay');
+  usePageMeta(getPageSeo('/')!);
 
   return (
     <>

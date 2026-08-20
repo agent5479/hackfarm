@@ -15,6 +15,7 @@ import ContactPage from './pages/ContactPage';
 import PartnersPage from './pages/PartnersPage';
 import PrivacyPage from './pages/PrivacyPage';
 import SitemapPage from './pages/SitemapPage';
+import AboutPage from './pages/AboutPage';
 import HorseSlashRedirect from './pages/HorseSlashRedirect';
 
 export default function App() {
@@ -23,6 +24,8 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />
+          <Route path="about/" element={<AboutPage />} />
+          <Route path="about" element={<Navigate to="/about/" replace />} />
           <Route path="accommodation/" element={<AccommodationPage />} />
           <Route path="accommodation" element={<Navigate to="/accommodation/" replace />} />
           <Route path="holistic-horse-rides/" element={<RidesPage />} />

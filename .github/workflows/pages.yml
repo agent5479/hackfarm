@@ -28,6 +28,8 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
       - name: Refresh tide cache
         continue-on-error: true
         env:
@@ -40,13 +42,22 @@ jobs:
         run: npm run build
         env:
           BASE_URL: /hackfarm/
+          VITE_SITE_ORIGIN: https://agent5479.github.io
       - name: Verify Pages files
         run: |
           test -f dist/index.html
           test -f dist/404.html
           test -f dist/.nojekyll
           test ! -f dist/CNAME
+          test -f dist/robots.txt
+          test -f dist/sitemap.xml
+          test -f dist/about/index.html
+          test -f dist/accommodation/index.html
+          test -f dist/horse/donnie/index.html
           grep -q 'src="/hackfarm/assets/' dist/index.html
+          grep -q 'agent5479.github.io/hackfarm' dist/sitemap.xml
+          grep -q 'application/ld+json' dist/index.html
+          grep -q 'About Hack n Stay' dist/about/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

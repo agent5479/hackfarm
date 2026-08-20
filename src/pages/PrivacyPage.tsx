@@ -1,12 +1,13 @@
 import scraped from '../content/scraped-content.json';
 import { decodeHtml } from '../lib/constants';
 import PageHero from '../components/PageHero';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { usePageMeta } from '../hooks/usePageTitle';
+import { getPageSeo } from '../seo/routes';
 
 const content = scraped.pages.privacy;
 
 export default function PrivacyPage() {
-  usePageTitle('Privacy Policy');
+  usePageMeta(getPageSeo('/privacy-policy-2/')!);
 
   return (
     <>

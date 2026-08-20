@@ -1,7 +1,9 @@
 import scraped from '../content/scraped-content.json';
 import { decodeHtml, withBase } from '../lib/constants';
 import PageHero from '../components/PageHero';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { JsonLd, serviceJsonLd } from '../components/JsonLd';
+import { usePageMeta } from '../hooks/usePageTitle';
+import { getPageSeo } from '../seo/routes';
 
 const content = scraped.pages.accommodation;
 
@@ -12,10 +14,12 @@ const SECTIONS = [
 ];
 
 export default function AccommodationPage() {
-  usePageTitle('Accommodation');
+  const seo = getPageSeo('/accommodation/')!;
+  usePageMeta(seo);
 
   return (
     <>
+      <JsonLd data={serviceJsonLd('Accommodation', seo.description, '/accommodation/')} />
       <PageHero title={decodeHtml(content.h1s[0] || 'Accommodation')} subtitle={content.ogDesc} />
       <section className="section section--cream">
         <div className="container">

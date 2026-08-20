@@ -2,12 +2,13 @@ import scraped from '../content/scraped-content.json';
 import { decodeHtml, CONTACT } from '../lib/constants';
 import PageHero from '../components/PageHero';
 import ContactForm from '../components/ContactForm';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { usePageMeta } from '../hooks/usePageTitle';
+import { getPageSeo } from '../seo/routes';
 
 const content = scraped.pages.contact;
 
 export default function ContactPage() {
-  usePageTitle('Contact');
+  usePageMeta(getPageSeo('/contact/')!);
 
   return (
     <>

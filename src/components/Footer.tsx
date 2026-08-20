@@ -42,6 +42,7 @@ const LINK_GROUPS = [
   {
     title: 'Other',
     links: [
+      { label: 'About', to: '/about/' },
       { label: 'Partner With Us', to: '/partners/' },
       { label: 'Privacy Policy', to: '/privacy-policy-2/' },
       { label: 'Sitemap', to: '/sitemap/' },

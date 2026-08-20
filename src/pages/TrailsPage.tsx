@@ -1,10 +1,11 @@
 import PageHero from '../components/PageHero';
 import { MAPS } from '../lib/constants';
 import InstagramGrid from '../components/InstagramGrid';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { usePageMeta } from '../hooks/usePageTitle';
+import { getPageSeo } from '../seo/routes';
 
 export default function TrailsPage() {
-  usePageTitle('Hack Farm Trails');
+  usePageMeta(getPageSeo('/hack-farm-trails/')!);
 
   return (
     <>
