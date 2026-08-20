@@ -73,12 +73,12 @@
 }
 
 .sunrise-cal__grid--month .sunrise-cal__day {
-  min-height: 168px;
+  min-height: 196px;
 }
 
 @media (max-width: 900px) {
   .sunrise-cal__grid--month .sunrise-cal__day {
-    min-height: 130px;
+    min-height: 160px;
   }
 
   .sunrise-cal__weekday-head {
@@ -96,7 +96,7 @@
   }
 
   .sunrise-cal__grid--month .sunrise-cal__day {
-    min-height: 108px;
+    min-height: 132px;
     padding: 0.35rem 0.25rem 0.45rem;
   }
 
@@ -104,8 +104,8 @@
     font-size: 0.75rem;
   }
 
-  .day-cell__wave-wrap {
-    min-height: 36px;
+  .day-cell__gauge {
+    min-height: 72px;
   }
 
   .sunrise-cal__pill {
@@ -125,6 +125,7 @@
   text-align: left;
   cursor: pointer;
   font-family: var(--font-body);
+  overflow: hidden;
 }
 
 .sunrise-cal__day--outside {
@@ -169,6 +170,8 @@
 }
 
 .sunrise-cal__date-num {
+  position: relative;
+  z-index: 3;
   font-weight: 700;
   font-size: 0.9rem;
   color: var(--color-secondary);
@@ -255,13 +258,12 @@
   outline-offset: 2px;
 }
 
-/* Day cell — tide wave */
+/* Day cell — vertical tide fill */
 .day-cell {
   position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
   min-height: 0;
 }
 
@@ -284,7 +286,7 @@
   position: absolute;
   top: -1.35rem;
   right: 0;
-  z-index: 4;
+  z-index: 5;
   width: 1.35rem;
   height: 1.35rem;
   display: flex;
@@ -300,18 +302,30 @@
   background: rgba(255, 230, 230, 0.95);
 }
 
-.day-cell__wave-wrap {
-  position: relative;
-  flex: 1;
-  min-height: 48px;
-  border-radius: 6px;
+.day-cell__gauge {
+  position: absolute;
+  inset: 0;
   overflow: hidden;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #f7fbff 0%, #e8f2fa 100%);
+  pointer-events: none;
 }
 
-.day-cell__wave {
-  width: 100%;
-  height: 100%;
-  min-height: 48px;
+.day-cell__water {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--tide-fill, 38%);
+  background: linear-gradient(180deg, #6dbde6 0%, #3a8ec4 55%, #1f6ea8 100%);
+}
+
+.day-cell__surface {
+  position: absolute;
+  top: -10px;
+  left: -8%;
+  width: 116%;
+  height: 14px;
   display: block;
 }
 
@@ -319,11 +333,10 @@
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  background: rgba(26, 107, 181, 0.72);
-  border-radius: 6px;
-  pointer-events: none;
+  padding-bottom: 0.55rem;
+  background: linear-gradient(180deg, rgba(31, 110, 168, 0.15) 0%, rgba(31, 110, 168, 0.55) 70%);
 }
 
 .day-cell__tide-overlay span {
@@ -336,29 +349,43 @@
 }
 
 .day-cell__times {
-  margin: 0;
+  position: relative;
+  z-index: 2;
+  margin: 1.1rem 0 0;
+  padding: 0.2rem 0.15rem 0;
   font-size: 0.68rem;
-  line-height: 1.35;
-  color: var(--color-text);
+  line-height: 1.3;
+  color: var(--color-secondary);
 }
 
 .day-cell__times p {
-  margin: 0;
+  margin: 0 0 0.15rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .day-cell__label {
-  color: #666;
-  font-size: 0.62rem;
+  color: #5a6570;
+  font-size: 0.58rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
 .day-cell__arrive strong {
-  color: var(--color-green);
+  font-size: 0.78rem;
+  color: #2d6b35;
 }
 
-.sunrise-cal__day--rideable .day-cell__arrive strong {
-  color: #2d6b35;
+.day-cell--blocked .day-cell__times,
+.day-cell--blocked .day-cell__label,
+.day-cell--blocked .day-cell__arrive strong {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.sunrise-cal__day--ride .sunrise-cal__pill {
+  position: relative;
+  z-index: 2;
 }
 
 .ride-planner .sunrise-cal__grid {
@@ -366,5 +393,5 @@
 }
 
 .ride-planner .sunrise-cal__day {
-  min-height: 168px;
+  min-height: 196px;
 }

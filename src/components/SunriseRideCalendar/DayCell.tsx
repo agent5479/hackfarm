@@ -3,17 +3,10 @@ import { weatherIcon } from '../../booking/weather';
 
 const TIDE_MAX_M = 4.2;
 
-function tideFillPct(height: number | undefined): number {
-  if (height == null) return 0.35;
-  return Math.min(0.95, Math.max(0.12, height / TIDE_MAX_M));
-}
-
-function wavePath(width: number, height: number, amplitude: number): string {
-  const mid = height * 0.55;
-  return `M 0 ${mid}
-    Q ${width * 0.25} ${mid - amplitude} ${width * 0.5} ${mid}
-    T ${width} ${mid}
-    L ${width} ${height} L 0 ${height} Z`;
+function tideFillPct(height: number | undefined, blocked: boolean): number {
+  if (blocked) return 0.92;
+  if (height == null) return 0.38;
+  return Math.min(0.86, Math.max(0.18, height / TIDE_MAX_M));
 }
 
 interface DayCellProps {
@@ -38,14 +31,14 @@ export default function DayCell({ day }: DayCellProps) {
     );
   }
 
-  const fillPct = tideFillPct(day.tideHeightAtRide);
-  const w = 100;
-  const h = 56;
-  const amp = 6;
-  const clipH = h * fillPct;
+  const fillPct = tideFillPct(day.tideHeightAtRide, Boolean(day.tideBlocked));
+  const clipId = `tide-wave-${day.date}`;
 
   return (
-    <div className="day-cell">
+    <div
+      className={`day-cell${day.tideBlocked ? ' day-cell--blocked' : ''}`}
+      style={{ ['--tide-fill' as string]: `${fillPct * 100}%` }}
+    >
       {showWeather && (
         <span
           className={`day-cell__weather${day.weatherBlocked ? ' day-cell__weather--block' : ''}`}
@@ -55,37 +48,21 @@ export default function DayCell({ day }: DayCellProps) {
         </span>
       )}
 
-      <div className="day-cell__wave-wrap">
-        <svg
-          className="day-cell__wave"
-          viewBox={`0 0 ${w} ${h}`}
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <defs>
-            <clipPath id={`wave-clip-${day.date}`}>
-              <rect x="0" y={h - clipH} width={w} height={clipH} />
-            </clipPath>
-            <linearGradient id={`wave-grad-${day.date}`} x1="0" y1="1" x2="0" y2="0">
-              <stop offset="0%" stopColor="#1a6bb5" />
-              <stop offset="100%" stopColor="#5eb8e8" />
-            </linearGradient>
-          </defs>
-          <rect x="0" y="0" width={w} height={h} fill="#eef4fa" rx="4" />
-          <path
-            d={wavePath(w, h, amp)}
-            fill={`url(#wave-grad-${day.date})`}
-            clipPath={`url(#wave-clip-${day.date})`}
-          />
-          <path
-            d={`M 0 ${h * 0.55} Q ${w * 0.25} ${h * 0.55 - amp} ${w * 0.5} ${h * 0.55} T ${w} ${h * 0.55}`}
-            fill="none"
-            stroke="rgba(255,255,255,0.55)"
-            strokeWidth="1.5"
-            clipPath={`url(#wave-clip-${day.date})`}
-          />
-        </svg>
-
+      <div className="day-cell__gauge" aria-hidden="true">
+        <div className="day-cell__water">
+          <svg className="day-cell__surface" viewBox="0 0 120 14" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id={clipId} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#7ec8ea" />
+                <stop offset="100%" stopColor="#2b7cb5" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M0 8 C 10 2, 20 2, 30 8 S 50 14, 60 8 S 90 2, 90 8 S 110 14, 120 8 V 14 H 0 Z"
+              fill={`url(#${clipId})`}
+            />
+          </svg>
+        </div>
         {day.tideBlocked && (
           <div className="day-cell__tide-overlay">
             <span>High tide</span>
@@ -95,11 +72,12 @@ export default function DayCell({ day }: DayCellProps) {
 
       <div className="day-cell__times">
         <p className="day-cell__arrive">
-          <span className="day-cell__label">Arrive by</span>{' '}
+          <span className="day-cell__label">Arrive by</span>
           <strong>{formatClock(day.rideStart)}</strong>
         </p>
         <p className="day-cell__sunrise">
-          <span className="day-cell__label">Sunrise</span> {formatClock(day.sunrise)}
+          <span className="day-cell__label">Sunrise</span>
+          <span>{formatClock(day.sunrise)}</span>
         </p>
       </div>
     </div>
