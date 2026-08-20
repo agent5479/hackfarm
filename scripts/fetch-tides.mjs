@@ -1,3 +1,16 @@
+/**
+ * Refresh NIWA high/low extremes for Paton's Rock → public/data/tides.json
+ *
+ * Primary call: GET /tides/data without `interval` (per tide-api.yaml).
+ * Verified response shape (2026-08-20):
+ *   { metadata: { latitude, longitude, datum, days, ... }, values: [
+ *     { time: "2026-08-20T02:53:00Z", value: 3.2, type: "high" },
+ *     { time: "2026-08-20T08:59:00Z", value: 1.39, type: "low" },
+ *     ... ~4 events/day (2 highs + 2 lows) over numberOfDays
+ *   ]}
+ * Source logged as `niwa-extremes` when rows are labelled high/low.
+ * Fallback: interval=10 dense series → extract peaks via tide-extremes.mjs.
+ */
 import { mkdir, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';

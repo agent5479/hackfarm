@@ -70,6 +70,15 @@ export default function DayTimeline({ day, tides }: DayTimelineProps) {
             ▲
           </span>
         )}
+        {day.nearestLow && (
+          <span
+            className="day-timeline__low"
+            style={{ left: `${pctInTimeline(day.nearestLow, day)}%` }}
+            title={`Low tide ${formatClock(day.nearestLow)}`}
+          >
+            ▼
+          </span>
+        )}
       </div>
       <div className="day-timeline__labels">
         <span>{formatClock(day.rideStart)}</span>

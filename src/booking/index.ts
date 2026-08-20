@@ -6,7 +6,7 @@ export {
 } from './location';
 export { RIDE_TYPES, SUNRISE_RIDE, getRideType, type RideType } from './rides';
 export { fetchForecast, weatherLabel, type DayWeather } from './weather';
-export { fetchTides, dateKeyInTz, highTidesNear, type TideExtreme } from './tides';
+export { fetchTides, dateKeyInTz, highTidesNear, lowTidesNear, type TideExtreme } from './tides';
 export { sunTimesForDate } from './sun';
 export {
   buildSunriseDaySchedule,

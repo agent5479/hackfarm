@@ -7,7 +7,7 @@ import {
 } from './location';
 import { type RideType, SUNRISE_RIDE } from './rides';
 import { sunTimesForDate } from './sun';
-import { dateKeyInTz, highTidesNear, type TideExtreme } from './tides';
+import { dateKeyInTz, highTidesNear, lowTidesNear, type TideExtreme } from './tides';
 import { weatherLabel, type DayWeather } from './weather';
 
 export function formatClock(date: Date): string {
@@ -43,6 +43,7 @@ export interface SunriseDaySchedule {
   status: ScheduleStatus;
   statusReasons: string[];
   nearestHigh?: Date;
+  nearestLow?: Date;
   tidePhase: TidePhase;
   weatherLabel?: string;
   weatherAffectsStatus: boolean;
@@ -130,17 +131,21 @@ export function rideOverlapsForbiddenHighZone(
   return undefined;
 }
 
-function nearestHighTo(highs: TideExtreme[], instant: Date): TideExtreme | undefined {
+function nearestTideTo(tides: TideExtreme[], instant: Date): TideExtreme | undefined {
   let best: TideExtreme | undefined;
   let bestDist = Infinity;
-  for (const h of highs) {
-    const dist = Math.abs(h.time.getTime() - instant.getTime());
+  for (const t of tides) {
+    const dist = Math.abs(t.time.getTime() - instant.getTime());
     if (dist < bestDist) {
       bestDist = dist;
-      best = h;
+      best = t;
     }
   }
   return best;
+}
+
+function nearestHighTo(highs: TideExtreme[], instant: Date): TideExtreme | undefined {
+  return nearestTideTo(highs.filter((t) => t.type === 'high'), instant);
 }
 
 function tidePhaseAt(instant: Date, highs: TideExtreme[]): TidePhase {
@@ -229,6 +234,7 @@ export function buildSunriseDaySchedule(
   const reasons: string[] = [];
   let status: ScheduleStatus = 'rideable';
   let nearestHigh: Date | undefined;
+  let nearestLow: Date | undefined;
   let tidePhase: TidePhase = 'unknown';
 
   reasons.push(`Sunrise ${formatClock(sun.sunrise)}`);
@@ -245,7 +251,9 @@ export function buildSunriseDaySchedule(
 
   if (ride.usesTides) {
     const highs = highTidesNear(tides, rideStart, rideEnd);
+    const lows = lowTidesNear(tides, rideStart, rideEnd);
     nearestHigh = nearestHighTo(highs, rideStart)?.time;
+    nearestLow = nearestTideTo(lows, rideStart)?.time;
     tidePhase = tidePhaseAt(rideStart, highs);
 
     if (!highs.length) {
@@ -259,6 +267,9 @@ export function buildSunriseDaySchedule(
         tidePhase = 'forbidden';
       } else if (nearestHigh) {
         reasons.push(tideReason({ time: nearestHigh, height: 0, type: 'high' }, rideStart));
+      }
+      if (nearestLow) {
+        reasons.push(`Low tide ${formatClock(nearestLow)}`);
       }
     }
   }
@@ -279,6 +290,7 @@ export function buildSunriseDaySchedule(
     status,
     statusReasons: reasons,
     nearestHigh,
+    nearestLow,
     tidePhase,
     weatherLabel: wxLabel,
     weatherAffectsStatus,
@@ -323,6 +335,9 @@ export function detailSummary(day: SunriseDaySchedule): string {
 
   if (day.nearestHigh) {
     bits.push(`High tide ${formatClock(day.nearestHigh)}`);
+  }
+  if (day.nearestLow) {
+    bits.push(`Low tide ${formatClock(day.nearestLow)}`);
   }
 
   if (day.weatherLabel && day.weatherAffectsStatus) {

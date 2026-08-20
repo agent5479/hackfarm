@@ -69,3 +69,16 @@ export function highTidesNear(
     (t) => t.type === 'high' && t.time.getTime() >= from && t.time.getTime() <= to,
   );
 }
+
+export function lowTidesNear(
+  tides: TideExtreme[],
+  windowStart: Date,
+  windowEnd: Date,
+): TideExtreme[] {
+  const pad = 36 * 3_600_000;
+  const from = windowStart.getTime() - pad;
+  const to = windowEnd.getTime() + pad;
+  return tides.filter(
+    (t) => t.type === 'low' && t.time.getTime() >= from && t.time.getTime() <= to,
+  );
+}

@@ -33,6 +33,9 @@ jobs:
         env:
           NIWA_API_KEY: ${{ secrets.NIWA_API_KEY }}
         run: npm run tides
+      - name: Log tide cache stats
+        continue-on-error: true
+        run: node -e "const j=require('./public/data/tides.json'); const h=(j.extremes||[]).filter(e=>e.type==='high').length; const l=(j.extremes||[]).filter(e=>e.type==='low').length; console.log('Tide cache:', j.extremes?.length||0, 'extremes', h, 'highs', l, 'lows', 'source:', j.metadata?.source||'none');"
       - name: Build for github.io/hackfarm
         run: npm run build
         env:

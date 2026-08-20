@@ -248,6 +248,15 @@
   opacity: 0.9;
 }
 
+.day-timeline__low {
+  position: absolute;
+  top: 2px;
+  transform: translateX(-50%);
+  font-size: 0.55rem;
+  color: rgba(255, 255, 255, 0.85);
+  z-index: 3;
+}
+
 .day-timeline__labels {
   display: flex;
   justify-content: space-between;
