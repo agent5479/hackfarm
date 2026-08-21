@@ -12,19 +12,18 @@ export interface FareHarborRide {
 
 export const SUNRISE_TWILIGHT_RIDE: FareHarborRide = {
   id: 'sunrise-twilight',
-  title: 'Sunrise/Sunset Twilight Ride',
-  meta: 'incl. fees & taxes · Ages 3+ · 3 hours · Watch the sun rise out of the ocean',
+  title: 'Sunrise & Twilight Beach Ride',
+  meta: 'incl. fees & taxes · Ages 3+ · 3 hours · Paton\'s Rock',
   priceFrom: '',
   image: '/images/uploads/2021/07/Sunrise-Ride-Poster.jpg',
+  // TODO: confirm whether sunrise and twilight should become separate FareHarbor items / availabilities
   fareharborItemId: '294945',
-  description:
-    'Our signature east-coast experience at Paton\'s Rock — use the schedule checker below before booking.',
 };
 
 export const OTHER_FAREHARBOR_RIDES: FareHarborRide[] = [
   {
     id: 'hack-track',
-    title: 'Hack Track/ Fairy Trail Loop Ride',
+    title: 'Hack Track / Fairy Trail Loop Ride',
     meta: 'incl. fees & taxes · 1 hour · Ages 3+ · Farmland, bush, wetland and forest',
     priceFrom: '$99',
     image: '/images/uploads/2021/07/Hack-Track-Trail-Ride.jpg',
@@ -32,7 +31,7 @@ export const OTHER_FAREHARBOR_RIDES: FareHarborRide[] = [
   },
   {
     id: 'patons-rock',
-    title: 'Patons Rock Beach Ride',
+    title: "Paton's Rock Beach Ride",
     meta: 'incl. fees & taxes · 2.5 hours · Ages 3+ · Ride-play-explore on Golden Bay beach',
     priceFrom: '$199',
     image: '/images/uploads/2021/07/Patons-Rock-Beach-Ride-Poster.jpg',
@@ -48,7 +47,7 @@ export const OTHER_FAREHARBOR_RIDES: FareHarborRide[] = [
   },
   {
     id: 'swimming',
-    title: 'Swimming / Playing With Horses in the Water',
+    title: 'Swimming / Playing with Horses in the Water',
     meta: 'incl. fees & taxes · Ages 3+ · 3 hours · A magical experience!',
     priceFrom: '$290',
     image: '/images/uploads/2021/07/Swimming-with-Horses-Poster.jpg',

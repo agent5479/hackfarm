@@ -5,7 +5,13 @@ export {
   SUNRISE_RIDE_WEEKDAYS,
   TIDE_HORIZON_DAYS,
 } from './location';
-export { RIDE_TYPES, SUNRISE_RIDE, getRideType, type RideType } from './rides';
+export {
+  RIDE_TYPES,
+  SUNRISE_RIDE,
+  TWILIGHT_RIDE,
+  getRideType,
+  type RideType,
+} from './rides';
 export { fetchForecast, weatherIcon, weatherLabel, type DayWeather } from './weather';
 export {
   fetchAllTides,
@@ -24,9 +30,11 @@ export { sunTimesForDate } from './sun';
 export {
   buildSunriseDaySchedule,
   buildSunriseHorizonSchedule,
+  buildDualHorizonSchedule,
   buildSunriseMonthSchedule,
   buildSunriseWeekSchedule,
   detailSummary,
+  dualHorizonSummary,
   formatClock,
   formatDayLabel,
   formatHorizonRange,
@@ -39,7 +47,9 @@ export {
   startOfWeekMonday,
   weekSummary,
   weekdayHeadersFrom,
+  type DualDaySchedule,
   type MonthGridCell,
+  type RideSlotId,
   type SunriseDaySchedule,
   type ScheduleStatus,
   type TidePhase,

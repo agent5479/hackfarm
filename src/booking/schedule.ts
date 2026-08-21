@@ -52,11 +52,18 @@ const WD: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri
 export type ScheduleStatus = 'rideable' | 'caution' | 'unavailable';
 export type TidePhase = 'safe_before_high' | 'safe_after_high' | 'forbidden' | 'unknown';
 
+export type RideSlotId = 'sunrise' | 'twilight';
+
 export interface SunriseDaySchedule {
   date: string;
   weekday: number;
   isRideDay: boolean;
+  rideId: string;
+  slot: RideSlotId;
   sunrise: Date;
+  sunset: Date;
+  sunAnchor: Date;
+  sunAnchorLabel: 'Sunrise' | 'Sunset';
   rideStart: Date;
   rideEnd: Date;
   status: ScheduleStatus;
@@ -74,6 +81,14 @@ export interface SunriseDaySchedule {
   weatherCaution?: boolean;
   weatherCode?: number;
   hasScheduleData?: boolean;
+}
+
+export interface DualDaySchedule {
+  date: string;
+  weekday: number;
+  isRideDay: boolean;
+  sunrise: SunriseDaySchedule;
+  twilight: SunriseDaySchedule;
 }
 
 export interface MonthGridCell {
@@ -329,6 +344,17 @@ function applyWeather(
   };
 }
 
+function sunAnchorForRide(ride: RideType, sun: { sunrise: Date; sunset: Date }): {
+  sunAnchor: Date;
+  sunAnchorLabel: 'Sunrise' | 'Sunset';
+  slot: RideSlotId;
+} {
+  if (ride.daylight === 'around-sunset') {
+    return { sunAnchor: sun.sunset, sunAnchorLabel: 'Sunset', slot: 'twilight' };
+  }
+  return { sunAnchor: sun.sunrise, sunAnchorLabel: 'Sunrise', slot: 'sunrise' };
+}
+
 export function buildSunriseDaySchedule(
   dateKey: string,
   forecast: DayWeather[],
@@ -342,7 +368,8 @@ export function buildSunriseDaySchedule(
     : true;
 
   const sun = sunTimesForDate(dateKey);
-  const rideStart = addMinutes(sun.sunrise, ride.startOffsetMin);
+  const { sunAnchor, sunAnchorLabel, slot } = sunAnchorForRide(ride, sun);
+  const rideStart = addMinutes(sunAnchor, ride.startOffsetMin);
   const rideEnd = addMinutes(rideStart, ride.durationHours * 60);
 
   const reasons: string[] = [];
@@ -362,11 +389,11 @@ export function buildSunriseDaySchedule(
     fromToday >= 0 && fromToday < TIDE_HORIZON_DAYS && tidesCoverDate(dateKey, allTides);
 
   reasons.push(`Arrive by ${formatClock(rideStart)}`);
-  reasons.push(`Sunrise ${formatClock(sun.sunrise)}`);
+  reasons.push(`${sunAnchorLabel} ${formatClock(sunAnchor)}`);
 
   if (!isRideDay) {
     status = 'unavailable';
-    reasons.unshift('Sunrise rides: Wed, Fri & Sun only');
+    reasons.unshift('Twilight beach rides: Wed, Fri & Sun only');
   }
 
   const dayWx = forecast.find((d) => d.date === dateKey);
@@ -426,7 +453,12 @@ export function buildSunriseDaySchedule(
     date: dateKey,
     weekday,
     isRideDay,
+    rideId: ride.id,
+    slot,
     sunrise: sun.sunrise,
+    sunset: sun.sunset,
+    sunAnchor,
+    sunAnchorLabel,
     rideStart,
     rideEnd,
     status,
@@ -488,15 +520,51 @@ export function buildSunriseHorizonSchedule(
   return map;
 }
 
-export function horizonSummary(days: SunriseDaySchedule[]): string {
-  const rideDays = days.filter((d) => d.isRideDay && d.hasScheduleData);
-  const rideable = rideDays.filter((d) => d.status === 'rideable').length;
-  const caution = rideDays.filter((d) => d.status === 'caution').length;
-  const blocked = rideDays.filter((d) => d.status === 'unavailable').length;
+export function buildDualHorizonSchedule(
+  startKey: string,
+  forecast: DayWeather[],
+  tides: TideExtreme[],
+  sunriseRide: RideType,
+  twilightRide: RideType,
+  allTides: TideExtreme[] = tides,
+  days: number = PLANNER_DAYS,
+): Map<string, DualDaySchedule> {
+  const map = new Map<string, DualDaySchedule>();
+  for (const date of rollingHorizonDates(startKey, days)) {
+    const sunrise = buildSunriseDaySchedule(date, forecast, tides, sunriseRide, allTides);
+    const twilight = buildSunriseDaySchedule(date, forecast, tides, twilightRide, allTides);
+    map.set(date, {
+      date,
+      weekday: sunrise.weekday,
+      isRideDay: sunrise.isRideDay || twilight.isRideDay,
+      sunrise,
+      twilight,
+    });
+  }
+  return map;
+}
+
+function slotSummaryParts(slots: SunriseDaySchedule[]): string[] {
+  const counted = slots.filter((d) => d.isRideDay && d.hasScheduleData);
+  const rideable = counted.filter((d) => d.status === 'rideable').length;
+  const caution = counted.filter((d) => d.status === 'caution').length;
+  const blocked = counted.filter((d) => d.status === 'unavailable').length;
   const parts = [`${rideable} rideable`];
   if (caution) parts.push(`${caution} check conditions`);
   if (blocked) parts.push(`${blocked} unavailable`);
-  return `These 4 weeks: ${parts.join(' · ')}`;
+  return parts;
+}
+
+export function horizonSummary(days: SunriseDaySchedule[]): string {
+  return `These 4 weeks: ${slotSummaryParts(days).join(' · ')}`;
+}
+
+export function dualHorizonSummary(days: DualDaySchedule[]): string {
+  const slots = days.flatMap((d) => [d.sunrise, d.twilight]);
+  const sunriseParts = slotSummaryParts(days.map((d) => d.sunrise));
+  const twilightParts = slotSummaryParts(days.map((d) => d.twilight));
+  const total = slotSummaryParts(slots);
+  return `These 4 weeks: ${total.join(' · ')} (sunrise ${sunriseParts[0]} · twilight ${twilightParts[0]})`;
 }
 
 export function weekSummary(days: SunriseDaySchedule[]): string {
@@ -520,8 +588,9 @@ export function detailSummary(day: SunriseDaySchedule): string {
 
   const bits = [
     dateLabel,
+    day.slot === 'twilight' ? 'Twilight' : 'Sunrise',
     `Arrive by ${formatClock(day.rideStart)}`,
-    `Sunrise ${formatClock(day.sunrise)}`,
+    `${day.sunAnchorLabel} ${formatClock(day.sunAnchor)}`,
   ];
 
   if (day.nearestHigh) {

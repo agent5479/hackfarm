@@ -93,6 +93,105 @@
   padding: 0.7rem 0.65rem 0.75rem;
 }
 
+.sunrise-cal__day--dual {
+  min-height: 0;
+  cursor: default;
+  gap: 0.45rem;
+}
+
+.sunrise-cal__slots {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.sunrise-cal__slot {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-height: 118px;
+  padding: 0.4rem 0.4rem 0.45rem;
+  border: 1px solid #e4dcc8;
+  border-radius: 6px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-body);
+  overflow: hidden;
+}
+
+.sunrise-cal__slot--sunrise {
+  border-top: 2px solid #f0b429;
+}
+
+.sunrise-cal__slot--twilight {
+  border-top: 2px solid #7a5a9a;
+}
+
+.sunrise-cal__slot-label {
+  position: relative;
+  z-index: 3;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.sunrise-cal__slot--sunrise .sunrise-cal__slot-label {
+  color: #9a6b10;
+}
+
+.sunrise-cal__slot--twilight .sunrise-cal__slot-label {
+  color: #5c3d7a;
+}
+
+.sunrise-cal__slot--rideable {
+  border-left: 3px solid var(--color-green);
+}
+
+.sunrise-cal__slot--caution {
+  border-left: 3px solid var(--color-orange);
+}
+
+.sunrise-cal__slot--unavailable,
+.sunrise-cal__slot--tide-block {
+  border-left: 3px solid var(--color-pink);
+}
+
+.sunrise-cal__slot--selected {
+  box-shadow: 0 0 0 2px var(--color-green);
+}
+
+.sunrise-cal__slot--disabled {
+  cursor: not-allowed;
+  opacity: 0.78;
+}
+
+.sunrise-cal--intercept .sunrise-cal__slot--bookable:hover {
+  outline: 2px solid var(--color-green);
+  outline-offset: 1px;
+}
+
+.day-cell--compact .day-cell__times {
+  margin-top: 0.55rem;
+}
+
+.day-cell--compact .day-cell__weather {
+  top: 0.15rem;
+  right: 0.15rem;
+}
+
+.sunrise-cal__slot .sunrise-cal__pill {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+}
+
 @media (max-width: 720px) {
   .sunrise-cal__weekdays,
   .sunrise-cal__grid {
@@ -106,6 +205,14 @@
 
   .sunrise-cal__grid--rides .sunrise-cal__day {
     min-height: 200px;
+  }
+
+  .sunrise-cal__day--dual {
+    min-height: 0;
+  }
+
+  .sunrise-cal__slot {
+    min-height: 110px;
   }
 
   .sunrise-cal__day--empty {
@@ -510,15 +617,24 @@
   color: #2d6b35;
 }
 
-.day-cell__sunrise,
-.day-cell__sunrise .day-cell__label {
+.day-cell__sun,
+.day-cell__sun .day-cell__label {
   color: #f5d76e;
   text-shadow: 0 1px 2px rgba(20, 40, 70, 0.7);
 }
 
-.day-cell__sunrise span:last-child {
+.day-cell__sun span:last-child {
   font-weight: 700;
   color: #ffe566;
+}
+
+.day-cell__sun--twilight,
+.day-cell__sun--twilight .day-cell__label {
+  color: #d4b8f0;
+}
+
+.day-cell__sun--twilight span:last-child {
+  color: #e8d4ff;
 }
 
 .day-cell__flow strong {
@@ -534,11 +650,17 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
-.day-cell--blocked .day-cell__sunrise,
-.day-cell--blocked .day-cell__sunrise .day-cell__label,
-.day-cell--blocked .day-cell__sunrise span:last-child {
+.day-cell--blocked .day-cell__sun,
+.day-cell--blocked .day-cell__sun .day-cell__label,
+.day-cell--blocked .day-cell__sun span:last-child {
   color: #ffe566;
   text-shadow: 0 1px 2px rgba(20, 40, 70, 0.75);
+}
+
+.day-cell--blocked .day-cell__sun--twilight,
+.day-cell--blocked .day-cell__sun--twilight .day-cell__label,
+.day-cell--blocked .day-cell__sun--twilight span:last-child {
+  color: #e8d4ff;
 }
 
 .sunrise-cal__day--ride .sunrise-cal__pill {

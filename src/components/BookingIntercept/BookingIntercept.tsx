@@ -1,17 +1,34 @@
 import { OTHER_FAREHARBOR_RIDES, SUNRISE_TWILIGHT_RIDE } from '../../booking/fareharbor-catalog';
 import { formatClock } from '../../booking/schedule';
-import type { SunriseDaySchedule } from '../../booking/schedule';
 import { openFareHarborBooking } from '../../lib/booking-events';
 import { optimizedUrl } from '../../lib/images';
-import SunriseRideCalendar from '../SunriseRideCalendar/SunriseRideCalendar';
+import SunriseRideCalendar, {
+  type BookSlotPayload,
+} from '../SunriseRideCalendar/SunriseRideCalendar';
 import './BookingIntercept.css';
 
-function bookSunriseDay(day: SunriseDaySchedule) {
+const RIDE_OUTLINE = [
+  {
+    id: 'twilight-rides',
+    title: 'Sunrise & Twilight Beach Rides',
+    blurb: 'Wed · Fri · Sun · tide-checked',
+    image: SUNRISE_TWILIGHT_RIDE.image,
+  },
+  {
+    id: 'other-rides',
+    title: 'Trail, Beach & Swim Rides',
+    blurb: 'Hack Track · Patons Rock · Rangi · Swim',
+    image: OTHER_FAREHARBOR_RIDES[0].image,
+  },
+] as const;
+
+function bookTwilightSlot({ day, slot }: BookSlotPayload) {
+  const slotTitle = slot === 'sunrise' ? 'Sunrise' : 'Twilight';
   openFareHarborBooking({
     itemId: SUNRISE_TWILIGHT_RIDE.fareharborItemId,
     date: day.date,
     rideStart: formatClock(day.rideStart),
-    title: SUNRISE_TWILIGHT_RIDE.title,
+    title: `${slotTitle} — ${SUNRISE_TWILIGHT_RIDE.title}`,
   });
 }
 
@@ -22,25 +39,24 @@ function bookOtherRide(itemId: string, title: string) {
 export default function BookingIntercept() {
   return (
     <div className="booking-intercept">
-      <div className="booking-intercept__disclaimer">
-        <h3>Sunrise &amp; sunset twilight rides — check before you book</h3>
-        <p>
-          The schedule checker below applies <strong>only</strong> to our{' '}
-          <strong>{SUNRISE_TWILIGHT_RIDE.title}</strong> on FareHarbor. Beach access at Paton&apos;s Rock
-          depends on tide and sunrise lining up safely.
-        </p>
-        <ul>
-          <li>Available <strong>Wednesday, Friday &amp; Sunday</strong> only</li>
-          <li>Ride starts <strong>1 hour before sunrise</strong> — the exact time is shown for each day</li>
-          <li>Beach access needs tide clearance around high water (3h+ before or 2h+ after high tide)</li>
-          <li>
-            <strong>Only book dates marked rideable</strong> — unavailable days mean tide and sunrise do
-            not align safely
-          </li>
-        </ul>
-      </div>
+      <nav className="booking-intercept__outline" aria-label="Ride types">
+        {RIDE_OUTLINE.map((item) => (
+          <a key={item.id} className="booking-intercept__outline-card" href={`#${item.id}`}>
+            <img
+              className="booking-intercept__outline-image"
+              src={optimizedUrl(item.image, 'thumb')}
+              alt=""
+              decoding="async"
+            />
+            <span className="booking-intercept__outline-body">
+              <span className="booking-intercept__outline-title">{item.title}</span>
+              <span className="booking-intercept__outline-blurb">{item.blurb}</span>
+            </span>
+          </a>
+        ))}
+      </nav>
 
-      <div className="booking-intercept__sunrise">
+      <section id="twilight-rides" className="booking-intercept__sunrise">
         <div className="booking-intercept__sunrise-media">
           <img
             className="booking-intercept__sunrise-image"
@@ -50,21 +66,13 @@ export default function BookingIntercept() {
           />
         </div>
         <div className="booking-intercept__sunrise-body">
-          <span className="booking-intercept__badge">Sunrise / Sunset Twilight — schedule checker</span>
           <h3>{SUNRISE_TWILIGHT_RIDE.title}</h3>
-          <p className="booking-intercept__meta">{SUNRISE_TWILIGHT_RIDE.meta}</p>
-          {SUNRISE_TWILIGHT_RIDE.description && (
-            <p className="booking-intercept__sunrise-copy">{SUNRISE_TWILIGHT_RIDE.description}</p>
-          )}
-          <SunriseRideCalendar mode="intercept" onBookDay={bookSunriseDay} />
+          <SunriseRideCalendar mode="intercept" onBookDay={bookTwilightSlot} />
         </div>
-      </div>
+      </section>
 
-      <div className="booking-intercept__other">
-        <h3>All other rides</h3>
-        <p className="booking-intercept__other-note">
-          Sunrise twilight bookings use the calendar above. Select a date below for our other experiences.
-        </p>
+      <section id="other-rides" className="booking-intercept__other">
+        <h3>Trail, beach &amp; swim rides</h3>
         <div className="booking-intercept__grid">
           {OTHER_FAREHARBOR_RIDES.map((ride) => (
             <article key={ride.id} className="booking-intercept__card">
@@ -92,7 +100,7 @@ export default function BookingIntercept() {
             </article>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 }

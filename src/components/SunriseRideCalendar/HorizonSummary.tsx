@@ -1,9 +1,9 @@
-import { horizonSummary, type SunriseDaySchedule } from '../../booking/schedule';
+import { dualHorizonSummary, type DualDaySchedule } from '../../booking/schedule';
 
 interface HorizonSummaryProps {
-  days: SunriseDaySchedule[];
+  days: DualDaySchedule[];
 }
 
 export default function HorizonSummary({ days }: HorizonSummaryProps) {
-  return <p className="sunrise-cal__summary">{horizonSummary(days)}</p>;
+  return <p className="sunrise-cal__summary">{dualHorizonSummary(days)}</p>;
 }

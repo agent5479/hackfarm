@@ -11,9 +11,10 @@ function tideFillPct(height: number | undefined, blocked: boolean): number {
 
 interface DayCellProps {
   day: SunriseDaySchedule;
+  compact?: boolean;
 }
 
-export default function DayCell({ day }: DayCellProps) {
+export default function DayCell({ day, compact = false }: DayCellProps) {
   const showWeather =
     day.weatherAffectsStatus &&
     day.weatherCode != null &&
@@ -25,14 +26,14 @@ export default function DayCell({ day }: DayCellProps) {
 
   if (!day.hasScheduleData) {
     return (
-      <div className="day-cell day-cell--pending">
+      <div className={`day-cell day-cell--pending${compact ? ' day-cell--compact' : ''}`}>
         <p className="day-cell__pending">Tide times updating</p>
       </div>
     );
   }
 
   const fillPct = tideFillPct(day.tideHeightAtRide, Boolean(day.tideBlocked));
-  const clipId = `tide-wave-${day.date}`;
+  const clipId = `tide-wave-${day.slot}-${day.date}`;
   const flow = day.tideFlow;
   const flowLabel = flow === 'incoming' ? 'Incoming' : flow === 'outgoing' ? 'Outgoing' : undefined;
 
@@ -40,6 +41,7 @@ export default function DayCell({ day }: DayCellProps) {
     <div
       className={[
         'day-cell',
+        compact ? 'day-cell--compact' : '',
         day.tideBlocked ? 'day-cell--blocked' : '',
         flow === 'incoming' ? 'day-cell--incoming' : '',
         flow === 'outgoing' ? 'day-cell--outgoing' : '',
@@ -91,11 +93,11 @@ export default function DayCell({ day }: DayCellProps) {
           <span className="day-cell__label">Arrive by</span>
           <strong>{formatClock(day.rideStart)}</strong>
         </p>
-        <p className="day-cell__sunrise">
-          <span className="day-cell__label">Sunrise</span>
-          <span>{formatClock(day.sunrise)}</span>
+        <p className={`day-cell__sun day-cell__sun--${day.slot}`}>
+          <span className="day-cell__label">{day.sunAnchorLabel}</span>
+          <span>{formatClock(day.sunAnchor)}</span>
         </p>
-        {flowLabel && (
+        {!compact && flowLabel && (
           <p className="day-cell__flow">
             <span className="day-cell__label">Tide</span>
             <strong>{flowLabel}</strong>

@@ -26,19 +26,23 @@ export const RIDE_TYPES: RideType[] = [
     maxRainMm: 8,
     startOffsetMin: -60,
     scheduleWeekdays: [0, 3, 5],
+    // TODO: confirm whether sunrise and twilight should become separate FareHarbor items
     fareharborItemId: '294945',
     hint: 'Wed, Fri & Sun · starts an hour before sunrise · tide must clear high water.',
   },
   {
-    id: 'sunset',
-    name: 'Sunset Ride',
-    durationHours: 1.5,
+    id: 'twilight',
+    name: "Twilight Beach Ride — Paton's Rock",
+    durationHours: 2,
     daylight: 'around-sunset',
     usesTides: true,
-    maxWindKmh: 35,
-    maxRainMm: 6,
-    startOffsetMin: 0,
-    hint: 'Golden Bay faces east — our sunrise rides are the highlight.',
+    maxWindKmh: 40,
+    maxRainMm: 8,
+    startOffsetMin: -60,
+    scheduleWeekdays: [0, 3, 5],
+    // TODO: confirm whether sunrise and twilight should become separate FareHarbor items
+    fareharborItemId: '294945',
+    hint: 'Wed, Fri & Sun · starts an hour before sunset · tide must clear high water.',
   },
   {
     id: 'swim',
@@ -66,7 +70,12 @@ export const RIDE_TYPES: RideType[] = [
 ];
 
 export const SUNRISE_RIDE = RIDE_TYPES[0];
+export const TWILIGHT_RIDE = RIDE_TYPES[1];
+
+/** @deprecated Use TWILIGHT_RIDE — kept for callers that still look up `sunset`. */
+export const SUNSET_RIDE = TWILIGHT_RIDE;
 
 export function getRideType(id: string): RideType {
+  if (id === 'sunset') return TWILIGHT_RIDE;
   return RIDE_TYPES.find((r) => r.id === id) ?? RIDE_TYPES[0];
 }

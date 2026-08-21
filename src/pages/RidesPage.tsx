@@ -11,8 +11,10 @@ import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 
 const content = scraped.pages.rides;
 
-function scrollToBookRides() {
-  document.getElementById('book-rides')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+function scrollToHash(hash: string) {
+  const id = hash.replace(/^#/, '');
+  if (!id) return;
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 const RIDE_SECTIONS = [
@@ -28,9 +30,8 @@ export default function RidesPage() {
   const { hash } = useLocation();
 
   useEffect(() => {
-    if (hash === '#book-rides') {
-      requestAnimationFrame(scrollToBookRides);
-    }
+    if (!hash) return;
+    requestAnimationFrame(() => scrollToHash(hash));
   }, [hash]);
 
   return (
@@ -58,10 +59,7 @@ export default function RidesPage() {
       <section id="book-rides" className="section section--white">
         <div className="container">
           <h2>Book your ride</h2>
-          <p>
-            Check sunrise and tide suitability before booking our twilight beach ride, then pick from our
-            other experiences below.
-          </p>
+          <p>Choose a ride type below, then pick a date that suits.</p>
           <BookingIntercept />
         </div>
       </section>
@@ -90,7 +88,7 @@ export default function RidesPage() {
         <div className="container">
           <h2>Booking Request Form</h2>
           <p>
-            Use the sunrise calendar above for tide-aware Wed/Fri/Sun slots, or book online.
+            Use the sunrise &amp; twilight calendar above for tide-aware Wed/Fri/Sun slots, or book online.
             All beach rides depend on tide and weather — we will confirm the perfect time for your experience.
           </p>
           <ContactForm type="ride-request" />
