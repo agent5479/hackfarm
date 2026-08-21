@@ -163,13 +163,30 @@
   border-left: 3px solid var(--color-pink);
 }
 
+.sunrise-cal__slot--unavailable::after,
+.sunrise-cal__slot--tide-block::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(
+    to top left,
+    transparent calc(50% - 1.5px),
+    #c62828 calc(50% - 1.5px),
+    #c62828 calc(50% + 1.5px),
+    transparent calc(50% + 1.5px)
+  );
+  opacity: 0.9;
+}
+
 .sunrise-cal__slot--selected {
   box-shadow: 0 0 0 2px var(--color-green);
 }
 
 .sunrise-cal__slot--disabled {
   cursor: not-allowed;
-  opacity: 0.78;
+  opacity: 0.82;
 }
 
 .sunrise-cal--intercept .sunrise-cal__slot--bookable:hover {

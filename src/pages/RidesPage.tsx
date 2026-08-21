@@ -59,7 +59,7 @@ export default function RidesPage() {
       <section id="book-rides" className="section section--white">
         <div className="container">
           <h2>Book your ride</h2>
-          <p>Choose a ride type below, then pick a date that suits.</p>
+          <p>Start by choosing a ride type, then pick a date that suits.</p>
           <BookingIntercept />
         </div>
       </section>
