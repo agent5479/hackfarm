@@ -13,7 +13,7 @@ export default function HorsesPage() {
     <>
       <PageHero
         title="Our Horses"
-        subtitle="Our Equine Family and your partner on the trail."
+        subtitle="Our equine family — your partners on the trail."
       />
       <section className="section section--cream">
         <div className="container">

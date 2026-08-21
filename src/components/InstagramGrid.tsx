@@ -11,7 +11,7 @@ const INSTAGRAM_POSTS = [
   { img: '582612897_1090808582976031_7488834955769579101_nlow.jpg', url: 'https://www.instagram.com/reel/DRB3CDBkbb-/', caption: 'Manuka having fun🤠 #havingfuninthesun☀️' },
   { img: '564979357_18428512930109112_3919236620991915233_nlow.jpg', url: 'https://www.instagram.com/p/DP0p1yREVYz/', caption: 'About to hit the trail from our new reception. ...' },
   { img: '554702250_18424840018109112_7208990187742874459_nlow.jpg', url: 'https://www.instagram.com/p/DPGUtZnkZe0/', caption: 'Always a marvellous ride along the stunning reef ...' },
-  { img: '523339927_18415493086109112_1291909907033999299_nlow.jpg', url: 'https://www.instagram.com/p/DMdpUUyzGsG/', caption: 'MOE the Farm dog Born 2017 Breed: Belgium ...' },
+  { img: '523339927_18415493086109112_1291909907033999299_nlow.jpg', url: 'https://www.instagram.com/p/DMdpUUyzGsG/', caption: 'MOE the Farm dog Born 2017 Breed: Belgian ...' },
   { img: '521431616_4193536320904973_4749747141129129244_n.heiclow.jpg', url: 'https://www.instagram.com/p/DMXPVYFxFtW/', caption: 'Name: Happy Harley Breed: Kaimanawa ...' },
   { img: '522480162_1291021942543954_9014924311264794161_n.heiclow.jpg', url: 'https://www.instagram.com/p/DMXO_x-Rm-5/', caption: 'Name: Keen Kevin Breed: Kaimanawa ...' },
   { img: '522410207_1467524017867691_113462825070426954_n.heiclow.jpg', url: 'https://www.instagram.com/p/DMXODv_xKIi/', caption: 'Name: Bright Buddy Breed: Pinto ...' },

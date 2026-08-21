@@ -35,7 +35,7 @@ export default function GiftsPage() {
       <section className="section section--cream">
         <div className="container">
           <h2>Frequently Asked Questions</h2>
-          <h3>Do I need to Book a Specific Date?</h3>
+          <h3>Do I need to book a specific date?</h3>
           <p>No — the gift voucher is credit toward a future ride. It is redeemed when you complete a booking.</p>
           <h3>What can I use the gift voucher for?</h3>
           <p>Any riding, learning or accommodation option on the website.</p>

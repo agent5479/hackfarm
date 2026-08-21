@@ -51,7 +51,7 @@ export default function AccommodationPage() {
       <section className="section section--white">
         <div className="container">
           <h2>Facilities include:</h2>
-          <p>Pizza Oven, Communal Kitchen, Showers, Rope Swing, Climbing Wall, Fruit Trees, Vegetable Garden and much much more.</p>
+          <p>Pizza oven, communal kitchen, showers, rope swing, climbing wall, fruit trees, vegetable garden and much, much more.</p>
         </div>
       </section>
     </>

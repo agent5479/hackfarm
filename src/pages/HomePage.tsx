@@ -52,7 +52,7 @@ const FEATURES = [
     },
   },
   {
-    title: 'campground, Back Packer & Farmstay',
+    title: 'Campground, Backpacker & Farmstay',
     subtitle: 'Comfortable accommodation options to guarantee a good night’s sleep after your day of exploring.',
     images: [
       '/images/uploads/2021/03/20190801_Hackfarm_Panorama-rainbow.jpg',
@@ -72,7 +72,7 @@ const FEATURES = [
     },
   },
   {
-    title: "Kid's Camps",
+    title: "Kids' Camps",
     subtitle: 'Fun camps and riding days',
     images: [
       '/images/uploads/2021/02/20210102_1540010.jpg',
@@ -92,7 +92,7 @@ const FEATURES = [
     },
   },
   {
-    title: 'Bring your Own horse!',
+    title: 'Bring your own horse!',
     subtitle: 'Bring your own horse and enjoy a holiday away',
     images: ['/images/uploads/2021/04/Horse-Stay-smaller.jpg'],
     imageSide: 'left' as const,
@@ -109,9 +109,9 @@ const FEATURES = [
 ];
 
 const TESTIMONIALS = [
-  { text: "Hack and stay is a real peace of heaven. The horses are really well treated and the track to the beach is amazing. But there's so much more than trekking, there's all sorts of swings for the children, a little climbing wall and you can even try some vaulting. We'll remember our stay forever!!!", author: 'Anne-Lise, Nov 2020' },
-  { text: "Hack n Stay is an amazing place to visit! The accommodation is well thought out and uniquely horse themed and the property is stunning. You will love the views and the awesome riding tracks around the farm.", author: 'Larissa Meuller' },
-  { text: "My partner and me intended to stay 1 night with our Campervan, in the end we stayed 3 nights, because we enjoyed it so much.", author: 'Merel, May 2020' },
+  { text: "Hack and stay is a real piece of heaven. The horses are really well treated and the track to the beach is amazing. But there's so much more than trekking, there's all sorts of swings for the children, a little climbing wall and you can even try some vaulting. We'll remember our stay forever!!!", author: 'Anne-Lise, Nov 2020' },
+  { text: "Hack n Stay is an amazing place to visit! The accommodation is well thought out and uniquely horse-themed and the property is stunning. You will love the views and the awesome riding tracks around the farm.", author: 'Larissa Meuller' },
+  { text: "My partner and I intended to stay 1 night with our campervan; in the end we stayed 3 nights, because we enjoyed it so much.", author: 'Merel, May 2020' },
   { text: "Great trekking with Baerbel and her horses! It's way more than just a trek, she really teaches you horse riding!", author: 'Lucy Devos, July 2020' },
 ];
 
