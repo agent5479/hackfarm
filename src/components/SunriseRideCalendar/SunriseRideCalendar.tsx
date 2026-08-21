@@ -5,6 +5,7 @@ import {
   detailSummary,
   formatClock,
   formatHorizonRange,
+  formatMonthTitle,
   rollingHorizonDates,
   shortMonth,
   startOfWeekMonday,
@@ -34,6 +35,12 @@ interface SunriseRideCalendarProps {
   onBookDay?: (payload: BookSlotPayload) => void;
 }
 
+interface MonthGroup {
+  monthKey: string;
+  title: string;
+  weeks: (DualDaySchedule | null)[][];
+}
+
 const STATUS_LABEL: Record<SunriseDaySchedule['status'], string> = {
   rideable: 'Rideable',
   caution: 'Check weather',
@@ -51,6 +58,36 @@ const RIDE_COLUMN_LABELS = ['Wednesday', 'Friday', 'Sunday'];
 
 function slotFromDay(day: DualDaySchedule, slot: RideSlotId): SunriseDaySchedule {
   return slot === 'sunrise' ? day.sunrise : day.twilight;
+}
+
+function groupRideDaysByMonth(rideDays: DualDaySchedule[]): MonthGroup[] {
+  const byMonth = new Map<string, DualDaySchedule[]>();
+  for (const day of rideDays) {
+    const monthKey = day.date.slice(0, 7);
+    const list = byMonth.get(monthKey) ?? [];
+    list.push(day);
+    byMonth.set(monthKey, list);
+  }
+
+  return [...byMonth.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([monthKey, days]) => {
+      const weeks = new Map<string, DualDaySchedule[]>();
+      for (const day of days) {
+        const week = startOfWeekMonday(nzNoon(day.date));
+        const list = weeks.get(week) ?? [];
+        list.push(day);
+        weeks.set(week, list);
+      }
+
+      return {
+        monthKey,
+        title: formatMonthTitle(monthKey),
+        weeks: [...weeks.entries()]
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([, weekDays]) => RIDE_COLUMNS.map((wd) => weekDays.find((d) => d.weekday === wd) ?? null)),
+      };
+    });
 }
 
 export default function SunriseRideCalendar({
@@ -75,18 +112,7 @@ export default function SunriseRideCalendar({
     [dates, scheduleMap],
   );
 
-  const rideWeeks = useMemo(() => {
-    const weeks = new Map<string, DualDaySchedule[]>();
-    for (const day of rideDays) {
-      const week = startOfWeekMonday(nzNoon(day.date));
-      const list = weeks.get(week) ?? [];
-      list.push(day);
-      weeks.set(week, list);
-    }
-    return [...weeks.entries()]
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([, days]) => RIDE_COLUMNS.map((wd) => days.find((d) => d.weekday === wd) ?? null));
-  }, [rideDays]);
+  const rideMonths = useMemo(() => groupRideDaysByMonth(rideDays), [rideDays]);
 
   const selectedSlot = selectedKey
     ? (() => {
@@ -146,91 +172,101 @@ export default function SunriseRideCalendar({
         rideable slot — only book dates marked rideable.
       </p>
 
-      <div className="sunrise-cal__weekdays sunrise-cal__weekdays--rides" aria-hidden="true">
-        {RIDE_COLUMN_LABELS.map((label) => (
-          <span key={label} className="sunrise-cal__weekday-head">
-            {label}
-          </span>
-        ))}
-      </div>
+      <div className="sunrise-cal__months">
+        {rideMonths.map((month) => (
+          <section key={month.monthKey} className="sunrise-cal__month" aria-labelledby={`cal-month-${month.monthKey}`}>
+            <h4 id={`cal-month-${month.monthKey}`} className="sunrise-cal__month-title">
+              {month.title}
+            </h4>
 
-      <div className="sunrise-cal__grid sunrise-cal__grid--rides sunrise-cal__grid--dual">
-        {rideWeeks.flatMap((week, weekIndex) =>
-          week.map((day, colIndex) => {
-            if (!day) {
-              return (
-                <div
-                  key={`empty-${weekIndex}-${colIndex}`}
-                  className="sunrise-cal__day sunrise-cal__day--empty"
-                  aria-hidden="true"
-                />
-              );
-            }
-
-            const isToday = day.date === todayKey;
-            const slots: RideSlotId[] = ['sunrise', 'twilight'];
-
-            return (
-              <div
-                key={day.date}
-                className={[
-                  'sunrise-cal__day',
-                  'sunrise-cal__day--ride',
-                  'sunrise-cal__day--dual',
-                  isToday ? 'sunrise-cal__day--today' : '',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-              >
-                <span className="sunrise-cal__weekday-tag">{WEEKDAY_LONG[day.weekday]}</span>
-                <span className="sunrise-cal__date-num">
-                  {dayOfMonth(day.date)}
-                  <span className="sunrise-cal__date-month">{shortMonth(day.date)}</span>
+            <div className="sunrise-cal__weekdays sunrise-cal__weekdays--rides" aria-hidden="true">
+              {RIDE_COLUMN_LABELS.map((label) => (
+                <span key={label} className="sunrise-cal__weekday-head">
+                  {label}
                 </span>
+              ))}
+            </div>
 
-                <div className="sunrise-cal__slots">
-                  {slots.map((slot) => {
-                    const slotDay = slotFromDay(day, slot);
-                    const selectable =
-                      mode === 'browse' ||
-                      (slotDay.status !== 'unavailable' && Boolean(slotDay.hasScheduleData));
-                    const isSelected = selectedKey === `${day.date}::${slot}`;
-                    const bookable = mode === 'intercept' && selectable;
-
+            <div className="sunrise-cal__grid sunrise-cal__grid--rides sunrise-cal__grid--dual">
+              {month.weeks.flatMap((week, weekIndex) =>
+                week.map((day, colIndex) => {
+                  if (!day) {
                     return (
-                      <button
-                        key={slot}
-                        type="button"
-                        className={[
-                          'sunrise-cal__slot',
-                          `sunrise-cal__slot--${slot}`,
-                          `sunrise-cal__slot--${slotDay.status}`,
-                          isSelected ? 'sunrise-cal__slot--selected' : '',
-                          !selectable ? 'sunrise-cal__slot--disabled' : '',
-                          bookable ? 'sunrise-cal__slot--bookable' : '',
-                          slotDay.tideBlocked ? 'sunrise-cal__slot--tide-block' : '',
-                        ]
-                          .filter(Boolean)
-                          .join(' ')}
-                        onClick={() => pickSlot(slotDay)}
-                        disabled={mode !== 'browse' && !selectable}
-                        aria-label={`${WEEKDAY_LONG[day.weekday]} ${day.date}, ${SLOT_LABEL[slot]}. ${STATUS_LABEL[slotDay.status]}. Arrive by ${formatClock(slotDay.rideStart)}.`}
-                      >
-                        <span className="sunrise-cal__slot-label">{SLOT_LABEL[slot]}</span>
-                        <DayCell day={slotDay} compact />
-                        {slotDay.hasScheduleData && (
-                          <span className={`sunrise-cal__pill sunrise-cal__pill--${slotDay.status}`}>
-                            {STATUS_LABEL[slotDay.status]}
-                          </span>
-                        )}
-                      </button>
+                      <div
+                        key={`empty-${month.monthKey}-${weekIndex}-${colIndex}`}
+                        className="sunrise-cal__day sunrise-cal__day--empty"
+                        aria-hidden="true"
+                      />
                     );
-                  })}
-                </div>
-              </div>
-            );
-          }),
-        )}
+                  }
+
+                  const isToday = day.date === todayKey;
+                  const slots: RideSlotId[] = ['sunrise', 'twilight'];
+
+                  return (
+                    <div
+                      key={day.date}
+                      className={[
+                        'sunrise-cal__day',
+                        'sunrise-cal__day--ride',
+                        'sunrise-cal__day--dual',
+                        isToday ? 'sunrise-cal__day--today' : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                    >
+                      <span className="sunrise-cal__weekday-tag">{WEEKDAY_LONG[day.weekday]}</span>
+                      <span className="sunrise-cal__date-num">
+                        {dayOfMonth(day.date)}
+                        <span className="sunrise-cal__date-month">{shortMonth(day.date)}</span>
+                      </span>
+
+                      <div className="sunrise-cal__slots">
+                        {slots.map((slot) => {
+                          const slotDay = slotFromDay(day, slot);
+                          const selectable =
+                            mode === 'browse' ||
+                            (slotDay.status !== 'unavailable' && Boolean(slotDay.hasScheduleData));
+                          const isSelected = selectedKey === `${day.date}::${slot}`;
+                          const bookable = mode === 'intercept' && selectable;
+
+                          return (
+                            <button
+                              key={slot}
+                              type="button"
+                              className={[
+                                'sunrise-cal__slot',
+                                `sunrise-cal__slot--${slot}`,
+                                `sunrise-cal__slot--${slotDay.status}`,
+                                isSelected ? 'sunrise-cal__slot--selected' : '',
+                                !selectable ? 'sunrise-cal__slot--disabled' : '',
+                                bookable ? 'sunrise-cal__slot--bookable' : '',
+                                slotDay.tideBlocked ? 'sunrise-cal__slot--tide-block' : '',
+                              ]
+                                .filter(Boolean)
+                                .join(' ')}
+                              onClick={() => pickSlot(slotDay)}
+                              disabled={mode !== 'browse' && !selectable}
+                              aria-label={`${WEEKDAY_LONG[day.weekday]} ${day.date}, ${SLOT_LABEL[slot]}. ${STATUS_LABEL[slotDay.status]}. Arrive by ${formatClock(slotDay.rideStart)}.`}
+                            >
+                              <span className="sunrise-cal__slot-label">{SLOT_LABEL[slot]}</span>
+                              <DayCell day={slotDay} compact />
+                              {slotDay.hasScheduleData && (
+                                <span className={`sunrise-cal__pill sunrise-cal__pill--${slotDay.status}`}>
+                                  {STATUS_LABEL[slotDay.status]}
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                }),
+              )}
+            </div>
+          </section>
+        ))}
       </div>
 
       {selectedSlot && selectedSlot.isRideDay && (

@@ -66,6 +66,31 @@
   line-height: 1.45;
 }
 
+.sunrise-cal__months {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.sunrise-cal__month {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.85rem 0.85rem 1rem;
+  border: 1px solid #e4dcc8;
+  border-radius: 10px;
+  background: #fbfaf6;
+}
+
+.sunrise-cal__month-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  line-height: 1.2;
+}
+
 .sunrise-cal__weekdays {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -218,6 +243,10 @@
 
   .sunrise-cal__weekdays {
     display: none;
+  }
+
+  .sunrise-cal__month {
+    padding: 0.7rem 0.65rem 0.85rem;
   }
 
   .sunrise-cal__grid--rides .sunrise-cal__day {
