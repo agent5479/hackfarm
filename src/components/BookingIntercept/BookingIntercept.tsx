@@ -7,30 +7,6 @@ import SunriseRideCalendar, {
 } from '../SunriseRideCalendar/SunriseRideCalendar';
 import './BookingIntercept.css';
 
-const RIDE_OUTLINE = [
-  {
-    id: 'twilight-rides',
-    title: 'Sunrise & Twilight Beach Rides',
-    blurb: "Wed · Fri · Sun · tide-checked at Paton's Rock",
-    image: SUNRISE_TWILIGHT_RIDE.image,
-    summaries: [
-      'Sunrise beach ride — arrive 1 hour before sunrise',
-      'Twilight beach ride — arrive 1 hour before sunset',
-      'Wednesday, Friday & Sunday only',
-      'Only rideable tide & sun combinations can be booked',
-    ],
-  },
-  {
-    id: 'other-rides',
-    title: 'Trail, Beach & Swim Rides',
-    blurb: 'Book any available date on FareHarbor',
-    image: OTHER_FAREHARBOR_RIDES[0].image,
-    summaries: OTHER_FAREHARBOR_RIDES.map((ride) =>
-      ride.priceFrom ? `${ride.title} — from ${ride.priceFrom}` : ride.title,
-    ),
-  },
-] as const;
-
 function bookTwilightSlot({ day, slot }: BookSlotPayload) {
   const slotTitle = slot === 'sunrise' ? 'Sunrise' : 'Twilight';
   openFareHarborBooking({
@@ -48,39 +24,6 @@ function bookOtherRide(itemId: string, title: string) {
 export default function BookingIntercept() {
   return (
     <div className="booking-intercept">
-      <fieldset className="booking-intercept__chooser">
-        <legend className="booking-intercept__chooser-legend">Choose your ride type</legend>
-        <p className="booking-intercept__chooser-lead">
-          Select a category to jump to booking options below.
-        </p>
-        <div className="booking-intercept__outline" role="list">
-          {RIDE_OUTLINE.map((item) => (
-            <a
-              key={item.id}
-              className="booking-intercept__outline-card"
-              href={`#${item.id}`}
-              role="listitem"
-            >
-              <img
-                className="booking-intercept__outline-image"
-                src={optimizedUrl(item.image, 'thumb')}
-                alt=""
-                decoding="async"
-              />
-              <span className="booking-intercept__outline-body">
-                <span className="booking-intercept__outline-title">{item.title}</span>
-                <span className="booking-intercept__outline-blurb">{item.blurb}</span>
-                <ul className="booking-intercept__outline-list">
-                  {item.summaries.map((line) => (
-                    <li key={line}>{line}</li>
-                  ))}
-                </ul>
-              </span>
-            </a>
-          ))}
-        </div>
-      </fieldset>
-
       <section id="twilight-rides" className="booking-intercept__panel booking-intercept__panel--twilight">
         <header className="booking-intercept__panel-head">
           <p className="booking-intercept__panel-eyebrow">Tide-checked schedule</p>
@@ -100,7 +43,7 @@ export default function BookingIntercept() {
       </section>
 
       <div className="booking-intercept__divider" aria-hidden="true">
-        <span>Or book a trail, beach or swim ride</span>
+        <span>Trail, beach &amp; swim rides</span>
       </div>
 
       <section id="other-rides" className="booking-intercept__panel booking-intercept__panel--other">
@@ -110,7 +53,7 @@ export default function BookingIntercept() {
         </header>
         <div className="booking-intercept__grid">
           {OTHER_FAREHARBOR_RIDES.map((ride) => (
-            <article key={ride.id} className="booking-intercept__card">
+            <article key={ride.id} id={ride.id} className="booking-intercept__card">
               <img
                 className="booking-intercept__card-image"
                 src={optimizedUrl(ride.image, 'thumb')}
