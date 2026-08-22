@@ -225,32 +225,95 @@
 @media (max-width: 720px) {
   .sunrise-cal__weekdays,
   .sunrise-cal__grid {
-    grid-template-columns: 1fr;
-    gap: 0.7rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem;
   }
 
-  .sunrise-cal__weekdays {
-    display: none;
+  .sunrise-cal__weekday-head {
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+    padding: 0 0 0.2rem;
   }
 
   .sunrise-cal__month {
-    padding: 0.7rem 0.65rem 0.85rem;
+    padding: 0.55rem 0.45rem 0.65rem;
+    gap: 0.4rem;
+  }
+
+  .sunrise-cal__month-title {
+    font-size: 1.05rem;
   }
 
   .sunrise-cal__grid--rides .sunrise-cal__day {
-    min-height: 200px;
+    min-height: 0;
+    padding: 0.35rem 0.3rem 0.4rem;
+    gap: 0.2rem;
   }
 
   .sunrise-cal__day--dual {
     min-height: 0;
   }
 
-  .sunrise-cal__slot {
-    min-height: 110px;
+  .sunrise-cal__weekday-tag {
+    display: none;
   }
 
-  .sunrise-cal__day--empty {
-    display: none;
+  .sunrise-cal__date-num {
+    font-size: 0.78rem;
+  }
+
+  .sunrise-cal__date-month {
+    font-size: 0.55rem;
+  }
+
+  .sunrise-cal__slots {
+    gap: 0.3rem;
+  }
+
+  .sunrise-cal__slot {
+    min-height: 78px;
+    padding: 0.28rem 0.28rem 0.32rem;
+    gap: 0.12rem;
+  }
+
+  .sunrise-cal__slot-label {
+    font-size: 0.55rem;
+  }
+
+  .sunrise-cal__pill {
+    font-size: 0.5rem;
+    padding: 0.08rem 0.28rem;
+  }
+
+  .sunrise-cal__days-note {
+    padding: 0.55rem 0.7rem;
+    font-size: 0.82rem;
+  }
+
+  .sunrise-cal__nav-btn {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.78rem;
+  }
+
+  .sunrise-cal__range {
+    font-size: 0.9rem;
+  }
+
+  .day-cell--compact .day-cell__times {
+    margin-top: 0.35rem;
+    font-size: 0.58rem;
+  }
+
+  .day-cell--compact .day-cell__label {
+    font-size: 0.5rem;
+  }
+
+  .day-cell--compact .day-cell__arrive strong {
+    font-size: 0.68rem;
+  }
+
+  .day-cell--compact .day-cell__pending {
+    font-size: 0.55rem;
   }
 }
 

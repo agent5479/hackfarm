@@ -230,6 +230,27 @@
     max-height: 180px;
   }
 
+  .booking-intercept__calendar {
+    padding: 0.75rem 0.55rem 0.85rem;
+  }
+
+  .booking-intercept__calendar-lead {
+    font-size: 0.82rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .booking-intercept__calendar .sunrise-cal__slot {
+    min-height: 74px;
+  }
+
+  .booking-intercept__calendar .sunrise-cal__month {
+    padding: 0.45rem 0.35rem 0.55rem;
+  }
+
+  .booking-intercept__calendar .sunrise-cal__month-title {
+    font-size: 1rem;
+  }
+
   .booking-intercept__grid {
     grid-template-columns: 1fr;
   }

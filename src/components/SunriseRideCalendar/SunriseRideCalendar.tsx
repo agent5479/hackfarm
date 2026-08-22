@@ -168,8 +168,8 @@ export default function SunriseRideCalendar({
       {!loading && rideDays.length > 0 && <HorizonSummary days={rideDays} />}
 
       <p className="sunrise-cal__days-note">
-        Sunrise and twilight rides run <strong>Wednesday, Friday &amp; Sunday</strong> only. Pick a
-        rideable slot — only book dates marked rideable.
+        Tide-dependent rides: <strong>Wednesday, Friday &amp; Sunday</strong> only. Green border =
+        bookable; faded = do not book.
       </p>
 
       <div className="sunrise-cal__months">

@@ -52,7 +52,7 @@ export default function BookingIntercept() {
           decoding="async"
         />
         <div className="booking-intercept__twilight-body">
-          <p className="booking-intercept__panel-eyebrow">Tide-checked · Wed / Fri / Sun</p>
+          <p className="booking-intercept__panel-eyebrow">Tide-dependent · Wed / Fri / Sun</p>
           <h3>{SUNRISE_TWILIGHT_RIDE.title}</h3>
           <p className="booking-intercept__meta">{SUNRISE_TWILIGHT_RIDE.meta}</p>
           <button
@@ -70,21 +70,20 @@ export default function BookingIntercept() {
       {calendarOpen && (
         <div id="tide-calendar" className="booking-intercept__calendar">
           <p className="booking-intercept__calendar-lead">
-            Pick a rideable sunrise or twilight slot — unavailable days stay faded when tide and sun do not
-            align.
+            Green border = bookable. Faded = tide and sun do not align — do not book those slots.
           </p>
           <SunriseRideCalendar mode="intercept" onBookDay={bookTwilightSlot} />
         </div>
       )}
 
       <div className="booking-intercept__divider" aria-hidden="true">
-        <span>Trail, beach &amp; swim rides</span>
+        <span>Other rides (no tide calendar needed)</span>
       </div>
 
       <section id="other-rides" className="booking-intercept__panel booking-intercept__panel--other">
         <header className="booking-intercept__panel-head">
           <p className="booking-intercept__panel-eyebrow">Open dates</p>
-          <h3>Trail, beach &amp; swim rides</h3>
+          <h3>Other rides</h3>
         </header>
         <div className="booking-intercept__grid">
           {OTHER_FAREHARBOR_RIDES.map((ride) => (

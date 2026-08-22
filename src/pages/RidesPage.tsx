@@ -234,7 +234,10 @@ export default function RidesPage() {
       <section id="book-rides" className="section section--cream">
         <div className="container">
           <h2>Book your ride</h2>
-          <p>Select a date for trail, beach and swim rides, or open the tide calendar to book sunrise &amp; twilight.</p>
+          <p>
+            Sunrise &amp; twilight rides need tide clearance — check the calendar first. Other rides can be
+            booked on any open date.
+          </p>
           <BookingIntercept />
         </div>
       </section>
