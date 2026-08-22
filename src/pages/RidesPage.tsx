@@ -49,7 +49,7 @@ const RIDE_CATEGORIES: RideCategory[] = [
         description:
           'Ride through native forest and farm country to the beach as the sun paints the sky. Glow-worms possible on the way back when conditions allow. Wed, Fri & Sun — tide-checked.',
         bookingHref: '#twilight-rides',
-        bookingLabel: 'Check twilight dates',
+        bookingLabel: 'Book sunrise / twilight',
       },
       {
         title: 'Swimming with Horses',
@@ -234,7 +234,7 @@ export default function RidesPage() {
       <section id="book-rides" className="section section--cream">
         <div className="container">
           <h2>Book your ride</h2>
-          <p>Use the tide calendar for sunrise &amp; twilight, or select a date for our other FareHarbor rides.</p>
+          <p>Select a date for trail, beach and swim rides, or open the tide calendar to book sunrise &amp; twilight.</p>
           <BookingIntercept />
         </div>
       </section>

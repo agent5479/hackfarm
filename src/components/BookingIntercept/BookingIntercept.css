@@ -1,13 +1,85 @@
+.booking-intercept__twilight-card {
+  display: grid;
+  grid-template-columns: minmax(140px, 220px) minmax(0, 1fr);
+  gap: 0;
+  margin: 0 0 1.25rem;
+  background: #f7faf5;
+  border: 2px solid var(--color-green);
+  border-radius: 10px;
+  overflow: hidden;
+  scroll-margin-top: 5rem;
+}
+
+.booking-intercept__twilight-image {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  object-fit: cover;
+}
+
+.booking-intercept__twilight-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 1.1rem 1.25rem;
+}
+
+.booking-intercept__twilight-body h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.45rem;
+  color: var(--color-secondary);
+  line-height: 1.2;
+}
+
+.booking-intercept__twilight-body .booking-intercept__select {
+  align-self: flex-start;
+  margin-top: 0.55rem;
+}
+
+.booking-intercept__calendar {
+  margin: 0 0 1.75rem;
+  padding: 1rem 1rem 1.15rem;
+  background: #fff;
+  border: 1px solid #c5ddc8;
+  border-radius: 10px;
+  scroll-margin-top: 5rem;
+}
+
+.booking-intercept__calendar-lead {
+  margin: 0 0 0.85rem;
+  font-size: 0.9rem;
+  color: var(--color-text-muted, #666);
+  line-height: 1.4;
+}
+
+.booking-intercept__calendar .sunrise-cal {
+  gap: 0.75rem;
+  font-size: 0.92rem;
+}
+
+.booking-intercept__calendar .sunrise-cal__month {
+  padding: 0.65rem 0.65rem 0.75rem;
+}
+
+.booking-intercept__calendar .sunrise-cal__month-title {
+  font-size: 1.1rem;
+}
+
+.booking-intercept__calendar .sunrise-cal__slot {
+  min-height: 96px;
+}
+
+.booking-intercept__calendar .sunrise-cal__days-note {
+  padding: 0.55rem 0.75rem;
+  font-size: 0.85rem;
+}
+
 .booking-intercept__panel {
   scroll-margin-top: 5rem;
   border-radius: 10px;
   overflow: hidden;
-}
-
-.booking-intercept__panel--twilight {
-  margin: 0 0 0.5rem;
-  background: #f7faf5;
-  border: 2px solid var(--color-green);
 }
 
 .booking-intercept__panel--other {
@@ -18,10 +90,6 @@
 }
 
 .booking-intercept__panel-head {
-  padding: 1.1rem 1.25rem 0.85rem;
-}
-
-.booking-intercept__panel--other .booking-intercept__panel-head {
   padding: 0 0 1rem;
 }
 
@@ -64,27 +132,6 @@
   flex: 1;
   height: 1px;
   background: #d4cbb5;
-}
-
-.booking-intercept__sunrise-media {
-  display: flex;
-  justify-content: center;
-  background: #e8f0e4;
-  border-top: 1px solid #d5e4d2;
-  border-bottom: 1px solid #d5e4d2;
-}
-
-.booking-intercept__sunrise-image {
-  display: block;
-  height: 220px;
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
-  object-position: center;
-}
-
-.booking-intercept__sunrise-body {
-  padding: 1.25rem;
 }
 
 .booking-intercept__grid {
@@ -137,6 +184,10 @@
   line-height: 1.45;
 }
 
+.booking-intercept__twilight-body .booking-intercept__meta {
+  margin-bottom: 0;
+}
+
 .booking-intercept__footer {
   display: flex;
   align-items: center;
@@ -170,20 +221,21 @@
 }
 
 @media (max-width: 720px) {
+  .booking-intercept__twilight-card {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-intercept__twilight-image {
+    min-height: 140px;
+    max-height: 180px;
+  }
+
   .booking-intercept__grid {
     grid-template-columns: 1fr;
   }
 
   .booking-intercept__panel--other {
     padding: 1rem 0.9rem 1.15rem;
-  }
-
-  .booking-intercept__sunrise-image {
-    height: 180px;
-  }
-
-  .booking-intercept__sunrise-body {
-    padding: 0.85rem;
   }
 
   .booking-intercept__footer {

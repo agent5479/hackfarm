@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { OTHER_FAREHARBOR_RIDES, SUNRISE_TWILIGHT_RIDE } from '../../booking/fareharbor-catalog';
 import { formatClock } from '../../booking/schedule';
 import { openFareHarborBooking } from '../../lib/booking-events';
@@ -21,26 +23,59 @@ function bookOtherRide(itemId: string, title: string) {
   openFareHarborBooking({ itemId, title });
 }
 
+function shouldOpenCalendar(hash: string) {
+  return hash === '#twilight-rides' || hash === '#tide-calendar';
+}
+
 export default function BookingIntercept() {
+  const { hash } = useLocation();
+  const [calendarOpen, setCalendarOpen] = useState(() =>
+    typeof window !== 'undefined' ? shouldOpenCalendar(window.location.hash) : false,
+  );
+
+  useEffect(() => {
+    if (!shouldOpenCalendar(hash)) return;
+    setCalendarOpen(true);
+    const id = hash.slice(1);
+    requestAnimationFrame(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }, [hash]);
+
   return (
     <div className="booking-intercept">
-      <section id="twilight-rides" className="booking-intercept__panel booking-intercept__panel--twilight">
-        <header className="booking-intercept__panel-head">
-          <p className="booking-intercept__panel-eyebrow">Tide-checked schedule</p>
+      <article id="twilight-rides" className="booking-intercept__twilight-card">
+        <img
+          className="booking-intercept__twilight-image"
+          src={optimizedUrl(SUNRISE_TWILIGHT_RIDE.image, 'thumb')}
+          alt={SUNRISE_TWILIGHT_RIDE.title}
+          decoding="async"
+        />
+        <div className="booking-intercept__twilight-body">
+          <p className="booking-intercept__panel-eyebrow">Tide-checked · Wed / Fri / Sun</p>
           <h3>{SUNRISE_TWILIGHT_RIDE.title}</h3>
-        </header>
-        <div className="booking-intercept__sunrise-media">
-          <img
-            className="booking-intercept__sunrise-image"
-            src={optimizedUrl(SUNRISE_TWILIGHT_RIDE.image, 'content')}
-            alt={SUNRISE_TWILIGHT_RIDE.title}
-            decoding="async"
-          />
+          <p className="booking-intercept__meta">{SUNRISE_TWILIGHT_RIDE.meta}</p>
+          <button
+            type="button"
+            className="booking-intercept__select"
+            aria-expanded={calendarOpen}
+            aria-controls="tide-calendar"
+            onClick={() => setCalendarOpen((open) => !open)}
+          >
+            {calendarOpen ? 'Hide tide calendar' : 'Check dates & book'}
+          </button>
         </div>
-        <div className="booking-intercept__sunrise-body">
+      </article>
+
+      {calendarOpen && (
+        <div id="tide-calendar" className="booking-intercept__calendar">
+          <p className="booking-intercept__calendar-lead">
+            Pick a rideable sunrise or twilight slot — unavailable days stay faded when tide and sun do not
+            align.
+          </p>
           <SunriseRideCalendar mode="intercept" onBookDay={bookTwilightSlot} />
         </div>
-      </section>
+      )}
 
       <div className="booking-intercept__divider" aria-hidden="true">
         <span>Trail, beach &amp; swim rides</span>
