@@ -2,6 +2,18 @@
   scroll-margin-top: 5rem;
 }
 
+.ride-request__eyebrow {
+  margin: 0 0 0.45rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-text-muted, #666);
+  line-height: 1.4;
+}
+
+#ride-request h2 {
+  margin-top: 0;
+}
+
 .rides-categories__lead {
   margin: 0 0 1.5rem;
   color: var(--color-text-muted, #666);

@@ -1,8 +1,14 @@
-.booking-intercept__twilight-card {
+.booking-intercept__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.booking-intercept__ride {
   display: grid;
   grid-template-columns: minmax(140px, 220px) minmax(0, 1fr);
   gap: 0;
-  margin: 0 0 1.25rem;
+  margin: 0;
   background: #f7faf5;
   border: 2px solid var(--color-green);
   border-radius: 10px;
@@ -10,14 +16,14 @@
   scroll-margin-top: 5rem;
 }
 
-.booking-intercept__twilight-image {
+.booking-intercept__ride-image {
   width: 100%;
   height: 100%;
   min-height: 160px;
   object-fit: cover;
 }
 
-.booking-intercept__twilight-body {
+.booking-intercept__ride-body {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -25,7 +31,7 @@
   padding: 1.1rem 1.25rem;
 }
 
-.booking-intercept__twilight-body h3 {
+.booking-intercept__ride-body h3 {
   margin: 0;
   font-family: var(--font-heading);
   font-size: 1.45rem;
@@ -33,13 +39,29 @@
   line-height: 1.2;
 }
 
-.booking-intercept__twilight-body .booking-intercept__select {
+.booking-intercept__ride-body .booking-intercept__select {
   align-self: flex-start;
   margin-top: 0.55rem;
 }
 
+.booking-intercept__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-green);
+}
+
+.booking-intercept__meta {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.45;
+}
+
 .booking-intercept__calendar {
-  margin: 0 0 1.75rem;
+  margin: 0;
   padding: 1rem 1rem 1.15rem;
   background: #fff;
   border: 1px solid #c5ddc8;
@@ -76,133 +98,6 @@
   font-size: 0.85rem;
 }
 
-.booking-intercept__panel {
-  scroll-margin-top: 5rem;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.booking-intercept__panel--other {
-  margin: 0;
-  padding: 1.25rem 1.25rem 1.5rem;
-  background: #fff;
-  border: 2px solid #d4cbb5;
-}
-
-.booking-intercept__panel-head {
-  padding: 0 0 1rem;
-}
-
-.booking-intercept__panel-eyebrow {
-  margin: 0 0 0.25rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-green);
-}
-
-.booking-intercept__panel--other .booking-intercept__panel-eyebrow {
-  color: #8a6a3a;
-}
-
-.booking-intercept__panel-head h3 {
-  margin: 0;
-  font-family: var(--font-heading);
-  font-size: 1.65rem;
-  color: var(--color-secondary);
-  line-height: 1.2;
-}
-
-.booking-intercept__divider {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 2.25rem 0;
-  color: var(--color-text-muted, #666);
-  font-size: 0.88rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-}
-
-.booking-intercept__divider::before,
-.booking-intercept__divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: #d4cbb5;
-}
-
-.booking-intercept__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.75rem;
-}
-
-.booking-intercept__card {
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  border: 1px solid #e8e0d0;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s, box-shadow 0.2s;
-  scroll-margin-top: 5rem;
-}
-
-.booking-intercept__card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-}
-
-.booking-intercept__card-image {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-}
-
-.booking-intercept__card-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 1.25rem;
-}
-
-.booking-intercept__card-body h4 {
-  margin: 0 0 0.5rem;
-  font-family: var(--font-heading);
-  font-size: 1.35rem;
-  line-height: 1.25;
-}
-
-.booking-intercept__meta {
-  margin: 0 0 1rem;
-  font-size: 0.85rem;
-  color: #666;
-  line-height: 1.45;
-}
-
-.booking-intercept__twilight-body .booking-intercept__meta {
-  margin-bottom: 0;
-}
-
-.booking-intercept__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: auto;
-  padding-top: 0.75rem;
-}
-
-.booking-intercept__price {
-  font-weight: 600;
-  font-size: 1.05rem;
-  color: var(--color-secondary);
-}
-
 .booking-intercept__select {
   padding: 0.55rem 1rem;
   border: none;
@@ -221,11 +116,11 @@
 }
 
 @media (max-width: 720px) {
-  .booking-intercept__twilight-card {
+  .booking-intercept__ride {
     grid-template-columns: 1fr;
   }
 
-  .booking-intercept__twilight-image {
+  .booking-intercept__ride-image {
     min-height: 140px;
     max-height: 180px;
   }
@@ -249,19 +144,6 @@
 
   .booking-intercept__calendar .sunrise-cal__month-title {
     font-size: 1rem;
-  }
-
-  .booking-intercept__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .booking-intercept__panel--other {
-    padding: 1rem 0.9rem 1.15rem;
-  }
-
-  .booking-intercept__footer {
-    flex-direction: column;
-    align-items: stretch;
   }
 
   .booking-intercept__select {

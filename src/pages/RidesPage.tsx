@@ -244,10 +244,14 @@ export default function RidesPage() {
 
       <section id="ride-request" className="section section--white">
         <div className="container">
+          <p className="ride-request__eyebrow">
+            Not sure what you need yet? Prefer to sort it out with a person first.
+          </p>
           <h2>Booking Request Form</h2>
           <p>
-            Prefer a full-day, multi-day, vaulting or custom experience? Send a request and we will confirm
-            times around tide and weather.
+            If you&apos;d rather coordinate directly — or you&apos;re looking at a full-day, multi-day,
+            vaulting or custom experience — send a request and we&apos;ll help you confirm times around
+            tide and weather.
           </p>
           <ContactForm type="ride-request" />
         </div>

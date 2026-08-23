@@ -44,75 +44,65 @@ export default function BookingIntercept() {
 
   return (
     <div className="booking-intercept">
-      <article id="twilight-rides" className="booking-intercept__twilight-card">
-        <img
-          className="booking-intercept__twilight-image"
-          src={optimizedUrl(SUNRISE_TWILIGHT_RIDE.image, 'thumb')}
-          alt={SUNRISE_TWILIGHT_RIDE.title}
-          decoding="async"
-        />
-        <div className="booking-intercept__twilight-body">
-          <p className="booking-intercept__panel-eyebrow">Tide-dependent · Wed / Fri / Sun</p>
-          <h3>{SUNRISE_TWILIGHT_RIDE.title}</h3>
-          <p className="booking-intercept__meta">{SUNRISE_TWILIGHT_RIDE.meta}</p>
-          <button
-            type="button"
-            className="booking-intercept__select"
-            aria-expanded={calendarOpen}
-            aria-controls="tide-calendar"
-            onClick={() => setCalendarOpen((open) => !open)}
-          >
-            {calendarOpen ? 'Hide tide calendar' : 'Check dates & book'}
-          </button>
-        </div>
-      </article>
+      <div className="booking-intercept__list">
+        <article id="twilight-rides" className="booking-intercept__ride">
+          <img
+            className="booking-intercept__ride-image"
+            src={optimizedUrl(SUNRISE_TWILIGHT_RIDE.image, 'thumb')}
+            alt={SUNRISE_TWILIGHT_RIDE.title}
+            decoding="async"
+          />
+          <div className="booking-intercept__ride-body">
+            <p className="booking-intercept__eyebrow">Tide-dependent · Wed / Fri / Sun</p>
+            <h3>{SUNRISE_TWILIGHT_RIDE.title}</h3>
+            <p className="booking-intercept__meta">{SUNRISE_TWILIGHT_RIDE.meta}</p>
+            <button
+              type="button"
+              className="booking-intercept__select"
+              aria-expanded={calendarOpen}
+              aria-controls="tide-calendar"
+              onClick={() => setCalendarOpen((open) => !open)}
+            >
+              {calendarOpen ? 'Hide tide calendar' : 'Check dates & book'}
+            </button>
+          </div>
+        </article>
 
-      {calendarOpen && (
-        <div id="tide-calendar" className="booking-intercept__calendar">
-          <p className="booking-intercept__calendar-lead">
-            Green border = bookable. Faded = tide and sun do not align — do not book those slots.
-          </p>
-          <SunriseRideCalendar mode="intercept" onBookDay={bookTwilightSlot} />
-        </div>
-      )}
+        {calendarOpen && (
+          <div id="tide-calendar" className="booking-intercept__calendar">
+            <p className="booking-intercept__calendar-lead">
+              Green border = bookable. Faded = tide and sun do not align — do not book those slots.
+            </p>
+            <SunriseRideCalendar mode="intercept" onBookDay={bookTwilightSlot} />
+          </div>
+        )}
 
-      <div className="booking-intercept__divider" aria-hidden="true">
-        <span>Other rides (no tide calendar needed)</span>
+        {OTHER_FAREHARBOR_RIDES.map((ride) => (
+          <article key={ride.id} id={ride.id} className="booking-intercept__ride">
+            <img
+              className="booking-intercept__ride-image"
+              src={optimizedUrl(ride.image, 'thumb')}
+              alt={ride.title}
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="booking-intercept__ride-body">
+              {ride.priceFrom && (
+                <p className="booking-intercept__eyebrow">From {ride.priceFrom}</p>
+              )}
+              <h3>{ride.title}</h3>
+              <p className="booking-intercept__meta">{ride.meta}</p>
+              <button
+                type="button"
+                className="booking-intercept__select"
+                onClick={() => bookOtherRide(ride.fareharborItemId, ride.title)}
+              >
+                Select date
+              </button>
+            </div>
+          </article>
+        ))}
       </div>
-
-      <section id="other-rides" className="booking-intercept__panel booking-intercept__panel--other">
-        <header className="booking-intercept__panel-head">
-          <p className="booking-intercept__panel-eyebrow">Open dates</p>
-          <h3>Other rides</h3>
-        </header>
-        <div className="booking-intercept__grid">
-          {OTHER_FAREHARBOR_RIDES.map((ride) => (
-            <article key={ride.id} id={ride.id} className="booking-intercept__card">
-              <img
-                className="booking-intercept__card-image"
-                src={optimizedUrl(ride.image, 'thumb')}
-                alt={ride.title}
-                loading="lazy"
-                decoding="async"
-              />
-              <div className="booking-intercept__card-body">
-                <h4>{ride.title}</h4>
-                <p className="booking-intercept__meta">{ride.meta}</p>
-                <div className="booking-intercept__footer">
-                  {ride.priceFrom && <span className="booking-intercept__price">From {ride.priceFrom}</span>}
-                  <button
-                    type="button"
-                    className="booking-intercept__select"
-                    onClick={() => bookOtherRide(ride.fareharborItemId, ride.title)}
-                  >
-                    Select date
-                  </button>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }
