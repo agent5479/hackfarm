@@ -765,3 +765,62 @@
   z-index: 2;
 }
 
+.sunrise-cal__weekdays--full,
+.sunrise-cal__grid--full {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.sunrise-cal__grid--full .sunrise-cal__day--tide {
+  min-height: 168px;
+  padding: 0.45rem 0.35rem 0.5rem;
+  width: 100%;
+  border: 1px solid #e4dcc8;
+  border-top: 3px solid #c5ddc8;
+}
+
+.sunrise-cal__grid--full .sunrise-cal__day--rideable:not(.sunrise-cal__day--off) {
+  border: 3px solid var(--color-green);
+  box-shadow: 0 0 0 1px rgba(45, 107, 53, 0.15);
+}
+
+.sunrise-cal__grid--full .sunrise-cal__day--caution:not(.sunrise-cal__day--off) {
+  border: 3px solid var(--color-orange);
+}
+
+.sunrise-cal__grid--full .sunrise-cal__day--unavailable:not(.sunrise-cal__day--off),
+.sunrise-cal__grid--full .sunrise-cal__day--tide-block:not(.sunrise-cal__day--off) {
+  border-color: #e4dcc8;
+  opacity: 0.42;
+}
+
+.sunrise-cal__off-note {
+  margin: 0.35rem 0 0;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.day-cell__sun--tide .day-cell__label,
+.day-cell__sun--tide span:last-child {
+  color: #2b7cb5;
+}
+
+@media (max-width: 900px) {
+  .sunrise-cal__weekdays--full,
+  .sunrise-cal__grid--full {
+    gap: 0.3rem;
+  }
+
+  .sunrise-cal__grid--full .sunrise-cal__day--tide {
+    min-height: 0;
+    padding: 0.3rem 0.2rem 0.35rem;
+  }
+
+  .sunrise-cal__weekdays--full .sunrise-cal__weekday-head {
+    font-size: 0.58rem;
+  }
+}
+
+

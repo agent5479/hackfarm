@@ -2,12 +2,16 @@ import {
   PATONS_ROCK,
   PLANNER_DAYS,
   SUNRISE_RIDE_WEEKDAYS,
+  TIDE_AFTER_HIGH_ALLOWED_HOURS,
   TIDE_AFTER_HIGH_HOURS,
+  TIDE_AFTER_LOW_HOURS,
+  TIDE_BEFORE_HIGH_ALLOWED_HOURS,
   TIDE_BEFORE_HIGH_HOURS,
+  TIDE_BEFORE_LOW_HOURS,
   TIDE_HORIZON_DAYS,
   WEATHER_HORIZON_DAYS,
 } from './location';
-import { type RideType, SUNRISE_RIDE } from './rides';
+import { type RideType, SUNRISE_RIDE, TWILIGHT_RIDE } from './rides';
 import { sunTimesForDate } from './sun';
 import {
   estimateTideHeightAt,
@@ -52,7 +56,9 @@ const WD: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri
 export type ScheduleStatus = 'rideable' | 'caution' | 'unavailable';
 export type TidePhase = 'safe_before_high' | 'safe_after_high' | 'forbidden' | 'unknown';
 
-export type RideSlotId = 'sunrise' | 'twilight';
+export type RideSlotId = 'sunrise' | 'twilight' | 'tide';
+
+export type AnchorLabel = 'Sunrise' | 'Sunset' | 'Low tide' | 'High tide';
 
 export interface SunriseDaySchedule {
   date: string;
@@ -63,7 +69,7 @@ export interface SunriseDaySchedule {
   sunrise: Date;
   sunset: Date;
   sunAnchor: Date;
-  sunAnchorLabel: 'Sunrise' | 'Sunset';
+  sunAnchorLabel: AnchorLabel;
   rideStart: Date;
   rideEnd: Date;
   status: ScheduleStatus;
@@ -81,6 +87,16 @@ export interface SunriseDaySchedule {
   weatherCaution?: boolean;
   weatherCode?: number;
   hasScheduleData?: boolean;
+}
+
+/** Alias — same day model used for low/high tide window rides. */
+export type TideDaySchedule = SunriseDaySchedule;
+
+interface TidePlacement {
+  start: Date;
+  end: Date;
+  anchor: TideExtreme;
+  centerDistMs: number;
 }
 
 export interface DualDaySchedule {
@@ -346,13 +362,353 @@ function applyWeather(
 
 function sunAnchorForRide(ride: RideType, sun: { sunrise: Date; sunset: Date }): {
   sunAnchor: Date;
-  sunAnchorLabel: 'Sunrise' | 'Sunset';
+  sunAnchorLabel: AnchorLabel;
   slot: RideSlotId;
 } {
   if (ride.daylight === 'around-sunset') {
     return { sunAnchor: sun.sunset, sunAnchorLabel: 'Sunset', slot: 'twilight' };
   }
   return { sunAnchor: sun.sunrise, sunAnchorLabel: 'Sunrise', slot: 'sunrise' };
+}
+
+export function intervalsOverlap(
+  aStart: Date,
+  aEnd: Date,
+  bStart: Date,
+  bEnd: Date,
+): boolean {
+  return aStart.getTime() < bEnd.getTime() && aEnd.getTime() > bStart.getTime();
+}
+
+function tideWindowHours(ride: RideType): { before: number; after: number } {
+  if (ride.tideMode === 'require-high') {
+    return {
+      before: ride.tideBeforeHours ?? TIDE_BEFORE_HIGH_ALLOWED_HOURS,
+      after: ride.tideAfterHours ?? TIDE_AFTER_HIGH_ALLOWED_HOURS,
+    };
+  }
+  return {
+    before: ride.tideBeforeHours ?? TIDE_BEFORE_LOW_HOURS,
+    after: ride.tideAfterHours ?? TIDE_AFTER_LOW_HOURS,
+  };
+}
+
+/** Place duration fully inside tide±window ∩ daylight, preferring centering on the extreme. */
+export function placeRideInTideWindow(
+  anchor: Date,
+  beforeHours: number,
+  afterHours: number,
+  durationHours: number,
+  daylightStart: Date,
+  daylightEnd: Date,
+): { start: Date; end: Date } | null {
+  const zoneStart = new Date(anchor.getTime() - beforeHours * MS_HOUR);
+  const zoneEnd = new Date(anchor.getTime() + afterHours * MS_HOUR);
+  const winStartMs = Math.max(zoneStart.getTime(), daylightStart.getTime());
+  const winEndMs = Math.min(zoneEnd.getTime(), daylightEnd.getTime());
+  const durationMs = durationHours * MS_HOUR;
+  if (winEndMs - winStartMs < durationMs) return null;
+
+  let startMs = anchor.getTime() - durationMs / 2;
+  let endMs = startMs + durationMs;
+  if (startMs < winStartMs) {
+    startMs = winStartMs;
+    endMs = startMs + durationMs;
+  } else if (endMs > winEndMs) {
+    endMs = winEndMs;
+    startMs = endMs - durationMs;
+  }
+  if (startMs < winStartMs - 1 || endMs > winEndMs + 1) return null;
+  return { start: new Date(startMs), end: new Date(endMs) };
+}
+
+function extremesNearDaylight(
+  tides: TideExtreme[],
+  type: 'high' | 'low',
+  daylightStart: Date,
+  daylightEnd: Date,
+  beforeHours: number,
+  afterHours: number,
+  durationHours: number,
+): TideExtreme[] {
+  const pad = (Math.max(beforeHours, afterHours) + durationHours) * MS_HOUR;
+  const from = daylightStart.getTime() - pad;
+  const to = daylightEnd.getTime() + pad;
+  return tides
+    .filter((t) => t.type === type && t.time.getTime() >= from && t.time.getTime() <= to)
+    .sort((a, b) => a.time.getTime() - b.time.getTime());
+}
+
+function overlapsSunriseOrTwilight(
+  dateKey: string,
+  rideStart: Date,
+  rideEnd: Date,
+  forecast: DayWeather[],
+  tides: TideExtreme[],
+  allTides: TideExtreme[],
+): boolean {
+  const weekday = weekdayInTz(dateKey);
+  if (!isSunriseRideWeekday(weekday)) return false;
+
+  const sunrise = buildSunriseDaySchedule(dateKey, forecast, tides, SUNRISE_RIDE, allTides);
+  const twilight = buildSunriseDaySchedule(dateKey, forecast, tides, TWILIGHT_RIDE, allTides);
+
+  if (
+    sunrise.isRideDay &&
+    intervalsOverlap(rideStart, rideEnd, sunrise.rideStart, sunrise.rideEnd)
+  ) {
+    return true;
+  }
+  if (
+    twilight.isRideDay &&
+    intervalsOverlap(rideStart, rideEnd, twilight.rideStart, twilight.rideEnd)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export function buildTideDaySchedule(
+  dateKey: string,
+  forecast: DayWeather[],
+  tides: TideExtreme[],
+  ride: RideType,
+  allTides: TideExtreme[] = tides,
+): TideDaySchedule {
+  const weekday = weekdayInTz(dateKey);
+  const isRideDay = ride.scheduleWeekdays
+    ? ride.scheduleWeekdays.includes(weekday)
+    : true;
+
+  const sun = sunTimesForDate(dateKey);
+  const { before, after } = tideWindowHours(ride);
+  const requireHigh = ride.tideMode === 'require-high';
+  const anchorLabel: AnchorLabel = requireHigh ? 'High tide' : 'Low tide';
+  const durationHours = ride.durationHours;
+
+  const reasons: string[] = [];
+  let status: ScheduleStatus = 'rideable';
+  let nearestHigh: Date | undefined;
+  let nearestLow: Date | undefined;
+  let nearestHighHeight: number | undefined;
+  let tidePhase: TidePhase = 'unknown';
+  let tideBlocked = false;
+  let weatherBlocked = false;
+  let weatherCaution = false;
+  let tideHeightAtRide: number | undefined;
+  let tideFlow: TideFlow | undefined;
+  let sunAnchor = sun.sunrise;
+  let rideStart = sun.sunrise;
+  let rideEnd = addMinutes(sun.sunrise, durationHours * 60);
+
+  const fromToday = daysFromToday(dateKey);
+  const hasScheduleData =
+    fromToday >= 0 && fromToday < TIDE_HORIZON_DAYS && tidesCoverDate(dateKey, allTides);
+
+  if (!isRideDay) {
+    status = 'unavailable';
+    reasons.unshift('Not available Fridays');
+  }
+
+  const dayWx = forecast.find((d) => d.date === dateKey);
+  const weatherAffectsStatus = dayWx != null && daysFromToday(dateKey) <= WEATHER_HORIZON_DAYS;
+  const wxLabel = dayWx ? weatherLabel(dayWx.weatherCode) : undefined;
+  const weatherCode = dayWx?.weatherCode;
+
+  if (ride.usesTides && hasScheduleData && isRideDay) {
+    const extremeType = requireHigh ? 'high' : 'low';
+    const candidates = extremesNearDaylight(
+      allTides.length ? allTides : tides,
+      extremeType,
+      sun.sunrise,
+      sun.sunset,
+      before,
+      after,
+      durationHours,
+    );
+
+    const placements: TidePlacement[] = [];
+    for (const extreme of candidates) {
+      const placed = placeRideInTideWindow(
+        extreme.time,
+        before,
+        after,
+        durationHours,
+        sun.sunrise,
+        sun.sunset,
+      );
+      if (!placed) continue;
+      const mid = placed.start.getTime() + (placed.end.getTime() - placed.start.getTime()) / 2;
+      placements.push({
+        start: placed.start,
+        end: placed.end,
+        anchor: extreme,
+        centerDistMs: Math.abs(mid - extreme.time.getTime()),
+      });
+    }
+    placements.sort((a, b) => a.centerDistMs - b.centerDistMs);
+
+    const clearOfSun = placements.filter(
+      (p) => !overlapsSunriseOrTwilight(dateKey, p.start, p.end, forecast, tides, allTides),
+    );
+    const chosen = clearOfSun[0] ?? placements[0];
+
+    if (!placements.length) {
+      status = 'unavailable';
+      tideBlocked = true;
+      reasons.push(
+        requireHigh
+          ? `No daylight window inside high tide ±${before}h`
+          : `No daylight window inside low tide ±${before}h`,
+      );
+      const near = nearestTideTo(candidates, sun.sunrise);
+      if (near) {
+        sunAnchor = near.time;
+        if (requireHigh) {
+          nearestHigh = near.time;
+          nearestHighHeight = near.height;
+        } else {
+          nearestLow = near.time;
+        }
+        reasons.push(`${anchorLabel} ${formatClock(near.time)}`);
+      }
+      tidePhase = 'forbidden';
+    } else if (!clearOfSun.length) {
+      status = 'unavailable';
+      rideStart = chosen.start;
+      rideEnd = chosen.end;
+      sunAnchor = chosen.anchor.time;
+      if (requireHigh) {
+        nearestHigh = chosen.anchor.time;
+        nearestHighHeight = chosen.anchor.height;
+      } else {
+        nearestLow = chosen.anchor.time;
+      }
+      reasons.push(`Arrive by ${formatClock(rideStart)}`);
+      reasons.push(`Until ${formatClock(rideEnd)}`);
+      reasons.push(`${anchorLabel} ${formatClock(chosen.anchor.time)}`);
+      reasons.push('Overlaps sunrise or twilight ride');
+      tidePhase = 'forbidden';
+    } else {
+      rideStart = chosen.start;
+      rideEnd = chosen.end;
+      sunAnchor = chosen.anchor.time;
+      if (requireHigh) {
+        nearestHigh = chosen.anchor.time;
+        nearestHighHeight = chosen.anchor.height;
+        const lows = lowTidesNear(tides, rideStart, rideEnd);
+        nearestLow = nearestTideTo(lows, rideStart)?.time;
+      } else {
+        nearestLow = chosen.anchor.time;
+        const highs = highTidesNear(tides, rideStart, rideEnd);
+        const nearHigh = nearestHighTo(highs, rideStart);
+        nearestHigh = nearHigh?.time;
+        nearestHighHeight = nearHigh?.height;
+      }
+      reasons.push(`Arrive by ${formatClock(rideStart)}`);
+      reasons.push(`Until ${formatClock(rideEnd)}`);
+      reasons.push(`${anchorLabel} ${formatClock(chosen.anchor.time)}`);
+      tidePhase = requireHigh ? 'forbidden' : 'safe_before_high';
+    }
+
+    if (allTides.length) {
+      tideHeightAtRide = estimateTideHeightAt(rideStart, allTides);
+      tideFlow = tideFlowAt(rideStart, allTides);
+      if (tideFlow && status !== 'unavailable') {
+        reasons.push(tideFlow === 'incoming' ? 'Tide incoming' : 'Tide outgoing');
+      }
+    }
+  } else if (ride.usesTides && isRideDay && !hasScheduleData) {
+    if (status !== 'unavailable') status = 'caution';
+    reasons.push('Tide times available within three months');
+    reasons.push(`Arrive by ${formatClock(rideStart)}`);
+  } else if (isRideDay) {
+    reasons.push(`Arrive by ${formatClock(rideStart)}`);
+  }
+
+  if (dayWx) {
+    const wx = applyWeather(dayWx, ride, reasons, status, weatherAffectsStatus);
+    status = wx.status;
+    weatherBlocked = wx.weatherBlocked;
+    weatherCaution = wx.weatherCaution;
+  } else if (daysFromToday(dateKey) > WEATHER_HORIZON_DAYS) {
+    reasons.push('Weather checked closer to the date');
+  }
+
+  return {
+    date: dateKey,
+    weekday,
+    isRideDay,
+    rideId: ride.id,
+    slot: 'tide',
+    sunrise: sun.sunrise,
+    sunset: sun.sunset,
+    sunAnchor,
+    sunAnchorLabel: anchorLabel,
+    rideStart,
+    rideEnd,
+    status,
+    statusReasons: reasons,
+    nearestHigh,
+    nearestLow,
+    tidePhase,
+    weatherLabel: wxLabel,
+    weatherAffectsStatus,
+    tideHeightAtRide,
+    tideFlow,
+    nearestHighHeight,
+    tideBlocked,
+    weatherBlocked,
+    weatherCaution,
+    weatherCode,
+    hasScheduleData,
+  };
+}
+
+export function buildTideHorizonSchedule(
+  startKey: string,
+  forecast: DayWeather[],
+  tides: TideExtreme[],
+  ride: RideType,
+  allTides: TideExtreme[] = tides,
+  days: number = PLANNER_DAYS,
+): Map<string, TideDaySchedule> {
+  const map = new Map<string, TideDaySchedule>();
+  for (const date of rollingHorizonDates(startKey, days)) {
+    map.set(date, buildTideDaySchedule(date, forecast, tides, ride, allTides));
+  }
+  return map;
+}
+
+export function tideHorizonSummary(days: TideDaySchedule[]): string {
+  return horizonSummary(days);
+}
+
+export function tideDetailSummary(day: TideDaySchedule): string {
+  const dateLabel = new Intl.DateTimeFormat('en-NZ', {
+    timeZone: PATONS_ROCK.timezone,
+    weekday: 'long',
+    day: 'numeric',
+    month: 'short',
+  }).format(nzNoon(day.date));
+
+  const bits = [
+    dateLabel,
+    `Arrive by ${formatClock(day.rideStart)}`,
+    `Until ${formatClock(day.rideEnd)}`,
+    `${day.sunAnchorLabel} ${formatClock(day.sunAnchor)}`,
+  ];
+
+  if (day.tideFlow) {
+    bits.push(day.tideFlow === 'incoming' ? 'Tide incoming' : 'Tide outgoing');
+  }
+  if (day.weatherLabel && day.weatherAffectsStatus) {
+    bits.push(`Forecast: ${day.weatherLabel}`);
+  } else if (!day.weatherAffectsStatus) {
+    bits.push('Weather checked closer to the date');
+  }
+
+  return bits.join(' · ');
 }
 
 export function buildSunriseDaySchedule(

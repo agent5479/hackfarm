@@ -83,7 +83,7 @@ export default function DayCell({ day, compact = false }: DayCellProps) {
         </div>
         {day.tideBlocked && (
           <div className="day-cell__tide-overlay">
-            <span>High tide</span>
+            <span>{day.slot === 'tide' ? 'No window' : 'High tide'}</span>
           </div>
         )}
       </div>

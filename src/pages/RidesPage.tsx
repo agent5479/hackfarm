@@ -235,8 +235,8 @@ export default function RidesPage() {
         <div className="container">
           <h2>Book your ride</h2>
           <p>
-            Sunrise &amp; twilight rides need tide clearance — check the calendar first. Other rides can be
-            booked on any open date.
+            Sunrise, twilight, Paton&apos;s Rock, Rangi, and swimming rides need tide clearance —
+            check the calendar first. Hack Track can be booked on any open date.
           </p>
           <BookingIntercept />
         </div>
