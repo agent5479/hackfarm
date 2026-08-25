@@ -7,7 +7,7 @@ import ContactForm from '../components/ContactForm';
 import BookingIntercept from '../components/BookingIntercept/BookingIntercept';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
-import { JsonLd, serviceJsonLd } from '../components/JsonLd';
+import { JsonLd, serviceJsonLd, softwareApplicationJsonLd } from '../components/JsonLd';
 import './RidesPage.css';
 
 const content = scraped.pages.rides;
@@ -158,11 +158,20 @@ export default function RidesPage() {
   return (
     <>
       <JsonLd
-        data={serviceJsonLd(
-          'Holistic Horse Rides',
-          seo.description,
-          '/holistic-horse-rides/',
-        )}
+        data={[
+          serviceJsonLd(
+            'Holistic Horse Rides',
+            seo.description,
+            '/holistic-horse-rides/',
+          ),
+          softwareApplicationJsonLd({
+            name: "Paton's Rock Sunrise & Tide Ride Planner",
+            description:
+              "First-party booking planner for Hack n Stay sunrise and twilight beach rides at Paton's Rock. Shows sunrise timing and tide clearance for Wed, Fri and Sun rides before continuing to live FareHarbor booking.",
+            path: '/holistic-horse-rides/',
+            applicationCategory: 'TravelApplication',
+          }),
+        ]}
       />
       <PageHero
         title="Holistic Horseback Experiences"
@@ -175,6 +184,22 @@ export default function RidesPage() {
           {content.paragraphs.slice(1, 5).map((p, i) => (
             <p key={i}>{decodeHtml(p)}</p>
           ))}
+        </div>
+      </section>
+
+      <section className="section section--white">
+        <div className="container">
+          <h2>What does the sunrise and tide Ride Planner do?</h2>
+          <p>
+            The Ride Planner is a first-party tool for Paton&apos;s Rock beach rides. It shows sunrise
+            timing and tide clearance for Wednesday, Friday and Sunday sunrise or twilight rides so
+            you can pick a workable week before continuing to live FareHarbor booking.
+          </p>
+          <p>
+            It is built for guests booking Hack n Stay guided rides at Hack Farm near Paton&apos;s
+            Rock in Golden Bay — not a generic tide table. Use it when tides matter; Hack Track
+            on-farm rides can still be booked on any open date.
+          </p>
         </div>
       </section>
 

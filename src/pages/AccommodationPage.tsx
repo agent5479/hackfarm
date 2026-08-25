@@ -2,9 +2,16 @@ import scraped from '../content/scraped-content.json';
 import { decodeHtml } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
-import { JsonLd, serviceJsonLd } from '../components/JsonLd';
+import { JsonLd, serviceJsonLd, faqPageJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import {
+  ALL_ACCOMMODATION_FAQS,
+  BYO_HORSE_FAQS,
+  CAMPING_FAQS,
+  HOMESTEAD_FAQS,
+  type FaqItem,
+} from '../content/faqs';
 
 const content = scraped.pages.accommodation;
 
@@ -14,16 +21,41 @@ const SECTIONS = [
   { id: 'horse-stay', title: 'Horse Stay', img: '/images/uploads/2021/04/Horse-Stay-smaller.jpg' },
 ];
 
+function FaqBlock({ title, faqs }: { title: string; faqs: FaqItem[] }) {
+  return (
+    <section className="section section--cream">
+      <div className="container">
+        <h2>{title}</h2>
+        {faqs.map((faq) => (
+          <div key={faq.question} style={{ marginBottom: '1.25rem' }}>
+            <h3>{faq.question}</h3>
+            <p>{faq.answer}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function AccommodationPage() {
   const seo = getPageSeo('/accommodation/')!;
   usePageMeta(seo);
 
   return (
     <>
-      <JsonLd data={serviceJsonLd('Accommodation', seo.description, '/accommodation/')} />
+      <JsonLd
+        data={[
+          serviceJsonLd('Accommodation', seo.description, '/accommodation/'),
+          faqPageJsonLd(ALL_ACCOMMODATION_FAQS),
+        ]}
+      />
       <PageHero title={decodeHtml(content.h1s[0] || 'Accommodation')} subtitle={content.ogDesc} />
       <section className="section section--cream">
         <div className="container">
+          <p>
+            Hack n Stay offers farmstay rooms, a dog-friendly campground, and bring-your-own-horse stays
+            near Paton&apos;s Rock beach in Golden Bay.
+          </p>
           {content.paragraphs.slice(0, 3).map((p, i) => (
             <p key={i}>{decodeHtml(p)}</p>
           ))}
@@ -54,6 +86,9 @@ export default function AccommodationPage() {
           <p>Pizza oven, communal kitchen, showers, rope swing, climbing wall, fruit trees, vegetable garden and much, much more.</p>
         </div>
       </section>
+      <FaqBlock title="Frequently asked homestead questions" faqs={HOMESTEAD_FAQS} />
+      <FaqBlock title="Frequently asked camping questions" faqs={CAMPING_FAQS} />
+      <FaqBlock title="Frequently asked BYO horse questions" faqs={BYO_HORSE_FAQS} />
     </>
   );
 }

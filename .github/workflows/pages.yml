@@ -51,13 +51,18 @@ jobs:
           test ! -f dist/CNAME
           test -f dist/robots.txt
           test -f dist/sitemap.xml
+          test -f dist/llms.txt
           test -f dist/about/index.html
           test -f dist/accommodation/index.html
           test -f dist/horse/donnie/index.html
           grep -q 'src="/hackfarm/assets/' dist/index.html
           grep -q 'agent5479.github.io/hackfarm' dist/sitemap.xml
+          grep -q 'GPTBot' dist/robots.txt
+          grep -q 'Hack n Stay Golden Bay' dist/llms.txt
           grep -q 'application/ld+json' dist/index.html
           grep -q 'About Hack n Stay' dist/about/index.html
+          grep -q 'FAQPage' dist/accommodation/index.html
+          grep -q 'sunrise and tide Ride Planner' dist/holistic-horse-rides/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

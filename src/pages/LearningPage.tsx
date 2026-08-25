@@ -2,6 +2,7 @@ import scraped from '../content/scraped-content.json';
 import { decodeHtml } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
+import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
 
@@ -14,10 +15,12 @@ const LESSONS = [
 ];
 
 export default function LearningPage() {
-  usePageMeta(getPageSeo('/learning-experiences/')!);
+  const seo = getPageSeo('/learning-experiences/')!;
+  usePageMeta(seo);
 
   return (
     <>
+      <JsonLd data={serviceJsonLd('Learning Experiences', seo.description, '/learning-experiences/')} />
       <PageHero title="Learning Experiences" subtitle="Horsemanship, Vaulting and Riding Lessons" />
       <section className="section section--cream">
         <div className="container">

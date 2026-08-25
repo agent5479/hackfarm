@@ -1,14 +1,17 @@
 import PageHero from '../components/PageHero';
 import { MAPS } from '../lib/constants';
 import InstagramGrid from '../components/InstagramGrid';
+import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
 
 export default function TrailsPage() {
-  usePageMeta(getPageSeo('/hack-farm-trails/')!);
+  const seo = getPageSeo('/hack-farm-trails/')!;
+  usePageMeta(seo);
 
   return (
     <>
+      <JsonLd data={serviceJsonLd('Hack Farm Trails', seo.description, '/hack-farm-trails/')} />
       <PageHero
         title="Interactive Hack Trail Map"
         subtitle="Bring your own horse and ride our trails"

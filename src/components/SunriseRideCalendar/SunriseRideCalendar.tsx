@@ -50,6 +50,7 @@ const STATUS_LABEL: Record<SunriseDaySchedule['status'], string> = {
 const SLOT_LABEL: Record<RideSlotId, string> = {
   sunrise: 'Sunrise',
   twilight: 'Twilight',
+  tide: 'Tide',
 };
 
 const WEEKDAY_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

@@ -2,6 +2,7 @@ import scraped from '../content/scraped-content.json';
 import { decodeHtml } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
+import { JsonLd, personJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
 
@@ -14,6 +15,16 @@ export default function AboutPage() {
 
   return (
     <>
+      <JsonLd
+        data={personJsonLd({
+          name: 'Baerbel Hack',
+          jobTitle: 'Founder, Hack n Stay Golden Bay',
+          path: '/about/',
+          description:
+            'Baerbel Hack founded Hack Farm / Hack n Stay Golden Bay and the Hack Vaulties club, sharing connected riding and vaulting near Paton\'s Rock, Golden Bay, New Zealand.',
+          image: '/images/uploads/2021/02/IMG_20190120_122312-scaled.jpg',
+        })}
+      />
       <PageHero
         title="About Hack n Stay"
         subtitle="Eco farmstay, holistic horse experiences, and community vaulting in Golden Bay"

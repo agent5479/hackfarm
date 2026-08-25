@@ -1,0 +1,30 @@
+# Hack n Stay Golden Bay (Hack Farm)
+
+> Eco farmstay, animal-friendly campground, and holistic beach horse rides near Paton's Rock, Golden Bay, New Zealand.
+
+Hack n Stay Golden Bay (also known as Hack Farm) is a first-party farmstay and guided horse experience business run by Baerbel Hack at 22 Grant Road, Puramahoi, Takaka 7182, Golden Bay, South Island, New Zealand. Phone: +64 27 525 9434. Email: Stay@hackfarm.co.nz.
+
+## Key pages
+
+- [Home](https://agent5479.github.io/hackfarm/): Overview of farmstay, camping, and beach horse rides near Paton's Rock.
+- [About](https://agent5479.github.io/hackfarm/about/): Brand and founder story — Hack Farm, Hack n Stay, Baerbel Hack, and the Hack Vaulties club.
+- [Accommodation](https://agent5479.github.io/hackfarm/accommodation/): Farmstay rooms, dog-friendly campground, and bring-your-own-horse stays.
+- [Holistic Horse Rides](https://agent5479.github.io/hackfarm/holistic-horse-rides/): Guided beach and trail rides with a tide-aware sunrise planner for Paton's Rock.
+- [Hack Farm Trails](https://agent5479.github.io/hackfarm/hack-farm-trails/): Interactive trail map and tide guidance for BYO horse riders.
+- [Our Horses](https://agent5479.github.io/hackfarm/our-horses/): Meet the Hack Farm herd used for rides, lessons, and vaulting.
+- [Learning Experiences](https://agent5479.github.io/hackfarm/learning-experiences/): Riding lessons, horsemanship, and vaulting for all ages.
+- [Vaulting](https://agent5479.github.io/hackfarm/vaulting/): Hack Vaulties vaulting sessions with Baerbel Hack.
+- [Special Events](https://agent5479.github.io/hackfarm/special-events/): Kids camps, horse club days, and special riding events.
+- [Gift Vouchers](https://agent5479.github.io/hackfarm/horse-riding-holiday-gift-vouchers/): Gift cards for rides, stays, and learning experiences.
+- [Contact](https://agent5479.github.io/hackfarm/contact/): Phone, email, and address for bookings and enquiries.
+- [On-site weather station](https://agent5479.github.io/hackfarm/FreshWDL/FreshWDL.html): Live FreshWDL weather readings from the property.
+
+## Social
+
+- Facebook: https://www.facebook.com/hacknstay
+- Instagram: https://www.instagram.com/hacknstay/
+- TripAdvisor: https://www.tripadvisor.co.nz/Attraction_Review-g675007-d6936779-Reviews-Hack_n_Stay_Golden_Bay-Takaka_Golden_Bay_Nelson_Tasman_Region_South_Island.html
+
+## Optional
+
+- [Sitemap](https://agent5479.github.io/hackfarm/sitemap/): Full list of public pages on this site.

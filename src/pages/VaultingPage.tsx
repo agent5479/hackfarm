@@ -2,16 +2,19 @@ import scraped from '../content/scraped-content.json';
 import { decodeHtml } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
+import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
 
 const content = scraped.pages.vaulting;
 
 export default function VaultingPage() {
-  usePageMeta(getPageSeo('/vaulting/')!);
+  const seo = getPageSeo('/vaulting/')!;
+  usePageMeta(seo);
 
   return (
     <>
+      <JsonLd data={serviceJsonLd('Vaulting', seo.description, '/vaulting/')} />
       <PageHero
         title="Vaulting"
         subtitle="Fun and engaging vaulting sessions for all ages"

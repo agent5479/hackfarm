@@ -2,16 +2,19 @@ import scraped from '../content/scraped-content.json';
 import { decodeHtml } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
+import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
 
 const content = scraped.pages.events;
 
 export default function EventsPage() {
-  usePageMeta(getPageSeo('/special-events/')!);
+  const seo = getPageSeo('/special-events/')!;
+  usePageMeta(seo);
 
   return (
     <>
+      <JsonLd data={serviceJsonLd('Special Events & Kids Camps', seo.description, '/special-events/')} />
       <PageHero title="Special Events & Kids Camps" subtitle="Fun camps and riding days" />
       <section className="section section--cream">
         <div className="container">

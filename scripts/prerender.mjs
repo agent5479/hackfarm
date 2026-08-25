@@ -112,7 +112,7 @@ async function main() {
     const urlPath = routePath === '/' ? base : `${base}${routePath.replace(/^\//, '')}`;
     const url = `${origin}${urlPath}`;
     try {
-      await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+      await page.goto(url, { waitUntil: 'load', timeout: 60000 });
       await page.waitForSelector('#root', { timeout: 30000 });
       // Wait until React has painted something inside #root
       await page.waitForFunction(
@@ -122,8 +122,13 @@ async function main() {
         },
         { timeout: 30000 },
       );
-      // Give meta hook a tick
-      await page.waitForTimeout(100);
+      // Give meta hook a tick; ignore lingering third-party iframe traffic
+      await page.waitForTimeout(150);
+      try {
+        await page.waitForLoadState('networkidle', { timeout: 5000 });
+      } catch {
+        /* maps / embeds may keep the network busy */
+      }
       const html = await page.content();
       const out = outPathForRoute(routePath);
       writeFileSync(out, html);
