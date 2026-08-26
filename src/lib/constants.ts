@@ -7,13 +7,11 @@ export const BOOKING = {
 };
 
 export function fareHarborRideUrl(itemId?: string, date?: string, rideStart?: string): string {
-  const base = itemId
-    ? `https://fareharbor.com/embeds/book/hackfarm/items/${itemId}/`
-    : 'https://fareharbor.com/embeds/book/hackfarm/';
+  const itemPath = itemId ? `items/${itemId}/${date ? `date/${date}/` : ''}` : '';
+  const base = `https://fareharbor.com/embeds/book/hackfarm/${itemPath}`;
   const params = new URLSearchParams({ 'full-items': 'yes', flow: BOOKING.rideFlow });
-  if (date) params.set('date', date);
   if (rideStart) {
-    params.set('asn', `Sunrise ride start ${rideStart}`);
+    params.set('ref', `Suggested start ${rideStart}`);
   }
   return `${base}?${params.toString()}`;
 }

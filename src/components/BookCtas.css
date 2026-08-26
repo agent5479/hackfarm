@@ -107,6 +107,31 @@
   background: rgba(0,0,0,0.08);
 }
 
+.book-card__date-lock {
+  padding: 0.65rem 1.25rem;
+  background: #f4f8f0;
+  border-bottom: 1px solid #d8e4cc;
+}
+
+.book-card__date-lock-heading {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--color-secondary);
+}
+
+.book-card__date-lock-start {
+  margin: 0.2rem 0 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #5a5a5a);
+}
+
+.book-card__date-lock-hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.8rem;
+  color: var(--color-text-muted, #5a5a5a);
+}
+
 .book-card__frame {
   flex: 1;
   width: 100%;

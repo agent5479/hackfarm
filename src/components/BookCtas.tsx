@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { formatDayLabel } from '../booking/schedule';
 import { BOOKING, fareHarborRideUrl } from '../lib/constants';
 import {
   OPEN_FAREHARBOR_BOOKING_EVENT,
@@ -29,7 +30,7 @@ export default function BookCtas() {
   const { pathname, hash } = useLocation();
   const [open, setOpen] = useState<BookingKind | null>(null);
   const [rideSrc, setRideSrc] = useState(BOOKING.ride);
-  const [rideTitle, setRideTitle] = useState<string | undefined>();
+  const [rideDetail, setRideDetail] = useState<FareHarborBookingDetail>({});
 
   useEffect(() => {
     if (!open) return;
@@ -56,7 +57,7 @@ export default function BookCtas() {
 
   const openFareHarbor = useCallback((detail: FareHarborBookingDetail = {}) => {
     setRideSrc(fareHarborRideUrl(detail.itemId, detail.date, detail.rideStart));
-    setRideTitle(detail.title);
+    setRideDetail(detail);
     setOpen('ride');
   }, []);
 
@@ -79,7 +80,15 @@ export default function BookCtas() {
     }
   }, [hash, pathname]);
 
-  const title = open === 'ride' ? rideTitle ?? LABELS.ride : open ? LABELS[open] : '';
+  const showDateLock = open === 'ride' && rideDetail.date && rideDetail.lockDate !== false;
+
+  const title = useMemo(() => {
+    if (open === 'stay') return LABELS.stay;
+    if (open !== 'ride') return '';
+    const base = rideDetail.title ?? LABELS.ride;
+    if (!rideDetail.date) return base;
+    return `${base} · ${formatDayLabel(rideDetail.date)}`;
+  }, [open, rideDetail.date, rideDetail.title]);
 
   return (
     <>
@@ -102,7 +111,21 @@ export default function BookCtas() {
                 ×
               </button>
             </div>
+            {showDateLock && (
+              <div className="book-card__date-lock" role="status">
+                <p className="book-card__date-lock-heading">
+                  Booking for {formatDayLabel(rideDetail.date!)}
+                </p>
+                {rideDetail.rideStart && (
+                  <p className="book-card__date-lock-start">Suggested start {rideDetail.rideStart}</p>
+                )}
+                <p className="book-card__date-lock-hint">
+                  To change the date, close this window and pick a different day on the tide calendar.
+                </p>
+              </div>
+            )}
             <iframe
+              key={open === 'ride' ? rideSrc : 'stay'}
               title={title}
               src={open === 'ride' ? rideSrc : BOOKING.stay}
               className="book-card__frame"

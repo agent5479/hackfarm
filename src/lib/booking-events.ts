@@ -6,6 +6,8 @@ export interface FareHarborBookingDetail {
   date?: string;
   rideStart?: string;
   title?: string;
+  /** When true (default if date is set), show date-lock banner in the booking modal. */
+  lockDate?: boolean;
 }
 
 export function openRideBooking(): void {
