@@ -6,8 +6,20 @@ export const BOOKING = {
   rideFlow: '543158',
 };
 
-export function fareHarborRideUrl(itemId?: string, date?: string, rideStart?: string): string {
-  const itemPath = itemId ? `items/${itemId}/${date ? `date/${date}/` : ''}` : '';
+export function fareHarborRideUrl(
+  itemId?: string,
+  date?: string,
+  rideStart?: string,
+  availabilityId?: number,
+): string {
+  let itemPath = '';
+  if (itemId) {
+    if (availabilityId != null) {
+      itemPath = `items/${itemId}/availability/${availabilityId}/book/`;
+    } else {
+      itemPath = `items/${itemId}/${date ? `date/${date}/` : ''}`;
+    }
+  }
   const base = `https://fareharbor.com/embeds/book/hackfarm/${itemPath}`;
   const params = new URLSearchParams({ 'full-items': 'yes', flow: BOOKING.rideFlow });
   if (rideStart) {

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { resolveAvailabilityId } from '../booking/fareharbor-availability';
 import { formatDayLabel } from '../booking/schedule';
 import { BOOKING, fareHarborRideUrl } from '../lib/constants';
 import {
@@ -31,6 +32,7 @@ export default function BookCtas() {
   const [open, setOpen] = useState<BookingKind | null>(null);
   const [rideSrc, setRideSrc] = useState(BOOKING.ride);
   const [rideDetail, setRideDetail] = useState<FareHarborBookingDetail>({});
+  const [rideLoading, setRideLoading] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -55,10 +57,31 @@ export default function BookCtas() {
     navigate(RIDES_BOOKING_PATH);
   }, [hash, navigate, pathname]);
 
-  const openFareHarbor = useCallback((detail: FareHarborBookingDetail = {}) => {
-    setRideSrc(fareHarborRideUrl(detail.itemId, detail.date, detail.rideStart));
+  const openFareHarbor = useCallback(async (detail: FareHarborBookingDetail = {}) => {
     setRideDetail(detail);
     setOpen('ride');
+
+    const fallbackSrc = fareHarborRideUrl(detail.itemId, detail.date, detail.rideStart);
+    if (!detail.itemId || !detail.date || detail.lockDate === false) {
+      setRideSrc(fallbackSrc);
+      setRideLoading(false);
+      return;
+    }
+
+    setRideLoading(true);
+    setRideSrc(fallbackSrc);
+    try {
+      const availabilityId = await resolveAvailabilityId(detail.itemId, detail.date, detail.rideStart);
+      setRideSrc(
+        availabilityId != null
+          ? fareHarborRideUrl(detail.itemId, detail.date, detail.rideStart, availabilityId)
+          : fallbackSrc,
+      );
+    } catch {
+      setRideSrc(fallbackSrc);
+    } finally {
+      setRideLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -124,12 +147,19 @@ export default function BookCtas() {
                 </p>
               </div>
             )}
-            <iframe
-              key={open === 'ride' ? rideSrc : 'stay'}
-              title={title}
-              src={open === 'ride' ? rideSrc : BOOKING.stay}
-              className="book-card__frame"
-            />
+            <div className="book-card__frame-wrap">
+              {open === 'ride' && rideLoading && (
+                <p className="book-card__loading" role="status">
+                  Loading your booking slot…
+                </p>
+              )}
+              <iframe
+                key={open === 'ride' ? rideSrc : 'stay'}
+                title={title}
+                src={open === 'ride' ? rideSrc : BOOKING.stay}
+                className="book-card__frame"
+              />
+            </div>
           </div>
         </div>
       )}
