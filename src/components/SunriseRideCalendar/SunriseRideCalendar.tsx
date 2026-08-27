@@ -19,6 +19,7 @@ import { SUNRISE_RIDE, TWILIGHT_RIDE } from '../../booking/rides';
 import { useSunriseSchedule } from '../../booking/useSunriseSchedule';
 import DayCell from './DayCell';
 import HorizonSummary from './HorizonSummary';
+import TideCalendarLoading from '../TideCalendarLoading/TideCalendarLoading';
 import './SunriseRideCalendar.css';
 
 type CalendarMode = 'browse' | 'book' | 'intercept';
@@ -162,18 +163,25 @@ export default function SunriseRideCalendar({
         </button>
       </div>
 
-      {loading && <p className="sunrise-cal__status">Loading sunrise, twilight &amp; tide times…</p>}
-      {error && <p className="sunrise-cal__status sunrise-cal__status--warn">{error}</p>}
-      {tideNote && !loading && <p className="sunrise-cal__status sunrise-cal__status--warn">{tideNote}</p>}
+      {error && !loading && <p className="sunrise-cal__status sunrise-cal__status--warn">{error}</p>}
 
-      {!loading && rideDays.length > 0 && <HorizonSummary days={rideDays} />}
+      <div className="sunrise-cal__body">
+        {loading && (
+          <TideCalendarLoading message="Checking sunrise, twilight & tide times…" />
+        )}
 
-      <p className="sunrise-cal__days-note">
-        Tide-dependent rides: <strong>Wednesday, Friday &amp; Sunday</strong> only. Green border =
-        bookable; faded = do not book.
-      </p>
+        {!loading && (
+          <>
+            {tideNote && <p className="sunrise-cal__status sunrise-cal__status--warn">{tideNote}</p>}
 
-      <div className="sunrise-cal__months">
+            {rideDays.length > 0 && <HorizonSummary days={rideDays} />}
+
+            <p className="sunrise-cal__days-note">
+              Tide-dependent rides: <strong>Wednesday, Friday &amp; Sunday</strong> only. Green border =
+              bookable; faded = do not book.
+            </p>
+
+            <div className="sunrise-cal__months">
         {rideMonths.map((month) => (
           <section key={month.monthKey} className="sunrise-cal__month" aria-labelledby={`cal-month-${month.monthKey}`}>
             <h4 id={`cal-month-${month.monthKey}`} className="sunrise-cal__month-title">
@@ -268,45 +276,48 @@ export default function SunriseRideCalendar({
             </div>
           </section>
         ))}
-      </div>
+            </div>
 
-      {selectedSlot && selectedSlot.isRideDay && (
-        <div className="sunrise-cal__detail">
-          <p className="sunrise-cal__detail-text">{detailSummary(selectedSlot)}</p>
-          <ul className="sunrise-cal__detail-reasons">
-            {selectedSlot.statusReasons.map((r) => (
-              <li key={r}>{r}</li>
-            ))}
-          </ul>
-          {mode === 'intercept' &&
-            selectedSlot.isRideDay &&
-            selectedSlot.status !== 'unavailable' &&
-            selectedSlot.hasScheduleData && (
-              <p className="sunrise-cal__book-hint">
-                Click this slot again to open booking for the {SLOT_LABEL[selectedSlot.slot]} ride.
-              </p>
+            {selectedSlot && selectedSlot.isRideDay && (
+              <div className="sunrise-cal__detail">
+                <p className="sunrise-cal__detail-text">{detailSummary(selectedSlot)}</p>
+                <ul className="sunrise-cal__detail-reasons">
+                  {selectedSlot.statusReasons.map((r) => (
+                    <li key={r}>{r}</li>
+                  ))}
+                </ul>
+                {mode === 'intercept' &&
+                  selectedSlot.isRideDay &&
+                  selectedSlot.status !== 'unavailable' &&
+                  selectedSlot.hasScheduleData && (
+                    <p className="sunrise-cal__book-hint">
+                      Click this slot again to open booking for the {SLOT_LABEL[selectedSlot.slot]} ride.
+                    </p>
+                  )}
+                {mode === 'book' && selectedSlot.status !== 'unavailable' && selectedSlot.hasScheduleData && (
+                  <button
+                    type="button"
+                    className="btn btn--green sunrise-cal__continue"
+                    onClick={() => onContinue?.(selectedSlot)}
+                  >
+                    Continue to booking
+                  </button>
+                )}
+              </div>
             )}
-          {mode === 'book' && selectedSlot.status !== 'unavailable' && selectedSlot.hasScheduleData && (
-            <button
-              type="button"
-              className="btn btn--green sunrise-cal__continue"
-              onClick={() => onContinue?.(selectedSlot)}
-            >
-              Continue to booking
-            </button>
-          )}
-        </div>
-      )}
 
-      <p className="sunrise-cal__footnote">
-        Wed, Fri &amp; Sun · arrive 1 hour before sunrise or sunset · wave height shows tide level.
-        {mode === 'browse' && ' Weather affects suitability within the next 7 days only.'}
-        {mode === 'intercept' && ' Click a rideable sunrise or twilight slot to book.'}
-      </p>
-      <p className="sunrise-cal__legend">
-        Wave height = tide at ride time · arrows show incoming (up) or outgoing (down) · blue overlay = high
-        tide block · corner icon = weather (7-day forecast)
-      </p>
+            <p className="sunrise-cal__footnote">
+              Wed, Fri &amp; Sun · arrive 1 hour before sunrise or sunset · wave height shows tide level.
+              {mode === 'browse' && ' Weather affects suitability within the next 7 days only.'}
+              {mode === 'intercept' && ' Click a rideable sunrise or twilight slot to book.'}
+            </p>
+            <p className="sunrise-cal__legend">
+              Wave height = tide at ride time · arrows show incoming (up) or outgoing (down) · blue overlay = high
+              tide block · corner icon = weather (7-day forecast)
+            </p>
+          </>
+        )}
+      </div>
     </div>
   );
 }

@@ -55,6 +55,46 @@
   color: #8a5a2b;
 }
 
+.sunrise-cal__body {
+  position: relative;
+  min-height: 12rem;
+}
+
+.sunrise-cal__loading {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  background: rgba(252, 249, 242, 0.92);
+  border-radius: 8px;
+}
+
+.sunrise-cal__loading-text {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+}
+
+.sunrise-cal__spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #d4cbb5;
+  border-top-color: var(--color-green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .sunrise-cal__days-note {
   margin: 0;
   padding: 0.75rem 1rem;

@@ -149,9 +149,17 @@ export default function BookCtas() {
             )}
             <div className="book-card__frame-wrap">
               {open === 'ride' && rideLoading && (
-                <p className="book-card__loading" role="status">
-                  Loading your booking slot…
-                </p>
+                <div className="book-card__loading" role="status" aria-live="polite">
+                  <span className="book-card__spinner" aria-hidden="true" />
+                  <p className="book-card__loading-text">Loading your booking slot…</p>
+                </div>
+              )}
+              {open === 'ride' && showDateLock && !rideLoading && (
+                <div
+                  className="book-card__fh-shield"
+                  aria-hidden="true"
+                  title="To change the date, close this window and pick again on the tide calendar"
+                />
               )}
               <iframe
                 key={open === 'ride' ? rideSrc : 'stay'}

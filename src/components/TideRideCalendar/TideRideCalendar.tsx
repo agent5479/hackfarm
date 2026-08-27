@@ -17,6 +17,7 @@ import { PLANNER_DAYS } from '../../booking/location';
 import type { RideType } from '../../booking/rides';
 import { useSunriseSchedule } from '../../booking/useSunriseSchedule';
 import DayCell from '../SunriseRideCalendar/DayCell';
+import TideCalendarLoading from '../TideCalendarLoading/TideCalendarLoading';
 import '../SunriseRideCalendar/SunriseRideCalendar.css';
 
 type CalendarMode = 'browse' | 'book' | 'intercept';
@@ -151,21 +152,26 @@ export default function TideRideCalendar({
         </button>
       </div>
 
-      {loading && <p className="sunrise-cal__status">Loading tide times…</p>}
-      {error && <p className="sunrise-cal__status sunrise-cal__status--warn">{error}</p>}
-      {tideNote && !loading && <p className="sunrise-cal__status sunrise-cal__status--warn">{tideNote}</p>}
+      {error && !loading && <p className="sunrise-cal__status sunrise-cal__status--warn">{error}</p>}
 
-      {!loading && horizonDays.length > 0 && (
-        <p className="sunrise-cal__summary">{tideHorizonSummary(horizonDays)}</p>
-      )}
+      <div className="sunrise-cal__body">
+        {loading && <TideCalendarLoading message="Checking tide times…" />}
 
-      <p className="sunrise-cal__days-note">
-        <strong>{ride.name}</strong>: not Fridays · entire ride inside {tideNoun} tide {windowLabel} ·
-        daylight only · must not overlap sunrise/twilight slots. Green border = bookable; faded = do
-        not book.
-      </p>
+        {!loading && (
+          <>
+            {tideNote && <p className="sunrise-cal__status sunrise-cal__status--warn">{tideNote}</p>}
 
-      <div className="sunrise-cal__months">
+            {horizonDays.length > 0 && (
+              <p className="sunrise-cal__summary">{tideHorizonSummary(horizonDays)}</p>
+            )}
+
+            <p className="sunrise-cal__days-note">
+              <strong>{ride.name}</strong>: not Fridays · entire ride inside {tideNoun} tide {windowLabel} ·
+              daylight only · must not overlap sunrise/twilight slots. Green border = bookable; faded = do
+              not book.
+            </p>
+
+            <div className="sunrise-cal__months">
         {months.map((month) => (
           <section
             key={month.monthKey}
@@ -256,42 +262,45 @@ export default function TideRideCalendar({
             </div>
           </section>
         ))}
-      </div>
+            </div>
 
-      {selected && selected.isRideDay && (
-        <div className="sunrise-cal__detail">
-          <p className="sunrise-cal__detail-text">{tideDetailSummary(selected)}</p>
-          <ul className="sunrise-cal__detail-reasons">
-            {selected.statusReasons.map((r) => (
-              <li key={r}>{r}</li>
-            ))}
-          </ul>
-          {mode === 'intercept' &&
-            selected.isRideDay &&
-            selected.status !== 'unavailable' &&
-            selected.hasScheduleData && (
-              <p className="sunrise-cal__book-hint">
-                Click this day again to open booking for {ride.name}.
-              </p>
+            {selected && selected.isRideDay && (
+              <div className="sunrise-cal__detail">
+                <p className="sunrise-cal__detail-text">{tideDetailSummary(selected)}</p>
+                <ul className="sunrise-cal__detail-reasons">
+                  {selected.statusReasons.map((r) => (
+                    <li key={r}>{r}</li>
+                  ))}
+                </ul>
+                {mode === 'intercept' &&
+                  selected.isRideDay &&
+                  selected.status !== 'unavailable' &&
+                  selected.hasScheduleData && (
+                    <p className="sunrise-cal__book-hint">
+                      Click this day again to open booking for {ride.name}.
+                    </p>
+                  )}
+                {mode === 'book' && selected.status !== 'unavailable' && selected.hasScheduleData && (
+                  <button
+                    type="button"
+                    className="btn btn--green sunrise-cal__continue"
+                    onClick={() => onContinue?.(selected)}
+                  >
+                    Continue to booking
+                  </button>
+                )}
+              </div>
             )}
-          {mode === 'book' && selected.status !== 'unavailable' && selected.hasScheduleData && (
-            <button
-              type="button"
-              className="btn btn--green sunrise-cal__continue"
-              onClick={() => onContinue?.(selected)}
-            >
-              Continue to booking
-            </button>
-          )}
-        </div>
-      )}
 
-      <p className="sunrise-cal__footnote">
-        Not Fridays · ride must fit inside {tideNoun} tide {windowLabel} during daylight · clear of
-        sunrise &amp; twilight package times.
-        {mode === 'browse' && ' Weather affects suitability within the next 7 days only.'}
-        {mode === 'intercept' && ' Click a rideable day to book.'}
-      </p>
+            <p className="sunrise-cal__footnote">
+              Not Fridays · ride must fit inside {tideNoun} tide {windowLabel} during daylight · clear of
+              sunrise &amp; twilight package times.
+              {mode === 'browse' && ' Weather affects suitability within the next 7 days only.'}
+              {mode === 'intercept' && ' Click a rideable day to book.'}
+            </p>
+          </>
+        )}
+      </div>
     </div>
   );
 }
