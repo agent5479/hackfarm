@@ -79,16 +79,28 @@ async function main() {
     jobs,
     async ({ itemId, date }) => {
       try {
-        return await fetchAvailabilitiesForDate(itemId, date);
+        const rows = await fetchAvailabilitiesForDate(itemId, date);
+        const bookable = rows.filter((a) => a.isBookable);
+        let status = 'none';
+        if (bookable.length) status = 'bookable';
+        else if (rows.length) status = 'full';
+
+        const dateStatus = { itemId, date, status };
+        if (bookable.length === 1) dateStatus.pk = bookable[0].pk;
+        else if (bookable.length > 1) dateStatus.pk = bookable[0].pk;
+
+        return { rows, dateStatus };
       } catch (err) {
         console.warn(`  skip ${itemId} ${date}: ${err.message}`);
-        return [];
+        return { rows: [], dateStatus: null };
       }
     },
     CONCURRENCY,
   );
 
-  const availabilities = chunks.flat().filter((a) => a.isBookable);
+  const allRows = chunks.flatMap((chunk) => chunk.rows);
+  const availabilities = allRows.filter((a) => a.isBookable);
+  const dateStatuses = chunks.map((chunk) => chunk.dateStatus).filter(Boolean);
   const outDir = join(ROOT, 'public', 'data');
   await mkdir(outDir, { recursive: true });
   await writeFile(
@@ -100,13 +112,25 @@ async function main() {
         origin,
         itemIds: ITEM_IDS,
         availabilities,
+        dateStatuses,
       },
       null,
       2,
     ),
   );
 
-  console.log(`Wrote ${availabilities.length} bookable availabilities to public/data/fareharbor-availabilities.json`);
+  const statusCounts = dateStatuses.reduce(
+    (acc, entry) => {
+      acc[entry.status] = (acc[entry.status] ?? 0) + 1;
+      return acc;
+    },
+    {},
+  );
+  console.log(
+    `Wrote ${availabilities.length} bookable availabilities and ${dateStatuses.length} date statuses`,
+    statusCounts,
+    'to public/data/fareharbor-availabilities.json',
+  );
 }
 
 main().catch((err) => {

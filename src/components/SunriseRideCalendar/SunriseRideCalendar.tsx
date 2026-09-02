@@ -13,6 +13,10 @@ import {
 } from '../../booking/schedule';
 import { nzNoon } from '../../booking/nzTime';
 import { PLANNER_DAYS } from '../../booking/location';
+import {
+  type FareHarborDateStatus,
+  useFareHarborDateStatuses,
+} from '../../booking/fareharbor-availability';
 import { SUNRISE_RIDE } from '../../booking/rides';
 import { useSunriseSchedule } from '../../booking/useSunriseSchedule';
 import DayCell from './DayCell';
@@ -49,6 +53,34 @@ const STATUS_LABEL: Record<SunriseDaySchedule['status'], string> = {
 const WEEKDAY_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const RIDE_COLUMNS = [3, 5, 0] as const;
 const RIDE_COLUMN_LABELS = ['Wednesday', 'Friday', 'Sunday'];
+
+function isTideBookable(day: SunriseDaySchedule): boolean {
+  return Boolean(day.isRideDay && day.hasScheduleData && day.status !== 'unavailable');
+}
+
+function isFhBlocked(
+  day: SunriseDaySchedule,
+  fhStatus: FareHarborDateStatus,
+  fhReady: boolean,
+): boolean {
+  return isTideBookable(day) && fhReady && (fhStatus === 'full' || fhStatus === 'none');
+}
+
+const FH_BADGE: Record<'full' | 'none', { label: string; title: string }> = {
+  full: { label: 'Fully booked', title: 'Already booked by another guest' },
+  none: { label: 'Not online', title: 'Not available to book online' },
+};
+
+function fhBadgeForStatus(fhStatus: FareHarborDateStatus) {
+  if (fhStatus === 'full' || fhStatus === 'none') return FH_BADGE[fhStatus];
+  return undefined;
+}
+
+function fhBlockedDetail(fhStatus: FareHarborDateStatus): string | undefined {
+  if (fhStatus === 'full') return 'This date is fully booked on FareHarbor.';
+  if (fhStatus === 'none') return 'This date is not available to book online on FareHarbor.';
+  return undefined;
+}
 
 function groupRideDaysByMonth(rideDays: SunriseDaySchedule[]): MonthGroup[] {
   const byMonth = new Map<string, SunriseDaySchedule[]>();
@@ -88,7 +120,11 @@ export default function SunriseRideCalendar({
 }: SunriseRideCalendarProps) {
   const { startKey, todayKey, canPrev, canNext, shiftWindow, forecast, tides, allTides, loading, error, tideNote } =
     useSunriseSchedule();
+  const { statuses: fhStatuses, loading: fhLoading, ready: fhReady } = useFareHarborDateStatuses(
+    SUNRISE_RIDE.fareharborItemId ?? '',
+  );
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const showLoading = loading || fhLoading;
 
   const dates = useMemo(() => rollingHorizonDates(startKey, PLANNER_DAYS), [startKey]);
 
@@ -105,18 +141,24 @@ export default function SunriseRideCalendar({
   const rideMonths = useMemo(() => groupRideDaysByMonth(rideDays), [rideDays]);
 
   const selectedDay = selectedKey ? scheduleMap.get(selectedKey) : undefined;
+  const selectedFhStatus = selectedDay ? (fhStatuses.get(selectedDay.date) ?? 'unknown') : 'unknown';
+  const selectedFhBlocked = selectedDay ? isFhBlocked(selectedDay, selectedFhStatus, fhReady) : false;
 
   const pickDay = (day: SunriseDaySchedule) => {
+    const fhStatus = fhStatuses.get(day.date) ?? 'unknown';
+    const fhBlocked = isFhBlocked(day, fhStatus, fhReady);
     if ((mode === 'book' || mode === 'intercept') && day.status === 'unavailable') return;
     if ((mode === 'book' || mode === 'intercept') && !day.isRideDay) return;
     if ((mode === 'book' || mode === 'intercept') && !day.hasScheduleData) return;
+    if ((mode === 'book' || mode === 'intercept') && fhBlocked) return;
     setSelectedKey(day.date);
     onSelectDay?.(day);
     if (
       mode === 'intercept' &&
       day.isRideDay &&
       day.status !== 'unavailable' &&
-      day.hasScheduleData
+      day.hasScheduleData &&
+      !fhBlocked
     ) {
       onBookDay?.({ day, slot: 'sunrise' });
     }
@@ -144,12 +186,12 @@ export default function SunriseRideCalendar({
         </button>
       </div>
 
-      {error && !loading && <p className="sunrise-cal__status sunrise-cal__status--warn">{error}</p>}
+      {error && !showLoading && <p className="sunrise-cal__status sunrise-cal__status--warn">{error}</p>}
 
       <div className="sunrise-cal__body">
-        {loading && <TideCalendarLoading message="Checking sunrise & tide times…" />}
+        {showLoading && <TideCalendarLoading message="Checking sunrise, tide & availability…" />}
 
-        {!loading && (
+        {!showLoading && (
           <>
             {tideNote && <p className="sunrise-cal__status sunrise-cal__status--warn">{tideNote}</p>}
 
@@ -157,7 +199,8 @@ export default function SunriseRideCalendar({
 
             <p className="sunrise-cal__days-note">
               Sunrise beach rides: <strong>Wednesday, Friday &amp; Sunday</strong> only. Green border =
-              bookable; faded = do not book.
+              bookable; faded = do not book. Faded cards with a &ldquo;Fully booked&rdquo; badge are tide-rideable
+              but not bookable online.
             </p>
 
             <div className="sunrise-cal__months">
@@ -193,11 +236,15 @@ export default function SunriseRideCalendar({
                         }
 
                         const isToday = day.date === todayKey;
+                        const fhStatus = fhStatuses.get(day.date) ?? 'unknown';
+                        const fhBlocked = isFhBlocked(day, fhStatus, fhReady);
+                        const fhBadge = fhBlocked ? fhBadgeForStatus(fhStatus) : undefined;
+                        const tideBookable = isTideBookable(day);
                         const selectable =
-                          mode === 'browse' ||
-                          (day.status !== 'unavailable' && Boolean(day.hasScheduleData));
+                          mode === 'browse' || (tideBookable && !fhBlocked);
                         const isSelected = selectedKey === day.date;
                         const bookable = mode === 'intercept' && selectable;
+                        const ariaFh = fhBadge ? ` ${fhBadge.title}.` : '';
 
                         return (
                           <button
@@ -212,12 +259,13 @@ export default function SunriseRideCalendar({
                               !selectable ? 'sunrise-cal__day--disabled' : '',
                               bookable ? 'sunrise-cal__day--bookable' : '',
                               day.tideBlocked ? 'sunrise-cal__day--tide-block' : '',
+                              fhBlocked ? 'sunrise-cal__day--fh-blocked' : '',
                             ]
                               .filter(Boolean)
                               .join(' ')}
                             onClick={() => pickDay(day)}
                             disabled={mode !== 'browse' && !selectable}
-                            aria-label={`${WEEKDAY_LONG[day.weekday]} ${day.date}, Sunrise. ${STATUS_LABEL[day.status]}. Arrive by ${formatClock(day.rideStart)}.`}
+                            aria-label={`${WEEKDAY_LONG[day.weekday]} ${day.date}, Sunrise. ${STATUS_LABEL[day.status]}.${ariaFh} Arrive by ${formatClock(day.rideStart)}.`}
                           >
                             <span className="sunrise-cal__weekday-tag">{WEEKDAY_LONG[day.weekday]}</span>
                             <span className="sunrise-cal__date-num">
@@ -226,8 +274,18 @@ export default function SunriseRideCalendar({
                             </span>
                             <DayCell day={day} compact />
                             {day.hasScheduleData && (
-                              <span className={`sunrise-cal__pill sunrise-cal__pill--${day.status}`}>
-                                {STATUS_LABEL[day.status]}
+                              <span className="sunrise-cal__pills">
+                                <span className={`sunrise-cal__pill sunrise-cal__pill--${day.status}`}>
+                                  {STATUS_LABEL[day.status]}
+                                </span>
+                                {fhBadge && (
+                                  <span
+                                    className="sunrise-cal__pill sunrise-cal__pill--fh-full"
+                                    title={fhBadge.title}
+                                  >
+                                    {fhBadge.label}
+                                  </span>
+                                )}
                               </span>
                             )}
                           </button>
@@ -247,15 +305,22 @@ export default function SunriseRideCalendar({
                     <li key={r}>{r}</li>
                   ))}
                 </ul>
+                {selectedFhBlocked && fhBlockedDetail(selectedFhStatus) && (
+                  <p className="sunrise-cal__fh-blocked">{fhBlockedDetail(selectedFhStatus)}</p>
+                )}
                 {mode === 'intercept' &&
                   selectedDay.isRideDay &&
                   selectedDay.status !== 'unavailable' &&
-                  selectedDay.hasScheduleData && (
+                  selectedDay.hasScheduleData &&
+                  !selectedFhBlocked && (
                     <p className="sunrise-cal__book-hint">
                       Click this day again to open booking for the sunrise ride.
                     </p>
                   )}
-                {mode === 'book' && selectedDay.status !== 'unavailable' && selectedDay.hasScheduleData && (
+                {mode === 'book' &&
+                  selectedDay.status !== 'unavailable' &&
+                  selectedDay.hasScheduleData &&
+                  !selectedFhBlocked && (
                   <button
                     type="button"
                     className="btn btn--green sunrise-cal__continue"

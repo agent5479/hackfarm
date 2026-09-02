@@ -481,6 +481,43 @@
   color: #7a3a55;
 }
 
+.sunrise-cal__pills {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.18rem;
+  margin-top: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.sunrise-cal__pills .sunrise-cal__pill {
+  margin-top: 0;
+}
+
+.sunrise-cal__pill--fh-full {
+  background: rgba(120, 120, 130, 0.22);
+  color: #555;
+}
+
+.sunrise-cal__day--fh-blocked:not(.sunrise-cal__day--off) {
+  opacity: 0.48;
+  border-left-color: #e4dcc8 !important;
+  cursor: not-allowed;
+}
+
+.sunrise-cal--intercept .sunrise-cal__day--fh-blocked.sunrise-cal__day--bookable:hover,
+.sunrise-cal--intercept .sunrise-cal__day--fh-blocked:hover {
+  outline: none;
+}
+
+.sunrise-cal__fh-blocked {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 500;
+}
+
 .sunrise-cal__detail {
   border: 1px solid #e4dcc8;
   border-radius: 10px;
@@ -800,7 +837,8 @@
   color: #e8d4ff;
 }
 
-.sunrise-cal__day--ride .sunrise-cal__pill {
+.sunrise-cal__day--ride .sunrise-cal__pill,
+.sunrise-cal__day--ride .sunrise-cal__pills {
   position: relative;
   z-index: 2;
 }

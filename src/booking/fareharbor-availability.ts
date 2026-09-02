@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { withBase } from '../lib/constants';
 
 export interface CachedFareHarborAvailability {
@@ -9,9 +10,21 @@ export interface CachedFareHarborAvailability {
   isBookable: boolean;
 }
 
-interface FareHarborAvailabilityCache {
+export type FareHarborDateStatus = 'bookable' | 'full' | 'none' | 'unknown';
+
+export interface CachedFareHarborDateStatus {
+  itemId: string;
+  date: string;
+  status: Exclude<FareHarborDateStatus, 'unknown'>;
+  pk?: number;
+}
+
+export interface FareHarborAvailabilityCache {
   generatedAt: string;
+  horizonDays?: number;
+  origin?: string;
   availabilities: CachedFareHarborAvailability[];
+  dateStatuses?: CachedFareHarborDateStatus[];
 }
 
 let cachePromise: Promise<FareHarborAvailabilityCache | null> | null = null;
@@ -63,6 +76,58 @@ function pickAvailability(
     const currentDiff = Math.abs(startAtMinutes(current.startAt) - target);
     return currentDiff < bestDiff ? current : best;
   });
+}
+
+export function getDateBookingStatus(
+  itemId: string,
+  date: string,
+  cache: FareHarborAvailabilityCache | null,
+): FareHarborDateStatus {
+  if (!cache?.dateStatuses?.length) return 'unknown';
+  const match = cache.dateStatuses.find((entry) => entry.itemId === itemId && entry.date === date);
+  return match?.status ?? 'unknown';
+}
+
+export function buildDateStatusMap(
+  itemId: string,
+  cache: FareHarborAvailabilityCache | null,
+): Map<string, FareHarborDateStatus> {
+  const map = new Map<string, FareHarborDateStatus>();
+  if (!cache?.dateStatuses?.length) return map;
+  for (const entry of cache.dateStatuses) {
+    if (entry.itemId === itemId) map.set(entry.date, entry.status);
+  }
+  return map;
+}
+
+export function useFareHarborDateStatuses(itemId: string) {
+  const [statuses, setStatuses] = useState<Map<string, FareHarborDateStatus>>(new Map());
+  const [loading, setLoading] = useState(true);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+
+    (async () => {
+      const cache = await loadCache();
+      if (cancelled) return;
+      if (cache?.dateStatuses?.length) {
+        setStatuses(buildDateStatusMap(itemId, cache));
+        setReady(true);
+      } else {
+        setStatuses(new Map());
+        setReady(false);
+      }
+      setLoading(false);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [itemId]);
+
+  return { statuses, loading, ready };
 }
 
 /** Resolve a FareHarbor availability PK from the cached CI snapshot. */
