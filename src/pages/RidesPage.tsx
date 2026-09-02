@@ -45,11 +45,11 @@ const RIDE_CATEGORIES: RideCategory[] = [
         bookingLabel: "Book Paton's Rock",
       },
       {
-        title: 'Sunset / Twilight Ride',
+        title: 'Sunrise Beach Ride',
         description:
-          'Ride through native forest and farm country to the beach as the sun paints the sky. Glow-worms possible on the way back when conditions allow. Wed, Fri & Sun — tide-checked.',
-        bookingHref: '#twilight-rides',
-        bookingLabel: 'Book sunrise / twilight',
+          'Ride through native forest and farm country to the beach as the sun rises over Golden Bay. Glow-worms possible on the way back when conditions allow. Wed, Fri & Sun — tide-checked.',
+        bookingHref: '#sunrise-rides',
+        bookingLabel: 'Book sunrise',
       },
       {
         title: 'Swimming with Horses',
@@ -167,7 +167,7 @@ export default function RidesPage() {
           softwareApplicationJsonLd({
             name: "Paton's Rock Sunrise & Tide Ride Planner",
             description:
-              "First-party booking planner for Hack n Stay sunrise and twilight beach rides at Paton's Rock. Shows sunrise timing and tide clearance for Wed, Fri and Sun rides before continuing to live FareHarbor booking.",
+              "First-party booking planner for Hack n Stay sunrise beach rides at Paton's Rock. Shows sunrise timing and tide clearance for Wed, Fri and Sun rides before continuing to live FareHarbor booking.",
             path: '/holistic-horse-rides/',
             applicationCategory: 'TravelApplication',
           }),
@@ -192,7 +192,7 @@ export default function RidesPage() {
           <h2>What does the sunrise and tide Ride Planner do?</h2>
           <p>
             The Ride Planner is a first-party tool for Paton&apos;s Rock beach rides. It shows sunrise
-            timing and tide clearance for Wednesday, Friday and Sunday sunrise or twilight rides so
+            timing and tide clearance for Wednesday, Friday and Sunday sunrise rides so
             you can pick a workable week before continuing to live FareHarbor booking.
           </p>
           <p>
@@ -260,7 +260,7 @@ export default function RidesPage() {
         <div className="container">
           <h2>Book your ride</h2>
           <p>
-            Sunrise, twilight, Paton&apos;s Rock, Rangi, and swimming rides need tide clearance —
+            Sunrise, Paton&apos;s Rock, Rangi, and swimming rides need tide clearance —
             check the calendar first. Hack Track can be booked on any open date.
           </p>
           <BookingIntercept />

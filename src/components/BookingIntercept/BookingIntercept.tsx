@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { OTHER_FAREHARBOR_RIDES, SUNRISE_TWILIGHT_RIDE } from '../../booking/fareharbor-catalog';
+import { OTHER_FAREHARBOR_RIDES, SUNRISE_BEACH_RIDE } from '../../booking/fareharbor-catalog';
 import { getRideType } from '../../booking/rides';
 import { formatClock } from '../../booking/schedule';
 import { openFareHarborBooking } from '../../lib/booking-events';
@@ -15,13 +15,12 @@ import './BookingIntercept.css';
 
 const TIDE_CALENDAR_RIDE_IDS = new Set(['patons-rock', 'rangi', 'swimming']);
 
-function bookTwilightSlot({ day, slot }: BookSlotPayload) {
-  const slotTitle = slot === 'sunrise' ? 'Sunrise' : 'Twilight';
+function bookSunriseSlot({ day }: BookSlotPayload) {
   openFareHarborBooking({
-    itemId: SUNRISE_TWILIGHT_RIDE.fareharborItemId,
+    itemId: SUNRISE_BEACH_RIDE.fareharborItemId,
     date: day.date,
     rideStart: formatClock(day.rideStart),
-    title: `${slotTitle} — ${SUNRISE_TWILIGHT_RIDE.title}`,
+    title: SUNRISE_BEACH_RIDE.title,
   });
 }
 
@@ -40,6 +39,7 @@ function bookTideRide(title: string, itemId: string, { day }: BookTideDayPayload
 
 function shouldOpenCalendar(hash: string) {
   return (
+    hash === '#sunrise-rides' ||
     hash === '#twilight-rides' ||
     hash === '#tide-calendar' ||
     hash === '#patons-rock' ||
@@ -49,7 +49,9 @@ function shouldOpenCalendar(hash: string) {
 }
 
 function calendarIdFromHash(hash: string): string | null {
-  if (hash === '#twilight-rides' || hash === '#tide-calendar') return 'sunrise-twilight';
+  if (hash === '#sunrise-rides' || hash === '#twilight-rides' || hash === '#tide-calendar') {
+    return 'sunrise';
+  }
   if (hash === '#patons-rock') return 'patons-rock';
   if (hash === '#rangi') return 'rangi';
   if (hash === '#swimming') return 'swimming';
@@ -66,7 +68,7 @@ export default function BookingIntercept() {
     if (!shouldOpenCalendar(hash)) return;
     const id = calendarIdFromHash(hash);
     setOpenCalendarId(id);
-    const elId = hash.slice(1);
+    const elId = hash === '#twilight-rides' || hash === '#tide-calendar' ? 'sunrise-rides' : hash.slice(1);
     requestAnimationFrame(() => {
       document.getElementById(elId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
@@ -79,35 +81,35 @@ export default function BookingIntercept() {
   return (
     <div className="booking-intercept">
       <div className="booking-intercept__list">
-        <article id="twilight-rides" className="booking-intercept__ride">
+        <article id="sunrise-rides" className="booking-intercept__ride">
           <img
             className="booking-intercept__ride-image"
-            src={optimizedUrl(SUNRISE_TWILIGHT_RIDE.image, 'thumb')}
-            alt={SUNRISE_TWILIGHT_RIDE.title}
+            src={optimizedUrl(SUNRISE_BEACH_RIDE.image, 'thumb')}
+            alt={SUNRISE_BEACH_RIDE.title}
             decoding="async"
           />
           <div className="booking-intercept__ride-body">
             <p className="booking-intercept__eyebrow">Tide-dependent · Wed / Fri / Sun</p>
-            <h3>{SUNRISE_TWILIGHT_RIDE.title}</h3>
-            <p className="booking-intercept__meta">{SUNRISE_TWILIGHT_RIDE.meta}</p>
+            <h3>{SUNRISE_BEACH_RIDE.title}</h3>
+            <p className="booking-intercept__meta">{SUNRISE_BEACH_RIDE.meta}</p>
             <button
               type="button"
               className="booking-intercept__select"
-              aria-expanded={openCalendarId === 'sunrise-twilight'}
+              aria-expanded={openCalendarId === 'sunrise'}
               aria-controls="tide-calendar"
-              onClick={() => toggleCalendar('sunrise-twilight')}
+              onClick={() => toggleCalendar('sunrise')}
             >
-              {openCalendarId === 'sunrise-twilight' ? 'Hide tide calendar' : 'Check dates & book'}
+              {openCalendarId === 'sunrise' ? 'Hide tide calendar' : 'Check dates & book'}
             </button>
           </div>
         </article>
 
-        {openCalendarId === 'sunrise-twilight' && (
+        {openCalendarId === 'sunrise' && (
           <div id="tide-calendar" className="booking-intercept__calendar">
             <p className="booking-intercept__calendar-lead">
-              Green border = bookable. Faded = tide and sun do not align — do not book those slots.
+              Green border = bookable. Faded = tide and sun do not align — do not book those days.
             </p>
-            <SunriseRideCalendar mode="intercept" onBookDay={bookTwilightSlot} />
+            <SunriseRideCalendar mode="intercept" onBookDay={bookSunriseSlot} />
           </div>
         )}
 
@@ -166,7 +168,7 @@ export default function BookingIntercept() {
               {usesTideCalendar && calendarOpen && (
                 <div id={calendarDomId} className="booking-intercept__calendar">
                   <p className="booking-intercept__calendar-lead">
-                    Green border = bookable. Faded = tide window, daylight, Friday, or sunrise/twilight
+                    Green border = bookable. Faded = tide window, daylight, Friday, or sunrise
                     overlap — do not book those days.
                   </p>
                   <TideRideCalendar

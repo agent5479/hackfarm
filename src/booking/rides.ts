@@ -8,7 +8,7 @@ import {
   TIDE_BEFORE_LOW_HOURS,
 } from './location';
 
-export type DaylightRule = 'before-sunrise' | 'around-sunset' | 'daylight' | 'flex-tide';
+export type DaylightRule = 'before-sunrise' | 'daylight' | 'flex-tide';
 
 export type TideMode = 'avoid-high' | 'require-low' | 'require-high';
 
@@ -42,24 +42,8 @@ export const RIDE_TYPES: RideType[] = [
     maxRainMm: 8,
     startOffsetMin: -60,
     scheduleWeekdays: [0, 3, 5],
-    // TODO: confirm whether sunrise and twilight should become separate FareHarbor items
     fareharborItemId: '294945',
     hint: 'Wed, Fri & Sun · starts an hour before sunrise · tide must clear high water.',
-  },
-  {
-    id: 'twilight',
-    name: "Twilight Beach Ride — Paton's Rock",
-    durationHours: 2,
-    daylight: 'around-sunset',
-    usesTides: true,
-    tideMode: 'avoid-high',
-    maxWindKmh: 40,
-    maxRainMm: 8,
-    startOffsetMin: -60,
-    scheduleWeekdays: [0, 3, 5],
-    // TODO: confirm whether sunrise and twilight should become separate FareHarbor items
-    fareharborItemId: '294945',
-    hint: 'Wed, Fri & Sun · starts an hour before sunset · tide must clear high water.',
   },
   {
     id: 'patons-rock',
@@ -75,7 +59,7 @@ export const RIDE_TYPES: RideType[] = [
     startOffsetMin: 0,
     scheduleWeekdays: NO_FRIDAY_WEEKDAYS,
     fareharborItemId: '294928',
-    hint: 'Not Fridays · entire ride inside low tide ±2h · daylight only · clear of sunrise/twilight slots.',
+    hint: 'Not Fridays · entire ride inside low tide ±2h · daylight only · clear of sunrise slots.',
   },
   {
     id: 'rangi',
@@ -91,7 +75,7 @@ export const RIDE_TYPES: RideType[] = [
     startOffsetMin: 0,
     scheduleWeekdays: NO_FRIDAY_WEEKDAYS,
     fareharborItemId: '294929',
-    hint: 'Not Fridays · entire ride inside low tide ±2.25h · daylight only · clear of sunrise/twilight slots.',
+    hint: 'Not Fridays · entire ride inside low tide ±2.25h · daylight only · clear of sunrise slots.',
   },
   {
     id: 'swimming',
@@ -108,7 +92,7 @@ export const RIDE_TYPES: RideType[] = [
     startOffsetMin: 0,
     scheduleWeekdays: NO_FRIDAY_WEEKDAYS,
     fareharborItemId: '295292',
-    hint: 'Not Fridays · entire ride inside high tide ±2h · daylight only · clear of sunrise/twilight slots.',
+    hint: 'Not Fridays · entire ride inside high tide ±2h · daylight only · clear of sunrise slots.',
   },
   {
     id: 'arena',
@@ -124,19 +108,14 @@ export const RIDE_TYPES: RideType[] = [
 ];
 
 export const SUNRISE_RIDE = RIDE_TYPES[0];
-export const TWILIGHT_RIDE = RIDE_TYPES[1];
-export const PATONS_ROCK_RIDE = RIDE_TYPES[2];
-export const RANGI_RIDE = RIDE_TYPES[3];
-export const SWIMMING_RIDE = RIDE_TYPES[4];
-
-/** @deprecated Use TWILIGHT_RIDE — kept for callers that still look up `sunset`. */
-export const SUNSET_RIDE = TWILIGHT_RIDE;
+export const PATONS_ROCK_RIDE = RIDE_TYPES[1];
+export const RANGI_RIDE = RIDE_TYPES[2];
+export const SWIMMING_RIDE = RIDE_TYPES[3];
 
 /** @deprecated Use SWIMMING_RIDE — kept for callers that still look up `swim`. */
 export const SWIM_RIDE = SWIMMING_RIDE;
 
 export function getRideType(id: string): RideType {
-  if (id === 'sunset') return TWILIGHT_RIDE;
   if (id === 'swim') return SWIMMING_RIDE;
   return RIDE_TYPES.find((r) => r.id === id) ?? RIDE_TYPES[0];
 }

@@ -45,14 +45,8 @@ function legacyWindow(ride: RideType, day: DayWeather, tides: TideExtreme[]): Ri
   let start: Date;
   let end: Date;
 
-  if (ride.daylight === 'around-sunset') {
-    end = addMinutes(sun.sunset, 15);
-    start = addMinutes(end, -ride.durationHours * 60);
-    reasons.unshift(`Sunset ${formatClock(sun.sunset)}`);
-  } else {
-    start = addMinutes(sun.sunrise, ride.startOffsetMin);
-    end = addMinutes(start, ride.durationHours * 60);
-  }
+  start = addMinutes(sun.sunrise, ride.startOffsetMin);
+  end = addMinutes(start, ride.durationHours * 60);
 
   reasons.unshift(`Sunrise ${formatClock(sun.sunrise)}`);
 

@@ -167,7 +167,7 @@ export default function TideRideCalendar({
 
             <p className="sunrise-cal__days-note">
               <strong>{ride.name}</strong>: not Fridays · entire ride inside {tideNoun} tide {windowLabel} ·
-              daylight only · must not overlap sunrise/twilight slots. Green border = bookable; faded = do
+              daylight only · must not overlap sunrise slots. Green border = bookable; faded = do
               not book.
             </p>
 
@@ -294,7 +294,7 @@ export default function TideRideCalendar({
 
             <p className="sunrise-cal__footnote">
               Not Fridays · ride must fit inside {tideNoun} tide {windowLabel} during daylight · clear of
-              sunrise &amp; twilight package times.
+              sunrise package times.
               {mode === 'browse' && ' Weather affects suitability within the next 7 days only.'}
               {mode === 'intercept' && ' Click a rideable day to book.'}
             </p>

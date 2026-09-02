@@ -17,7 +17,7 @@ const LINK_GROUPS = [
       { label: 'Book a ride', to: '/holistic-horse-rides/#book-rides' },
       { label: 'The Hack Track', to: '/holistic-horse-rides/#short-rides' },
       { label: "Paton's Rock Beach Ride", to: '/holistic-horse-rides/#short-rides' },
-      { label: 'Sunset Ride', to: '/holistic-horse-rides/#twilight-rides' },
+      { label: 'Sunrise Ride', to: '/holistic-horse-rides/#sunrise-rides' },
       { label: 'Swimming with Horses', to: '/holistic-horse-rides/#swimming' },
     ],
   },

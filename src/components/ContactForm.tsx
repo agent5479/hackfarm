@@ -33,7 +33,7 @@ const FIELDS: Record<string, { name: string; label: string; type: string; requir
     { name: 'phone', label: 'Phone', type: 'tel', required: true },
     { name: 'experience', label: 'Riding Experience', type: 'select', options: ['Beginner', 'Intermediate', 'Experienced'] },
     { name: 'ride', label: 'Preferred Ride', type: 'select', options: [
-      'Hack Track', "Paton's Rock Beach Ride", 'Sunset Ride', 'Swimming with Horses',
+      'Hack Track', "Paton's Rock Beach Ride", 'Sunrise Ride', 'Swimming with Horses',
       'The Rangi Ride', 'Ale Trail - Mussel Inn', 'Collingwood Explorer',
       'Mussel Inn Ale Trail', 'Collingwood Discovery Ride', 'Moonlight Ride', 'Multi-day Experience',
     ]},

@@ -11,7 +11,7 @@ import {
   TIDE_HORIZON_DAYS,
   WEATHER_HORIZON_DAYS,
 } from './location';
-import { type RideType, SUNRISE_RIDE, TWILIGHT_RIDE } from './rides';
+import { type RideType, SUNRISE_RIDE } from './rides';
 import { sunTimesForDate } from './sun';
 import {
   estimateTideHeightAt,
@@ -56,9 +56,9 @@ const WD: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri
 export type ScheduleStatus = 'rideable' | 'caution' | 'unavailable';
 export type TidePhase = 'safe_before_high' | 'safe_after_high' | 'forbidden' | 'unknown';
 
-export type RideSlotId = 'sunrise' | 'twilight' | 'tide';
+export type RideSlotId = 'sunrise' | 'tide';
 
-export type AnchorLabel = 'Sunrise' | 'Sunset' | 'Low tide' | 'High tide';
+export type AnchorLabel = 'Sunrise' | 'Low tide' | 'High tide';
 
 export interface SunriseDaySchedule {
   date: string;
@@ -97,14 +97,6 @@ interface TidePlacement {
   end: Date;
   anchor: TideExtreme;
   centerDistMs: number;
-}
-
-export interface DualDaySchedule {
-  date: string;
-  weekday: number;
-  isRideDay: boolean;
-  sunrise: SunriseDaySchedule;
-  twilight: SunriseDaySchedule;
 }
 
 export interface MonthGridCell {
@@ -360,14 +352,11 @@ function applyWeather(
   };
 }
 
-function sunAnchorForRide(ride: RideType, sun: { sunrise: Date; sunset: Date }): {
+function sunAnchorForRide(_ride: RideType, sun: { sunrise: Date; sunset: Date }): {
   sunAnchor: Date;
   sunAnchorLabel: AnchorLabel;
   slot: RideSlotId;
 } {
-  if (ride.daylight === 'around-sunset') {
-    return { sunAnchor: sun.sunset, sunAnchorLabel: 'Sunset', slot: 'twilight' };
-  }
   return { sunAnchor: sun.sunrise, sunAnchorLabel: 'Sunrise', slot: 'sunrise' };
 }
 
@@ -439,7 +428,7 @@ function extremesNearDaylight(
     .sort((a, b) => a.time.getTime() - b.time.getTime());
 }
 
-function overlapsSunriseOrTwilight(
+function overlapsSunriseRide(
   dateKey: string,
   rideStart: Date,
   rideEnd: Date,
@@ -451,21 +440,10 @@ function overlapsSunriseOrTwilight(
   if (!isSunriseRideWeekday(weekday)) return false;
 
   const sunrise = buildSunriseDaySchedule(dateKey, forecast, tides, SUNRISE_RIDE, allTides);
-  const twilight = buildSunriseDaySchedule(dateKey, forecast, tides, TWILIGHT_RIDE, allTides);
-
-  if (
+  return (
     sunrise.isRideDay &&
     intervalsOverlap(rideStart, rideEnd, sunrise.rideStart, sunrise.rideEnd)
-  ) {
-    return true;
-  }
-  if (
-    twilight.isRideDay &&
-    intervalsOverlap(rideStart, rideEnd, twilight.rideStart, twilight.rideEnd)
-  ) {
-    return true;
-  }
-  return false;
+  );
 }
 
 export function buildTideDaySchedule(
@@ -549,7 +527,7 @@ export function buildTideDaySchedule(
     placements.sort((a, b) => a.centerDistMs - b.centerDistMs);
 
     const clearOfSun = placements.filter(
-      (p) => !overlapsSunriseOrTwilight(dateKey, p.start, p.end, forecast, tides, allTides),
+      (p) => !overlapsSunriseRide(dateKey, p.start, p.end, forecast, tides, allTides),
     );
     const chosen = clearOfSun[0] ?? placements[0];
 
@@ -587,7 +565,7 @@ export function buildTideDaySchedule(
       reasons.push(`Arrive by ${formatClock(rideStart)}`);
       reasons.push(`Until ${formatClock(rideEnd)}`);
       reasons.push(`${anchorLabel} ${formatClock(chosen.anchor.time)}`);
-      reasons.push('Overlaps sunrise or twilight ride');
+      reasons.push('Overlaps sunrise ride');
       tidePhase = 'forbidden';
     } else {
       rideStart = chosen.start;
@@ -749,7 +727,7 @@ export function buildSunriseDaySchedule(
 
   if (!isRideDay) {
     status = 'unavailable';
-    reasons.unshift('Twilight beach rides: Wed, Fri & Sun only');
+    reasons.unshift('Sunrise beach rides: Wed, Fri & Sun only');
   }
 
   const dayWx = forecast.find((d) => d.date === dateKey);
@@ -876,30 +854,6 @@ export function buildSunriseHorizonSchedule(
   return map;
 }
 
-export function buildDualHorizonSchedule(
-  startKey: string,
-  forecast: DayWeather[],
-  tides: TideExtreme[],
-  sunriseRide: RideType,
-  twilightRide: RideType,
-  allTides: TideExtreme[] = tides,
-  days: number = PLANNER_DAYS,
-): Map<string, DualDaySchedule> {
-  const map = new Map<string, DualDaySchedule>();
-  for (const date of rollingHorizonDates(startKey, days)) {
-    const sunrise = buildSunriseDaySchedule(date, forecast, tides, sunriseRide, allTides);
-    const twilight = buildSunriseDaySchedule(date, forecast, tides, twilightRide, allTides);
-    map.set(date, {
-      date,
-      weekday: sunrise.weekday,
-      isRideDay: sunrise.isRideDay || twilight.isRideDay,
-      sunrise,
-      twilight,
-    });
-  }
-  return map;
-}
-
 function slotSummaryParts(slots: SunriseDaySchedule[]): string[] {
   const counted = slots.filter((d) => d.isRideDay && d.hasScheduleData);
   const rideable = counted.filter((d) => d.status === 'rideable').length;
@@ -913,14 +867,6 @@ function slotSummaryParts(slots: SunriseDaySchedule[]): string[] {
 
 export function horizonSummary(days: SunriseDaySchedule[]): string {
   return `These 4 weeks: ${slotSummaryParts(days).join(' · ')}`;
-}
-
-export function dualHorizonSummary(days: DualDaySchedule[]): string {
-  const slots = days.flatMap((d) => [d.sunrise, d.twilight]);
-  const sunriseParts = slotSummaryParts(days.map((d) => d.sunrise));
-  const twilightParts = slotSummaryParts(days.map((d) => d.twilight));
-  const total = slotSummaryParts(slots);
-  return `These 4 weeks: ${total.join(' · ')} (sunrise ${sunriseParts[0]} · twilight ${twilightParts[0]})`;
 }
 
 export function weekSummary(days: SunriseDaySchedule[]): string {
@@ -944,7 +890,7 @@ export function detailSummary(day: SunriseDaySchedule): string {
 
   const bits = [
     dateLabel,
-    day.slot === 'twilight' ? 'Twilight' : 'Sunrise',
+    'Sunrise',
     `Arrive by ${formatClock(day.rideStart)}`,
     `${day.sunAnchorLabel} ${formatClock(day.sunAnchor)}`,
   ];

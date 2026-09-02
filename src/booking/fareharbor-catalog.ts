@@ -10,15 +10,17 @@ export interface FareHarborRide {
   description?: string;
 }
 
-export const SUNRISE_TWILIGHT_RIDE: FareHarborRide = {
-  id: 'sunrise-twilight',
-  title: 'Sunrise & Twilight Beach Ride',
+export const SUNRISE_BEACH_RIDE: FareHarborRide = {
+  id: 'sunrise',
+  title: 'Sunrise Beach Ride',
   meta: 'incl. fees & taxes · Ages 3+ · 3 hours · Paton\'s Rock',
   priceFrom: '',
   image: '/images/uploads/2021/07/Sunrise-Ride-Poster.jpg',
-  // TODO: confirm whether sunrise and twilight should become separate FareHarbor items / availabilities
   fareharborItemId: '294945',
 };
+
+/** @deprecated Use SUNRISE_BEACH_RIDE */
+export const SUNRISE_TWILIGHT_RIDE = SUNRISE_BEACH_RIDE;
 
 export const OTHER_FAREHARBOR_RIDES: FareHarborRide[] = [
   {
