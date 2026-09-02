@@ -240,6 +240,7 @@ export default function SunriseRideCalendar({
                         const fhBlocked = isFhBlocked(day, fhStatus, fhReady);
                         const fhBadge = fhBlocked ? fhBadgeForStatus(fhStatus) : undefined;
                         const tideBookable = isTideBookable(day);
+                        const fhBookable = tideBookable && fhReady && fhStatus === 'bookable';
                         const selectable =
                           mode === 'browse' || (tideBookable && !fhBlocked);
                         const isSelected = selectedKey === day.date;
@@ -260,6 +261,7 @@ export default function SunriseRideCalendar({
                               bookable ? 'sunrise-cal__day--bookable' : '',
                               day.tideBlocked ? 'sunrise-cal__day--tide-block' : '',
                               fhBlocked ? 'sunrise-cal__day--fh-blocked' : '',
+                              fhBookable ? 'sunrise-cal__day--fh-bookable' : '',
                             ]
                               .filter(Boolean)
                               .join(' ')}

@@ -429,6 +429,17 @@
 .sunrise-cal__day--unavailable:not(.sunrise-cal__day--off),
 .sunrise-cal__day--tide-block:not(.sunrise-cal__day--off) {
   border-left: 3px solid var(--color-pink);
+  opacity: 0.38;
+}
+
+.sunrise-cal__day--rideable.sunrise-cal__day--fh-bookable:not(.sunrise-cal__day--off) {
+  opacity: 1;
+  box-shadow: 0 0 0 1px rgba(45, 107, 53, 0.15);
+}
+
+.sunrise-cal__day--caution.sunrise-cal__day--fh-bookable:not(.sunrise-cal__day--off) {
+  opacity: 1;
+  box-shadow: 0 0 0 1px rgba(239, 156, 103, 0.22);
 }
 
 .sunrise-cal__date-num {
@@ -501,7 +512,7 @@
 }
 
 .sunrise-cal__day--fh-blocked:not(.sunrise-cal__day--off) {
-  opacity: 0.48;
+  opacity: 0.72;
   border-left-color: #e4dcc8 !important;
   cursor: not-allowed;
 }
