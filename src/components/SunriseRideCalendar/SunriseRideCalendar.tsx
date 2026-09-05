@@ -20,7 +20,6 @@ import {
 import { SUNRISE_RIDE } from '../../booking/rides';
 import { useSunriseSchedule } from '../../booking/useSunriseSchedule';
 import DayCell from './DayCell';
-import HorizonSummary from './HorizonSummary';
 import TideCalendarLoading from '../TideCalendarLoading/TideCalendarLoading';
 import './SunriseRideCalendar.css';
 
@@ -73,12 +72,6 @@ const FH_BADGE: Record<'full' | 'none', { label: string; title: string }> = {
 
 function fhBadgeForStatus(fhStatus: FareHarborDateStatus) {
   if (fhStatus === 'full' || fhStatus === 'none') return FH_BADGE[fhStatus];
-  return undefined;
-}
-
-function fhBlockedDetail(fhStatus: FareHarborDateStatus): string | undefined {
-  if (fhStatus === 'full') return 'This date is fully booked on FareHarbor.';
-  if (fhStatus === 'none') return 'This date is not available to book online on FareHarbor.';
   return undefined;
 }
 
@@ -195,14 +188,6 @@ export default function SunriseRideCalendar({
           <>
             {tideNote && <p className="sunrise-cal__status sunrise-cal__status--warn">{tideNote}</p>}
 
-            {rideDays.length > 0 && <HorizonSummary days={rideDays} />}
-
-            <p className="sunrise-cal__days-note">
-              Sunrise beach rides: <strong>Wednesday, Friday &amp; Sunday</strong> only. Green border =
-              bookable; faded = do not book. Faded cards with a &ldquo;Fully booked&rdquo; badge are tide-rideable
-              but not bookable online.
-            </p>
-
             <div className="sunrise-cal__months">
               {rideMonths.map((month) => (
                 <section
@@ -307,18 +292,6 @@ export default function SunriseRideCalendar({
                     <li key={r}>{r}</li>
                   ))}
                 </ul>
-                {selectedFhBlocked && fhBlockedDetail(selectedFhStatus) && (
-                  <p className="sunrise-cal__fh-blocked">{fhBlockedDetail(selectedFhStatus)}</p>
-                )}
-                {mode === 'intercept' &&
-                  selectedDay.isRideDay &&
-                  selectedDay.status !== 'unavailable' &&
-                  selectedDay.hasScheduleData &&
-                  !selectedFhBlocked && (
-                    <p className="sunrise-cal__book-hint">
-                      Click this day again to open booking for the sunrise ride.
-                    </p>
-                  )}
                 {mode === 'book' &&
                   selectedDay.status !== 'unavailable' &&
                   selectedDay.hasScheduleData &&
@@ -333,16 +306,6 @@ export default function SunriseRideCalendar({
                 )}
               </div>
             )}
-
-            <p className="sunrise-cal__footnote">
-              Wed, Fri &amp; Sun · arrive 1 hour before sunrise · wave height shows tide level.
-              {mode === 'browse' && ' Weather affects suitability within the next 7 days only.'}
-              {mode === 'intercept' && ' Click a rideable sunrise day to book.'}
-            </p>
-            <p className="sunrise-cal__legend">
-              Wave height = tide at ride time · arrows show incoming (up) or outgoing (down) · blue overlay = high
-              tide block · corner icon = weather (7-day forecast)
-            </p>
           </>
         )}
       </div>

@@ -9,12 +9,19 @@ import {
   shortMonth,
   startOfWeekMonday,
   tideDetailSummary,
-  tideHorizonSummary,
   type TideDaySchedule,
 } from '../../booking/schedule';
 import { nzNoon } from '../../booking/nzTime';
 import { PLANNER_DAYS } from '../../booking/location';
-import type { RideType } from '../../booking/rides';
+import {
+  type FareHarborDateStatus,
+  useFareHarborDateStatuses,
+} from '../../booking/fareharbor-availability';
+import {
+  PATONS_ROCK_RIDE,
+  RANGI_RIDE,
+  type RideType,
+} from '../../booking/rides';
 import { useSunriseSchedule } from '../../booking/useSunriseSchedule';
 import DayCell from '../SunriseRideCalendar/DayCell';
 import TideCalendarLoading from '../TideCalendarLoading/TideCalendarLoading';
@@ -40,15 +47,38 @@ interface MonthGroup {
   weeks: (TideDaySchedule | null)[][];
 }
 
+/** Low-tide rides share capacity — when one is booked, the other must not be offered. */
+const LOW_TIDE_SIBLING: Record<string, { itemId: string; badge: string; title: string }> = {
+  [PATONS_ROCK_RIDE.id]: {
+    itemId: RANGI_RIDE.fareharborItemId!,
+    badge: 'Rangi booked',
+    title: 'Already booked on the Rangi ride',
+  },
+  [RANGI_RIDE.id]: {
+    itemId: PATONS_ROCK_RIDE.fareharborItemId!,
+    badge: "Paton's booked",
+    title: "Already booked on the Paton's Rock ride",
+  },
+};
+
 const STATUS_LABEL: Record<TideDaySchedule['status'], string> = {
   rideable: 'Rideable',
   caution: 'Check weather',
   unavailable: 'Unavailable',
 };
 
+const OWN_FH_BADGE: Record<'full' | 'none', { label: string; title: string }> = {
+  full: { label: 'Fully booked', title: 'Already booked by another guest' },
+  none: { label: 'Not online', title: 'Not available to book online' },
+};
+
 const WEEKDAY_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const WEEK_COLUMNS = [1, 2, 3, 4, 5, 6, 0] as const;
 const WEEK_COLUMN_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+function isTideBookable(day: TideDaySchedule): boolean {
+  return Boolean(day.isRideDay && day.hasScheduleData && day.status !== 'unavailable');
+}
 
 function groupDaysByMonth(days: TideDaySchedule[]): MonthGroup[] {
   const byMonth = new Map<string, TideDaySchedule[]>();
@@ -82,6 +112,48 @@ function groupDaysByMonth(days: TideDaySchedule[]): MonthGroup[] {
     });
 }
 
+function resolveFhGate(
+  day: TideDaySchedule,
+  ownStatus: FareHarborDateStatus,
+  siblingStatus: FareHarborDateStatus,
+  fhReady: boolean,
+  siblingMeta?: { badge: string; title: string },
+): {
+  blocked: boolean;
+  bookable: boolean;
+  badge?: { label: string; title: string };
+} {
+  const tideBookable = isTideBookable(day);
+  if (!tideBookable) {
+    return { blocked: false, bookable: false };
+  }
+
+  if (!fhReady) {
+    return { blocked: false, bookable: true };
+  }
+
+  if (ownStatus === 'full' || ownStatus === 'none') {
+    return {
+      blocked: true,
+      bookable: false,
+      badge: OWN_FH_BADGE[ownStatus],
+    };
+  }
+
+  if (siblingMeta && siblingStatus === 'full') {
+    return {
+      blocked: true,
+      bookable: false,
+      badge: { label: siblingMeta.badge, title: siblingMeta.title },
+    };
+  }
+
+  return {
+    blocked: false,
+    bookable: ownStatus === 'bookable',
+  };
+}
+
 export default function TideRideCalendar({
   ride,
   mode = 'browse',
@@ -91,6 +163,22 @@ export default function TideRideCalendar({
 }: TideRideCalendarProps) {
   const { startKey, todayKey, canPrev, canNext, shiftWindow, forecast, tides, allTides, loading, error, tideNote } =
     useSunriseSchedule();
+  const sibling = LOW_TIDE_SIBLING[ride.id];
+  const {
+    statuses: ownStatuses,
+    loading: ownFhLoading,
+    ready: ownFhReady,
+  } = useFareHarborDateStatuses(ride.fareharborItemId ?? '');
+  const {
+    statuses: siblingStatuses,
+    loading: siblingFhLoading,
+    ready: siblingFhReady,
+  } = useFareHarborDateStatuses(sibling?.itemId ?? '');
+
+  const fhLoading = ownFhLoading || Boolean(sibling && siblingFhLoading);
+  const fhReady = ownFhReady && (!sibling || siblingFhReady);
+  const showLoading = loading || fhLoading;
+
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
 
   const dates = useMemo(() => rollingHorizonDates(startKey, PLANNER_DAYS), [startKey]);
@@ -107,24 +195,36 @@ export default function TideRideCalendar({
 
   const months = useMemo(() => groupDaysByMonth(horizonDays), [horizonDays]);
   const selected = selectedKey ? scheduleMap.get(selectedKey) : undefined;
-
-  const tideNoun = ride.tideMode === 'require-high' ? 'high' : 'low';
-  const windowLabel =
-    ride.tideBeforeHours != null && ride.tideAfterHours != null
-      ? `±${ride.tideBeforeHours}h`
-      : 'tide window';
+  const selectedGate = selected
+    ? resolveFhGate(
+        selected,
+        ownStatuses.get(selected.date) ?? 'unknown',
+        siblingStatuses.get(selected.date) ?? 'unknown',
+        fhReady,
+        sibling,
+      )
+    : undefined;
 
   const pickDay = (day: TideDaySchedule) => {
+    const gate = resolveFhGate(
+      day,
+      ownStatuses.get(day.date) ?? 'unknown',
+      siblingStatuses.get(day.date) ?? 'unknown',
+      fhReady,
+      sibling,
+    );
     if ((mode === 'book' || mode === 'intercept') && day.status === 'unavailable') return;
     if ((mode === 'book' || mode === 'intercept') && !day.isRideDay) return;
     if ((mode === 'book' || mode === 'intercept') && !day.hasScheduleData) return;
+    if ((mode === 'book' || mode === 'intercept') && gate.blocked) return;
     setSelectedKey(day.date);
     onSelectDay?.(day);
     if (
       mode === 'intercept' &&
       day.isRideDay &&
       day.status !== 'unavailable' &&
-      day.hasScheduleData
+      day.hasScheduleData &&
+      !gate.blocked
     ) {
       onBookDay?.({ day });
     }
@@ -152,116 +252,124 @@ export default function TideRideCalendar({
         </button>
       </div>
 
-      {error && !loading && <p className="sunrise-cal__status sunrise-cal__status--warn">{error}</p>}
+      {error && !showLoading && <p className="sunrise-cal__status sunrise-cal__status--warn">{error}</p>}
 
       <div className="sunrise-cal__body">
-        {loading && <TideCalendarLoading message="Checking tide times…" />}
+        {showLoading && <TideCalendarLoading message="Checking tide & availability…" />}
 
-        {!loading && (
+        {!showLoading && (
           <>
             {tideNote && <p className="sunrise-cal__status sunrise-cal__status--warn">{tideNote}</p>}
 
-            {horizonDays.length > 0 && (
-              <p className="sunrise-cal__summary">{tideHorizonSummary(horizonDays)}</p>
-            )}
-
-            <p className="sunrise-cal__days-note">
-              <strong>{ride.name}</strong>: not Fridays · entire ride inside {tideNoun} tide {windowLabel} ·
-              daylight only · must not overlap sunrise slots. Green border = bookable; faded = do
-              not book.
-            </p>
-
             <div className="sunrise-cal__months">
-        {months.map((month) => (
-          <section
-            key={month.monthKey}
-            className="sunrise-cal__month"
-            aria-labelledby={`tide-cal-month-${ride.id}-${month.monthKey}`}
-          >
-            <h4
-              id={`tide-cal-month-${ride.id}-${month.monthKey}`}
-              className="sunrise-cal__month-title"
-            >
-              {month.title}
-            </h4>
+              {months.map((month) => (
+                <section
+                  key={month.monthKey}
+                  className="sunrise-cal__month"
+                  aria-labelledby={`tide-cal-month-${ride.id}-${month.monthKey}`}
+                >
+                  <h4
+                    id={`tide-cal-month-${ride.id}-${month.monthKey}`}
+                    className="sunrise-cal__month-title"
+                  >
+                    {month.title}
+                  </h4>
 
-            <div className="sunrise-cal__weekdays sunrise-cal__weekdays--full" aria-hidden="true">
-              {WEEK_COLUMN_LABELS.map((label) => (
-                <span key={label} className="sunrise-cal__weekday-head">
-                  {label}
-                </span>
-              ))}
-            </div>
-
-            <div className="sunrise-cal__grid sunrise-cal__grid--full">
-              {month.weeks.flatMap((week, weekIndex) =>
-                week.map((day, colIndex) => {
-                  if (!day) {
-                    return (
-                      <div
-                        key={`empty-${month.monthKey}-${weekIndex}-${colIndex}`}
-                        className="sunrise-cal__day sunrise-cal__day--empty"
-                        aria-hidden="true"
-                      />
-                    );
-                  }
-
-                  const isToday = day.date === todayKey;
-                  const selectable =
-                    mode === 'browse' ||
-                    (day.isRideDay &&
-                      day.status !== 'unavailable' &&
-                      Boolean(day.hasScheduleData));
-                  const isSelected = selectedKey === day.date;
-                  const bookable = mode === 'intercept' && selectable;
-
-                  return (
-                    <button
-                      key={day.date}
-                      type="button"
-                      className={[
-                        'sunrise-cal__day',
-                        'sunrise-cal__day--ride',
-                        'sunrise-cal__day--tide',
-                        `sunrise-cal__day--${day.status}`,
-                        isToday ? 'sunrise-cal__day--today' : '',
-                        isSelected ? 'sunrise-cal__day--selected' : '',
-                        !selectable ? 'sunrise-cal__day--disabled' : '',
-                        bookable ? 'sunrise-cal__day--bookable' : '',
-                        day.tideBlocked ? 'sunrise-cal__day--tide-block' : '',
-                        !day.isRideDay ? 'sunrise-cal__day--off' : '',
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
-                      onClick={() => pickDay(day)}
-                      disabled={mode !== 'browse' && !selectable}
-                      aria-label={`${WEEKDAY_LONG[day.weekday]} ${day.date}. ${STATUS_LABEL[day.status]}. Arrive by ${formatClock(day.rideStart)}.`}
-                    >
-                      <span className="sunrise-cal__weekday-tag">{WEEKDAY_LONG[day.weekday]}</span>
-                      <span className="sunrise-cal__date-num">
-                        {dayOfMonth(day.date)}
-                        <span className="sunrise-cal__date-month">{shortMonth(day.date)}</span>
+                  <div className="sunrise-cal__weekdays sunrise-cal__weekdays--full" aria-hidden="true">
+                    {WEEK_COLUMN_LABELS.map((label) => (
+                      <span key={label} className="sunrise-cal__weekday-head">
+                        {label}
                       </span>
+                    ))}
+                  </div>
 
-                      {day.isRideDay ? (
-                        <>
-                          <DayCell day={day} compact />
-                          {day.hasScheduleData && (
-                            <span className={`sunrise-cal__pill sunrise-cal__pill--${day.status}`}>
-                              {STATUS_LABEL[day.status]}
+                  <div className="sunrise-cal__grid sunrise-cal__grid--full">
+                    {month.weeks.flatMap((week, weekIndex) =>
+                      week.map((day, colIndex) => {
+                        if (!day) {
+                          return (
+                            <div
+                              key={`empty-${month.monthKey}-${weekIndex}-${colIndex}`}
+                              className="sunrise-cal__day sunrise-cal__day--empty"
+                              aria-hidden="true"
+                            />
+                          );
+                        }
+
+                        const isToday = day.date === todayKey;
+                        const gate = resolveFhGate(
+                          day,
+                          ownStatuses.get(day.date) ?? 'unknown',
+                          siblingStatuses.get(day.date) ?? 'unknown',
+                          fhReady,
+                          sibling,
+                        );
+                        const tideBookable = isTideBookable(day);
+                        const selectable =
+                          mode === 'browse' || (tideBookable && !gate.blocked);
+                        const isSelected = selectedKey === day.date;
+                        const bookable = mode === 'intercept' && selectable;
+                        const ariaFh = gate.badge ? ` ${gate.badge.title}.` : '';
+
+                        return (
+                          <button
+                            key={day.date}
+                            type="button"
+                            className={[
+                              'sunrise-cal__day',
+                              'sunrise-cal__day--ride',
+                              'sunrise-cal__day--tide',
+                              `sunrise-cal__day--${day.status}`,
+                              isToday ? 'sunrise-cal__day--today' : '',
+                              isSelected ? 'sunrise-cal__day--selected' : '',
+                              !selectable ? 'sunrise-cal__day--disabled' : '',
+                              bookable ? 'sunrise-cal__day--bookable' : '',
+                              day.tideBlocked ? 'sunrise-cal__day--tide-block' : '',
+                              !day.isRideDay ? 'sunrise-cal__day--off' : '',
+                              gate.blocked ? 'sunrise-cal__day--fh-blocked' : '',
+                              gate.bookable ? 'sunrise-cal__day--fh-bookable' : '',
+                            ]
+                              .filter(Boolean)
+                              .join(' ')}
+                            onClick={() => pickDay(day)}
+                            disabled={mode !== 'browse' && !selectable}
+                            aria-label={`${WEEKDAY_LONG[day.weekday]} ${day.date}. ${STATUS_LABEL[day.status]}.${ariaFh} Arrive by ${formatClock(day.rideStart)}.`}
+                          >
+                            <span className="sunrise-cal__weekday-tag">{WEEKDAY_LONG[day.weekday]}</span>
+                            <span className="sunrise-cal__date-num">
+                              {dayOfMonth(day.date)}
+                              <span className="sunrise-cal__date-month">{shortMonth(day.date)}</span>
                             </span>
-                          )}
-                        </>
-                      ) : (
-                        <p className="sunrise-cal__off-note">Not Fridays</p>
-                      )}
-                    </button>
-                  );
-                }),
-              )}
-            </div>
-          </section>
-        ))}
+
+                            {day.isRideDay ? (
+                              <>
+                                <DayCell day={day} compact />
+                                {day.hasScheduleData && (
+                                  <span className="sunrise-cal__pills">
+                                    <span className={`sunrise-cal__pill sunrise-cal__pill--${day.status}`}>
+                                      {STATUS_LABEL[day.status]}
+                                    </span>
+                                    {gate.badge && (
+                                      <span
+                                        className="sunrise-cal__pill sunrise-cal__pill--fh-full"
+                                        title={gate.badge.title}
+                                      >
+                                        {gate.badge.label}
+                                      </span>
+                                    )}
+                                  </span>
+                                )}
+                              </>
+                            ) : (
+                              <p className="sunrise-cal__off-note">Not Fridays</p>
+                            )}
+                          </button>
+                        );
+                      }),
+                    )}
+                  </div>
+                </section>
+              ))}
             </div>
 
             {selected && selected.isRideDay && (
@@ -272,32 +380,20 @@ export default function TideRideCalendar({
                     <li key={r}>{r}</li>
                   ))}
                 </ul>
-                {mode === 'intercept' &&
-                  selected.isRideDay &&
+                {mode === 'book' &&
                   selected.status !== 'unavailable' &&
-                  selected.hasScheduleData && (
-                    <p className="sunrise-cal__book-hint">
-                      Click this day again to open booking for {ride.name}.
-                    </p>
+                  selected.hasScheduleData &&
+                  !selectedGate?.blocked && (
+                    <button
+                      type="button"
+                      className="btn btn--green sunrise-cal__continue"
+                      onClick={() => onContinue?.(selected)}
+                    >
+                      Continue to booking
+                    </button>
                   )}
-                {mode === 'book' && selected.status !== 'unavailable' && selected.hasScheduleData && (
-                  <button
-                    type="button"
-                    className="btn btn--green sunrise-cal__continue"
-                    onClick={() => onContinue?.(selected)}
-                  >
-                    Continue to booking
-                  </button>
-                )}
               </div>
             )}
-
-            <p className="sunrise-cal__footnote">
-              Not Fridays · ride must fit inside {tideNoun} tide {windowLabel} during daylight · clear of
-              sunrise package times.
-              {mode === 'browse' && ' Weather affects suitability within the next 7 days only.'}
-              {mode === 'intercept' && ' Click a rideable day to book.'}
-            </p>
           </>
         )}
       </div>

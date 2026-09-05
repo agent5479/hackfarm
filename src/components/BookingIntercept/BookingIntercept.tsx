@@ -106,9 +106,6 @@ export default function BookingIntercept() {
 
         {openCalendarId === 'sunrise' && (
           <div id="tide-calendar" className="booking-intercept__calendar">
-            <p className="booking-intercept__calendar-lead">
-              Green border = bookable. Faded = tide and sun do not align — do not book those days.
-            </p>
             <SunriseRideCalendar mode="intercept" onBookDay={bookSunriseSlot} />
           </div>
         )}
@@ -167,10 +164,6 @@ export default function BookingIntercept() {
 
               {usesTideCalendar && calendarOpen && (
                 <div id={calendarDomId} className="booking-intercept__calendar">
-                  <p className="booking-intercept__calendar-lead">
-                    Green border = bookable. Faded = tide window, daylight, Friday, or sunrise
-                    overlap — do not book those days.
-                  </p>
                   <TideRideCalendar
                     ride={getRideType(ride.id)}
                     mode="intercept"

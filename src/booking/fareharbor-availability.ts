@@ -102,11 +102,19 @@ export function buildDateStatusMap(
 
 export function useFareHarborDateStatuses(itemId: string) {
   const [statuses, setStatuses] = useState<Map<string, FareHarborDateStatus>>(new Map());
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(itemId));
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
+
+    if (!itemId) {
+      setStatuses(new Map());
+      setReady(false);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
 
     (async () => {
