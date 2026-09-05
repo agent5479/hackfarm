@@ -79,6 +79,19 @@ jobs:
           grep -q 'About Hack n Stay' dist/about/index.html
           grep -q 'FAQPage' dist/accommodation/index.html
           grep -q 'sunrise and tide Ride Planner' dist/holistic-horse-rides/index.html
+          test -f dist/favicon.ico
+          test -f dist/favicon-32x32.png
+          test -f dist/favicon-48x48.png
+          test -f dist/apple-touch-icon.png
+          test -f dist/android-chrome-192x192.png
+          test -f dist/android-chrome-512x512.png
+          test -f dist/site.webmanifest
+          test -f dist/images/og/default.jpg
+          grep -q 'favicon.ico' dist/index.html
+          grep -q 'apple-touch-icon' dist/index.html
+          grep -q 'og:image:width' dist/index.html
+          grep -q 'images/og/default.jpg' dist/index.html
+          grep -q 'theme-color' dist/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

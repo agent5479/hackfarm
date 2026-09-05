@@ -3,7 +3,11 @@ import {
   absoluteAssetUrl,
   absoluteUrl,
   DEFAULT_DESCRIPTION,
+  DEFAULT_OG_ALT,
   DEFAULT_OG_IMAGE,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_WIDTH,
+  toOgImage,
 } from '../seo/site';
 import { formatDocumentTitle } from '../seo/routes';
 
@@ -39,7 +43,7 @@ export function usePageMeta({ title, description, path, image }: PageMetaInput) 
     const fullTitle = formatDocumentTitle(title);
     const desc = description || DEFAULT_DESCRIPTION;
     const url = absoluteUrl(path);
-    const img = absoluteAssetUrl(image || DEFAULT_OG_IMAGE);
+    const img = absoluteAssetUrl(toOgImage(image || DEFAULT_OG_IMAGE));
 
     document.title = fullTitle;
     ensureMeta('name', 'description', desc);
@@ -49,13 +53,18 @@ export function usePageMeta({ title, description, path, image }: PageMetaInput) 
     ensureMeta('property', 'og:description', desc);
     ensureMeta('property', 'og:url', url);
     ensureMeta('property', 'og:image', img);
+    ensureMeta('property', 'og:image:width', String(OG_IMAGE_WIDTH));
+    ensureMeta('property', 'og:image:height', String(OG_IMAGE_HEIGHT));
+    ensureMeta('property', 'og:image:alt', DEFAULT_OG_ALT);
     ensureMeta('property', 'og:type', 'website');
     ensureMeta('property', 'og:site_name', 'Hack n Stay Golden Bay');
+    ensureMeta('property', 'og:locale', 'en_NZ');
 
     ensureMeta('name', 'twitter:card', 'summary_large_image');
     ensureMeta('name', 'twitter:title', fullTitle);
     ensureMeta('name', 'twitter:description', desc);
     ensureMeta('name', 'twitter:image', img);
+    ensureMeta('name', 'twitter:image:alt', DEFAULT_OG_ALT);
   }, [title, description, path, image]);
 }
 

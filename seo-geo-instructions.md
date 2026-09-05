@@ -33,12 +33,12 @@ Working checklist for AI search visibility (Gemini, ChatGPT, Perplexity, Claude)
 
 Favicon (browser tab / SERP icon) and social preview images (`og:image`) are separate systems.
 
-- [ ] `favicon.ico` (multi-size ICO) at `/favicon.ico` — file not present under `public/` as of recheck.
-- [ ] `<link rel="icon" href="…/favicon.ico" sizes="any">` in `<head>`.
-- [~] PNG favicons — 32×32 linked in `index.html`; no dedicated 16×16 link.
-- [x] `<link rel="apple-touch-icon" …>` present (180×180 upload asset).
-- [ ] `site.webmanifest` / `manifest.json` with 192×192 and 512×512 icons + `<link rel="manifest">`.
-- [ ] `theme-color` meta matching brand color.
+- [x] `favicon.ico` (16/32/48 ICO) at `/favicon.ico`.
+- [x] `<link rel="icon" href="…/favicon.ico" sizes="48x48">` in `<head>`.
+- [x] PNG favicons — 32×32 and 48×48 (Google SERP wants a multiple of 48px).
+- [x] `<link rel="apple-touch-icon" …>` present (180×180 at `/apple-touch-icon.png`).
+- [x] `site.webmanifest` with 192×192 and 512×512 icons + `<link rel="manifest">`.
+- [x] `theme-color` meta matching brand green (`#8CC395`).
 
 ### 2a. og:image
 
@@ -61,8 +61,8 @@ Required tags, every page, in `<head>`:
 Checklist:
 - [x] `og:image` URL is **absolute** (via `absoluteAssetUrl`) — never relative.
 - [x] Image is JPG/PNG, not SVG.
-- [~] Prefer 1200×630 and under ~1MB — default OG uses a `-1200w` crop; many page images still point at full uploads, not dedicated OG crops.
-- [ ] Set `og:image:width` and `og:image:height` explicitly in `usePageMeta`.
+- [x] Prefer 1200×630 and under ~1MB — generated at `/images/og/` via `scripts/generate-icons.mjs`.
+- [x] Set `og:image:width` and `og:image:height` explicitly in `usePageMeta`.
 - [~] Distinct preview per major page/service where practical (rides, accommodation, horses, etc.) — not one homepage graphic reused everywhere.
 - [x] Confirm OG assets ship in the deployed build (`public/` → Pages publish).
 - [ ] After OG fixes, force re-scrape (Facebook Sharing Debugger, LinkedIn Post Inspector, Twitter Card Validator). Version-query (`?v=2`) if caches stick.

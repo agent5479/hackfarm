@@ -1,0 +1,21 @@
+{
+  "name": "Hack n Stay Golden Bay",
+  "short_name": "Hack n Stay",
+  "description": "Beach horse rides, campground and farmstay in Golden Bay, New Zealand.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#F6F1E7",
+  "theme_color": "#8CC395",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

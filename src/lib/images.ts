@@ -26,5 +26,5 @@ export function optimizedUrl(originalPath: string, size: ImageSize): string {
   return withBase(optimizedPath(originalPath, size));
 }
 
-/** OG / social JPEG derived from the default hero (~1200w). */
-export const OG_IMAGE_PATH = '/images/optimized/2021/02/IMG_6067-scaled-1200w.jpg';
+/** OG / social JPEG (1200x630) for crawlers that still import this path. */
+export const OG_IMAGE_PATH = '/images/og/default.jpg';
