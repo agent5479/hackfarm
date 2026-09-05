@@ -1,0 +1,92 @@
+name: Refresh FareHarbor availabilities
+
+on:
+  schedule:
+    - cron: '*/20 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: fareharbor-refresh
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Needed so the subsequent push can update main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Snapshot previous cache fingerprint
+        id: before
+        run: |
+          node <<'EOF'
+          const fs = require('fs');
+          const path = 'public/data/fareharbor-availabilities.json';
+          function fingerprint(file) {
+            if (!fs.existsSync(file)) return '';
+            const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+            return JSON.stringify({
+              origin: data.origin ?? null,
+              horizonDays: data.horizonDays ?? null,
+              itemIds: data.itemIds ?? null,
+              availabilities: data.availabilities ?? [],
+              dateStatuses: data.dateStatuses ?? [],
+            });
+          }
+          fs.writeFileSync('/tmp/fh-before.json', fingerprint(path));
+          EOF
+
+      - name: Fetch FareHarbor availabilities
+        run: node scripts/fetch-fareharbor-availabilities.mjs
+
+      - name: Commit and dispatch deploy if cache changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node <<'EOF'
+          const fs = require('fs');
+          const path = 'public/data/fareharbor-availabilities.json';
+          function fingerprint(file) {
+            if (!fs.existsSync(file)) return '';
+            const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+            return JSON.stringify({
+              origin: data.origin ?? null,
+              horizonDays: data.horizonDays ?? null,
+              itemIds: data.itemIds ?? null,
+              availabilities: data.availabilities ?? [],
+              dateStatuses: data.dateStatuses ?? [],
+            });
+          }
+          const before = fs.readFileSync('/tmp/fh-before.json', 'utf8');
+          const after = fingerprint(path);
+          if (before === after) {
+            console.log('FareHarbor cache unchanged (ignoring generatedAt); skipping commit.');
+            fs.writeFileSync('/tmp/fh-changed', '0');
+          } else {
+            console.log('FareHarbor cache changed; will commit and dispatch Pages deploy.');
+            fs.writeFileSync('/tmp/fh-changed', '1');
+          }
+          EOF
+
+          if [ "$(cat /tmp/fh-changed)" != "1" ]; then
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/fareharbor-availabilities.json
+          git commit -m "Refresh FareHarbor availability cache."
+          git push
+
+          # Pushes with GITHUB_TOKEN do not trigger other workflows; dispatch explicitly.
+          gh workflow run pages.yml --repo "${{ github.repository }}"
