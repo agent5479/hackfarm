@@ -116,7 +116,7 @@ p { margin-bottom: 1rem; color: var(--color-text); }
   position: relative;
   min-height: min(72vh, 640px);
   background-size: cover;
-  background-position: 50% 0;
+  background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
