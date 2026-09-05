@@ -67,7 +67,11 @@ jobs:
           grep -q 'https://hackfarm.co.nz/about/' dist/sitemap.xml
           grep -q 'https://hackfarm.co.nz/horse/donnie/' dist/sitemap.xml
           grep -q 'https://hackfarm.co.nz/sitemap.xml' dist/robots.txt
+          grep -q 'https://hackfarm.co.nz/' dist/llms.txt
           ! grep -q 'github.io' dist/sitemap.xml
+          ! grep -q 'github.io' dist/robots.txt
+          ! grep -q 'github.io' dist/llms.txt
+          ! grep -R -q 'github.io' dist --include='*.html'
           ! grep -q '/hackfarm/' dist/sitemap.xml
           grep -q 'GPTBot' dist/robots.txt
           grep -q 'Hack n Stay Golden Bay' dist/llms.txt

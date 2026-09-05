@@ -2,7 +2,7 @@
 
 Working checklist for AI search visibility (Gemini, ChatGPT, Perplexity, Claude) alongside traditional SEO. Use as a Cursor audit prompt.
 
-**Hackfarm status** (rechecked 2026-08-28): foundations for Sections 0–4 are largely in place on the GitHub Pages preview. Open items and post-cutover ops live in [`docs/SEO-FOLLOWUP.md`](docs/SEO-FOLLOWUP.md). Checkboxes below reflect this repo (`[x]` done, `[ ]` open, `[~]` partial).
+**Hackfarm status** (rechecked 2026-09-05): foundations for Sections 0–4 are in place on **https://hackfarm.co.nz**. Remaining ops live in [`docs/SEO-FOLLOWUP.md`](docs/SEO-FOLLOWUP.md). Checkboxes below reflect this repo (`[x]` done, `[ ]` open, `[~]` partial).
 
 **Priority if doing this incrementally:** 0 → 1 → 2 → 4 → 5 → 6/7/8 → 9 → 3. Access, rendering, icons/OG, and schema/content beat `llms.txt` — that file is low-cost and optional, not a confirmed ranking or citation signal.
 
@@ -25,7 +25,7 @@ Working checklist for AI search visibility (Gemini, ChatGPT, Perplexity, Claude)
 
 - [x] Pages are statically generated / pre-rendered (`scripts/prerender.mjs`) — AI crawlers largely do not execute JS.
 - [~] Custom domain live at `hackfarm.co.nz`; enforce HTTPS in Pages once the certificate is ready. See `docs/SEO-FOLLOWUP.md`.
-- [x] Explicit `<link rel="canonical">` on every page via `usePageMeta` (absolute; currently preview origin until cutover).
+- [x] Explicit `<link rel="canonical">` on every page via `usePageMeta` (absolute `https://hackfarm.co.nz`).
 - [x] `sitemap.xml` present, generated, and referenced in `robots.txt`.
 - [~] Validate robots/sitemap for stale URLs after cutover and any slug cleanups (e.g. `/privacy-policy-2/`).
 

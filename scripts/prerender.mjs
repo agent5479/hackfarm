@@ -127,7 +127,9 @@ async function main() {
       } catch {
         /* maps / embeds may keep the network busy */
       }
-      const html = await page.content();
+      const html = (await page.content())
+        .replaceAll('https://agent5479.github.io/hackfarm', 'https://hackfarm.co.nz')
+        .replaceAll('http://agent5479.github.io/hackfarm', 'https://hackfarm.co.nz');
       const out = outPathForRoute(routePath);
       writeFileSync(out, html);
       ok += 1;

@@ -1,6 +1,6 @@
 # Hack Farm — React Site
 
-React recreation of [hackfarm.co.nz](https://www.hackfarm.co.nz) for GitHub Pages hosting.
+React recreation of [hackfarm.co.nz](https://hackfarm.co.nz) for GitHub Pages hosting.
 
 ## Stack
 

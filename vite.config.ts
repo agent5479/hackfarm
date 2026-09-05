@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
+process.env.VITE_SITE_ORIGIN = process.env.VITE_SITE_ORIGIN || 'https://hackfarm.co.nz';
+
 function normalizeBase(raw?: string) {
   let base = (raw || '/').trim() || '/';
   if (!base.startsWith('/')) base = `/${base}`;
