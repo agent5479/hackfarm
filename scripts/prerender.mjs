@@ -16,10 +16,8 @@ function normalizeBase(raw) {
 
 const base = normalizeBase(process.env.BASE_URL);
 const routes = JSON.parse(readFileSync(join(root, 'src/seo/routes.json'), 'utf8'));
-const horseSlugs = [
-  'donnie', 'buddy', 'safran', 'manuka', 'rusty', 'mcduff', 'redwing',
-  'brunner', 'ice', 'leonard', 'chloe', 'arnie', 'jasper', 'brown-acre',
-];
+const scraped = JSON.parse(readFileSync(join(root, 'src/content/scraped-content.json'), 'utf8'));
+const horseSlugs = (scraped.horses || []).map((h) => h.slug).filter(Boolean);
 
 /** SPA routes to prerender (not static FreshWDL html). */
 const paths = [

@@ -56,12 +56,19 @@ jobs:
           test -f dist/robots.txt
           test -f dist/sitemap.xml
           test -f dist/llms.txt
+          test -f dist/BingSiteAuth.xml
+          grep -q '7A483AA50FC8C07106E5E9E40687CB5C' dist/BingSiteAuth.xml
           test -f dist/about/index.html
           test -f dist/accommodation/index.html
           test -f dist/horse/donnie/index.html
           grep -q 'src="/assets/' dist/index.html
           ! grep -q 'src="/hackfarm/assets/' dist/index.html
           grep -q 'https://hackfarm.co.nz/' dist/sitemap.xml
+          grep -q 'https://hackfarm.co.nz/about/' dist/sitemap.xml
+          grep -q 'https://hackfarm.co.nz/horse/donnie/' dist/sitemap.xml
+          grep -q 'https://hackfarm.co.nz/sitemap.xml' dist/robots.txt
+          ! grep -q 'github.io' dist/sitemap.xml
+          ! grep -q '/hackfarm/' dist/sitemap.xml
           grep -q 'GPTBot' dist/robots.txt
           grep -q 'Hack n Stay Golden Bay' dist/llms.txt
           grep -q 'application/ld+json' dist/index.html

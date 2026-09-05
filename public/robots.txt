@@ -28,4 +28,4 @@ Allow: /
 User-agent: Bytespider
 Disallow: /
 
-Sitemap: https://agent5479.github.io/hackfarm/sitemap.xml
+Sitemap: https://hackfarm.co.nz/sitemap.xml

@@ -15,10 +15,11 @@ const origin = (process.env.VITE_SITE_ORIGIN || 'https://hackfarm.co.nz').replac
 const base = normalizeBase(process.env.BASE_URL);
 
 const routes = JSON.parse(readFileSync(join(root, 'src/seo/routes.json'), 'utf8'));
-const horseSlugs = [
-  'donnie', 'buddy', 'safran', 'manuka', 'rusty', 'mcduff', 'redwing',
-  'brunner', 'ice', 'leonard', 'chloe', 'arnie', 'jasper', 'brown-acre',
-];
+const scraped = JSON.parse(readFileSync(join(root, 'src/content/scraped-content.json'), 'utf8'));
+const horseSlugs = (scraped.horses || []).map((h) => h.slug).filter(Boolean);
+if (!horseSlugs.length) {
+  throw new Error('No horse slugs found in scraped-content.json');
+}
 
 function absoluteUrl(path) {
   const normalized = String(path || '').replace(/^\//, '');
@@ -27,9 +28,11 @@ function absoluteUrl(path) {
 }
 
 const paths = [
-  ...routes.map((r) => r.path),
-  ...horseSlugs.map((slug) => `/horse/${slug}/`),
-  '/FreshWDL/FreshWDL.html',
+  ...new Set([
+    ...routes.map((r) => r.path),
+    ...horseSlugs.map((slug) => `/horse/${slug}/`),
+    '/FreshWDL/FreshWDL.html',
+  ]),
 ];
 
 const AI_BOTS = [

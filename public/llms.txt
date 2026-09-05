@@ -6,18 +6,18 @@ Hack n Stay Golden Bay (also known as Hack Farm) is a first-party farmstay and g
 
 ## Key pages
 
-- [Home](https://agent5479.github.io/hackfarm/): Overview of farmstay, camping, and beach horse rides near Paton's Rock.
-- [About](https://agent5479.github.io/hackfarm/about/): Brand and founder story — Hack Farm, Hack n Stay, Baerbel Hack, and the Hack Vaulties club.
-- [Accommodation](https://agent5479.github.io/hackfarm/accommodation/): Farmstay rooms, dog-friendly campground, and bring-your-own-horse stays.
-- [Holistic Horse Rides](https://agent5479.github.io/hackfarm/holistic-horse-rides/): Guided beach and trail rides with a tide-aware sunrise planner for Paton's Rock.
-- [Hack Farm Trails](https://agent5479.github.io/hackfarm/hack-farm-trails/): Interactive trail map and tide guidance for BYO horse riders.
-- [Our Horses](https://agent5479.github.io/hackfarm/our-horses/): Meet the Hack Farm herd used for rides, lessons, and vaulting.
-- [Learning Experiences](https://agent5479.github.io/hackfarm/learning-experiences/): Riding lessons, horsemanship, and vaulting for all ages.
-- [Vaulting](https://agent5479.github.io/hackfarm/vaulting/): Hack Vaulties vaulting sessions with Baerbel Hack.
-- [Special Events](https://agent5479.github.io/hackfarm/special-events/): Kids camps, horse club days, and special riding events.
-- [Gift Vouchers](https://agent5479.github.io/hackfarm/horse-riding-holiday-gift-vouchers/): Gift cards for rides, stays, and learning experiences.
-- [Contact](https://agent5479.github.io/hackfarm/contact/): Phone, email, and address for bookings and enquiries.
-- [On-site weather station](https://agent5479.github.io/hackfarm/FreshWDL/FreshWDL.html): Live FreshWDL weather readings from the property.
+- [Home](https://hackfarm.co.nz/): Overview of farmstay, camping, and beach horse rides near Paton's Rock.
+- [About](https://hackfarm.co.nz/about/): Brand and founder story — Hack Farm, Hack n Stay, Baerbel Hack, and the Hack Vaulties club.
+- [Accommodation](https://hackfarm.co.nz/accommodation/): Farmstay rooms, dog-friendly campground, and bring-your-own-horse stays.
+- [Holistic Horse Rides](https://hackfarm.co.nz/holistic-horse-rides/): Guided beach and trail rides with a tide-aware sunrise planner for Paton's Rock.
+- [Hack Farm Trails](https://hackfarm.co.nz/hack-farm-trails/): Interactive trail map and tide guidance for BYO horse riders.
+- [Our Horses](https://hackfarm.co.nz/our-horses/): Meet the Hack Farm herd used for rides, lessons, and vaulting.
+- [Learning Experiences](https://hackfarm.co.nz/learning-experiences/): Riding lessons, horsemanship, and vaulting for all ages.
+- [Vaulting](https://hackfarm.co.nz/vaulting/): Hack Vaulties vaulting sessions with Baerbel Hack.
+- [Special Events](https://hackfarm.co.nz/special-events/): Kids camps, horse club days, and special riding events.
+- [Gift Vouchers](https://hackfarm.co.nz/horse-riding-holiday-gift-vouchers/): Gift cards for rides, stays, and learning experiences.
+- [Contact](https://hackfarm.co.nz/contact/): Phone, email, and address for bookings and enquiries.
+- [On-site weather station](https://hackfarm.co.nz/FreshWDL/FreshWDL.html): Live FreshWDL weather readings from the property.
 
 ## Social
 
@@ -27,4 +27,4 @@ Hack n Stay Golden Bay (also known as Hack Farm) is a first-party farmstay and g
 
 ## Optional
 
-- [Sitemap](https://agent5479.github.io/hackfarm/sitemap/): Full list of public pages on this site.
+- [Sitemap](https://hackfarm.co.nz/sitemap/): Full list of public pages on this site.
