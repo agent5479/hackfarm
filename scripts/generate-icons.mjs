@@ -70,9 +70,7 @@ function ogBasename(uploadPath) {
 
 async function writeOgCrop(srcPath, destPath) {
   const meta = await sharp(srcPath).rotate().metadata();
-  if (!meta.width || !meta.height || Math.min(meta.width, meta.height) < 400) {
-    return false;
-  }
+  if (!meta.width || !meta.height) return false;
   await mkdir(dirname(destPath), { recursive: true });
   await sharp(srcPath)
     .rotate()
