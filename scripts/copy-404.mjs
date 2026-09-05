@@ -3,7 +3,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const base = (process.env.BASE_URL || '/hackfarm/').replace(/\/?$/, '/');
+const base = (process.env.BASE_URL || '/').replace(/\/?$/, '/');
 const keep = base.split('/').filter(Boolean).length;
 
 const html = `<!DOCTYPE html>

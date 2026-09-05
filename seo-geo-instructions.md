@@ -24,7 +24,7 @@ Working checklist for AI search visibility (Gemini, ChatGPT, Perplexity, Claude)
 ## 1. Rendering & Indexing (GitHub Pages / static hosting)
 
 - [x] Pages are statically generated / pre-rendered (`scripts/prerender.mjs`) — AI crawlers largely do not execute JS.
-- [ ] Custom domain with HTTPS enforced — preview still on `agent5479.github.io/hackfarm/`; cutover steps in `docs/SEO-FOLLOWUP.md`.
+- [~] Custom domain live at `hackfarm.co.nz`; enforce HTTPS in Pages once the certificate is ready. See `docs/SEO-FOLLOWUP.md`.
 - [x] Explicit `<link rel="canonical">` on every page via `usePageMeta` (absolute; currently preview origin until cutover).
 - [x] `sitemap.xml` present, generated, and referenced in `robots.txt`.
 - [~] Validate robots/sitemap for stale URLs after cutover and any slug cleanups (e.g. `/privacy-policy-2/`).
@@ -72,7 +72,7 @@ Checklist:
 
 Advisory Markdown index at `/llms.txt`. **Not a confirmed ranking or citation signal** for major AI search products as of mid-2026; crawlers mainly honour `robots.txt` and fetch HTML. Keep for low cost / future clients; do not prioritize over content or schema.
 
-- [x] Published and generated (`scripts/generate-seo.mjs` → `public/llms.txt`) with brand blurb + key pages. On project Pages preview the file lives under `/hackfarm/llms.txt`, not host apex — move to domain root on cutover.
+- [x] Published and generated (`scripts/generate-seo.mjs` → `public/llms.txt`) with brand blurb + key pages at domain root (`/llms.txt`).
 - [x] Hand-curated for this site (not a generic host default).
 
 ## 4. Structured Data (JSON-LD)

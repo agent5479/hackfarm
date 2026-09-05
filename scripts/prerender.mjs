@@ -8,7 +8,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
 
 function normalizeBase(raw) {
-  let base = (raw || '/hackfarm/').trim() || '/hackfarm/';
+  let base = (raw || '/').trim() || '/';
   if (!base.startsWith('/')) base = `/${base}`;
   if (!base.endsWith('/')) base = `${base}/`;
   return base;

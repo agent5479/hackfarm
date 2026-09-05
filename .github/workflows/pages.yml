@@ -41,25 +41,27 @@ jobs:
       - name: Log tide cache stats
         continue-on-error: true
         run: node -e "const j=require('./public/data/tides.json'); const h=(j.extremes||[]).filter(e=>e.type==='high').length; const l=(j.extremes||[]).filter(e=>e.type==='low').length; console.log('Tide cache:', j.extremes?.length||0, 'extremes', h, 'highs', l, 'lows', 'source:', j.metadata?.source||'none');"
-      - name: Build for github.io/hackfarm
+      - name: Build for hackfarm.co.nz
         run: npm run build
         env:
-          BASE_URL: /hackfarm/
-          VITE_SITE_ORIGIN: https://agent5479.github.io
+          BASE_URL: /
+          VITE_SITE_ORIGIN: https://hackfarm.co.nz
       - name: Verify Pages files
         run: |
           test -f dist/index.html
           test -f dist/404.html
           test -f dist/.nojekyll
-          test ! -f dist/CNAME
+          test -f dist/CNAME
+          grep -q 'hackfarm.co.nz' dist/CNAME
           test -f dist/robots.txt
           test -f dist/sitemap.xml
           test -f dist/llms.txt
           test -f dist/about/index.html
           test -f dist/accommodation/index.html
           test -f dist/horse/donnie/index.html
-          grep -q 'src="/hackfarm/assets/' dist/index.html
-          grep -q 'agent5479.github.io/hackfarm' dist/sitemap.xml
+          grep -q 'src="/assets/' dist/index.html
+          ! grep -q 'src="/hackfarm/assets/' dist/index.html
+          grep -q 'https://hackfarm.co.nz/' dist/sitemap.xml
           grep -q 'GPTBot' dist/robots.txt
           grep -q 'Hack n Stay Golden Bay' dist/llms.txt
           grep -q 'application/ld+json' dist/index.html
@@ -79,9 +81,9 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-      - name: Keep github.io preview (no custom domain yet)
+      - name: Keep custom domain on Pages
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo '{"cname":null}' | gh api --method PUT repos/${{ github.repository }}/pages --input -
+          echo '{"cname":"hackfarm.co.nz"}' | gh api --method PUT repos/${{ github.repository }}/pages --input -

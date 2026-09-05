@@ -1,18 +1,15 @@
 # SEO follow-up (after technical foundation)
 
-This site ships SEO foundations (per-route meta, robots/sitemap/`llms.txt` tied to the live host, JSON-LD including Organization/Service/FAQ/HowTo/Person/SoftwareApplication, prerender, About page) while the preview remains on GitHub Pages.
+This site ships SEO foundations (per-route meta, robots/sitemap/`llms.txt` tied to the live host, JSON-LD including Organization/Service/FAQ/HowTo/Person/SoftwareApplication, prerender, About page) on GitHub Pages at **https://hackfarm.co.nz**.
 
 ## 1. Domain cutover
 
-When ready to make this the official site:
+Done: DNS + Pages custom domain, `BASE_URL=/`, `VITE_SITE_ORIGIN=https://hackfarm.co.nz`, and `public/CNAME`.
 
-1. Point DNS for `hackfarm.co.nz` / `www.hackfarm.co.nz` at GitHub Pages.
-2. Set **Settings → Pages → Custom domain** to `www.hackfarm.co.nz` (pick one primary host).
-3. Rebuild with `BASE_URL=/` and `VITE_SITE_ORIGIN=https://www.hackfarm.co.nz`.
-4. Remove the workflow step that forces `cname: null`.
-5. Enforce HTTPS in Pages settings; redirect apex ↔ www to the canonical host.
+Still check:
 
-Until then, keep `BASE_URL=/hackfarm/` and `VITE_SITE_ORIGIN=https://agent5479.github.io` so the preview stays usable.
+1. Enforce HTTPS in **Settings → Pages** once the certificate is ready.
+2. Redirect `www.hackfarm.co.nz` ↔ apex to the canonical host (`hackfarm.co.nz`).
 
 **Note:** Hosting is GitHub Pages (no Cloudflare WAF). After any CDN/WAF cutover, re-check dashboard bot rules separately from `robots.txt` — edge defaults can block AI bots even when robots allow them.
 

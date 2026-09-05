@@ -5,13 +5,13 @@ import { fileURLToPath } from 'url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 function normalizeBase(raw) {
-  let base = (raw || '/hackfarm/').trim() || '/hackfarm/';
+  let base = (raw || '/').trim() || '/';
   if (!base.startsWith('/')) base = `/${base}`;
   if (!base.endsWith('/')) base = `${base}/`;
   return base;
 }
 
-const origin = (process.env.VITE_SITE_ORIGIN || 'https://agent5479.github.io').replace(/\/$/, '');
+const origin = (process.env.VITE_SITE_ORIGIN || 'https://hackfarm.co.nz').replace(/\/$/, '');
 const base = normalizeBase(process.env.BASE_URL);
 
 const routes = JSON.parse(readFileSync(join(root, 'src/seo/routes.json'), 'utf8'));

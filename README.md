@@ -35,7 +35,7 @@ Downloads images, fonts, FreshWDL weather files, and page copy from the live sit
 Copy `.env.example` to `.env.local` and set:
 
 - `VITE_FORM_ENDPOINT` — form submission URL (defaults to FormSubmit)
-- `VITE_SITE_ORIGIN` — canonical origin without path (preview: `https://agent5479.github.io`)
+- `VITE_SITE_ORIGIN` — canonical origin without path (`https://hackfarm.co.nz`)
 - `VITE_NIWA_API_KEY` — optional live NIWA tide fetch in the Book a Ride planner
 - Or set `NIWA_API_KEY` and run `npm run tides` to write `public/data/tides.json` without exposing the key
 
@@ -45,15 +45,11 @@ Copy `.env.example` to `.env.local` and set:
 
 ## Deployment
 
-GitHub Actions deploys **from `main`**. Until DNS is live, the site is built for the project URL:
+GitHub Actions deploys **from `main`** to **https://hackfarm.co.nz**.
 
-**https://agent5479.github.io/hackfarm/**
+CSS, images, and routes use a `/` base. Canonicals, `robots.txt`, and `sitemap.xml` are generated for `VITE_SITE_ORIGIN` (default `https://hackfarm.co.nz`). `public/CNAME` keeps the custom domain on GitHub Pages.
 
-CSS, images, and routes all use the `/hackfarm/` base. Canonicals, `robots.txt`, and `sitemap.xml` are generated for `VITE_SITE_ORIGIN` (default `https://agent5479.github.io`) so they match the preview host.
-
-After you point DNS, add `www.hackfarm.co.nz` in **Settings → Pages → Custom domain**, then rebuild with `BASE_URL=/` and `VITE_SITE_ORIGIN=https://www.hackfarm.co.nz`. See [docs/SEO-FOLLOWUP.md](docs/SEO-FOLLOWUP.md) for the full cutover and local-SEO checklist.
-
-Do not leave a custom domain set in Pages (or a `CNAME` file) until DNS actually resolves — GitHub will hide the `github.io` preview.
+See [docs/SEO-FOLLOWUP.md](docs/SEO-FOLLOWUP.md) for HTTPS, Search Console, and local-SEO follow-up.
 
 ## SEO build steps
 

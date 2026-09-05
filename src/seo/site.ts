@@ -1,18 +1,18 @@
 import { HORSE_SLUGS } from '../lib/constants';
 
-/** Canonical site origin without trailing slash (e.g. https://agent5479.github.io). */
+/** Canonical site origin without trailing slash (e.g. https://hackfarm.co.nz). */
 export function getSiteOrigin(): string {
   const raw =
     (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SITE_ORIGIN) ||
-    'https://agent5479.github.io';
+    'https://hackfarm.co.nz';
   return String(raw).replace(/\/$/, '');
 }
 
-/** Vite base path with leading and trailing slash (e.g. /hackfarm/ or /). */
+/** Vite base path with leading and trailing slash (e.g. / or /hackfarm/). */
 export function getBasePath(): string {
   const raw =
-    (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/hackfarm/';
-  let base = String(raw).trim() || '/hackfarm/';
+    (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
+  let base = String(raw).trim() || '/';
   if (!base.startsWith('/')) base = `/${base}`;
   if (!base.endsWith('/')) base = `${base}/`;
   return base;
