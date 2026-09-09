@@ -4,6 +4,8 @@ import { nzNoon } from './nzTime';
 export interface SunTimes {
   sunrise: Date;
   sunset: Date;
+  /** End of civil twilight (sun −6°): last usable evening light. */
+  civilDusk: Date;
 }
 
 function toJulian(date: Date): number {
@@ -24,10 +26,12 @@ function solarNoonAndDeclination(julian: number, lon: number) {
   return { jTransit, dec };
 }
 
-function hourAngle(lat: number, dec: number): number {
+/** Solar elevation angle in degrees (sunrise/sunset ≈ −0.833, civil twilight ≈ −6). */
+function hourAngle(lat: number, dec: number, elevationDeg: number): number {
   const latRad = (lat * Math.PI) / 180;
+  const elevRad = (elevationDeg * Math.PI) / 180;
   const cosHa =
-    (Math.sin((-0.833 * Math.PI) / 180) - Math.sin(latRad) * Math.sin(dec)) /
+    (Math.sin(elevRad) - Math.sin(latRad) * Math.sin(dec)) /
     (Math.cos(latRad) * Math.cos(dec));
   const clamped = Math.min(1, Math.max(-1, cosHa));
   return Math.acos(clamped);
@@ -37,7 +41,7 @@ function julianToDate(j: number): Date {
   return new Date((j - 2440587.5) * 86400000);
 }
 
-/** Sunrise/sunset instants (UTC). Display with Pacific/Auckland so NZST/NZDT apply. */
+/** Sunrise/sunset/civil-dusk instants (UTC). Display with Pacific/Auckland so NZST/NZDT apply. */
 export function sunTimesForDate(
   date: Date | string,
   lat = PATONS_ROCK.lat,
@@ -45,8 +49,26 @@ export function sunTimesForDate(
 ): SunTimes {
   const noon = typeof date === 'string' ? nzNoon(date) : date;
   const { jTransit, dec } = solarNoonAndDeclination(toJulian(noon), lon);
-  const ha = hourAngle(lat, dec);
-  const rise = julianToDate(jTransit - (ha * 180) / Math.PI / 360);
-  const set = julianToDate(jTransit + (ha * 180) / Math.PI / 360);
-  return { sunrise: rise, sunset: set };
+  const haSun = hourAngle(lat, dec, -0.833);
+  const haCivil = hourAngle(lat, dec, -6);
+  const rise = julianToDate(jTransit - (haSun * 180) / Math.PI / 360);
+  const set = julianToDate(jTransit + (haSun * 180) / Math.PI / 360);
+  const civilDusk = julianToDate(jTransit + (haCivil * 180) / Math.PI / 360);
+  return { sunrise: rise, sunset: set, civilDusk };
+}
+
+/**
+ * True when the ride runs into the evening sunset / civil-twilight window.
+ * Tide rides are clamped to daylight, so late placements often end at sunset —
+ * those still count as dipping into twilight for beach comfort at Paton's Rock.
+ */
+export function rideDipsIntoTwilight(
+  rideStart: Date,
+  rideEnd: Date,
+  sunset: Date,
+  civilDusk?: Date,
+): boolean {
+  const twilightEnd = civilDusk ?? sunset;
+  // Overlap with [sunset, civil dusk], including rides that end exactly at sunset.
+  return rideEnd.getTime() >= sunset.getTime() && rideStart.getTime() < twilightEnd.getTime();
 }

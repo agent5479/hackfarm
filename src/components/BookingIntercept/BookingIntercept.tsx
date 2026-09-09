@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { OTHER_FAREHARBOR_RIDES, SUNRISE_BEACH_RIDE } from '../../booking/fareharbor-catalog';
 import { getRideType } from '../../booking/rides';
-import { formatClock } from '../../booking/schedule';
-import { openFareHarborBooking } from '../../lib/booking-events';
+import { formatClock, type SunriseDaySchedule } from '../../booking/schedule';
+import { rideDipsIntoTwilight, sunTimesForDate } from '../../booking/sun';
+import { openFareHarborBooking, type FareHarborBookingDetail } from '../../lib/booking-events';
 import { optimizedUrl } from '../../lib/images';
 import SunriseRideCalendar, {
   type BookSlotPayload,
@@ -15,26 +16,27 @@ import './BookingIntercept.css';
 
 const TIDE_CALENDAR_RIDE_IDS = new Set(['patons-rock', 'rangi', 'swimming']);
 
-function bookSunriseSlot({ day }: BookSlotPayload) {
-  openFareHarborBooking({
-    itemId: SUNRISE_BEACH_RIDE.fareharborItemId,
-    date: day.date,
-    rideStart: formatClock(day.rideStart),
-    title: SUNRISE_BEACH_RIDE.title,
-  });
-}
+type PendingTwilightBooking = {
+  detail: FareHarborBookingDetail;
+  sunsetLabel: string;
+  rideEndLabel: string;
+};
 
-function bookOtherRide(itemId: string, title: string) {
-  openFareHarborBooking({ itemId, title });
-}
-
-function bookTideRide(title: string, itemId: string, { day }: BookTideDayPayload) {
-  openFareHarborBooking({
+function toFareHarborDetail(
+  itemId: string,
+  title: string,
+  day: SunriseDaySchedule,
+): FareHarborBookingDetail {
+  return {
     itemId,
     date: day.date,
     rideStart: formatClock(day.rideStart),
     title,
-  });
+  };
+}
+
+function bookOtherRide(itemId: string, title: string) {
+  openFareHarborBooking({ itemId, title });
 }
 
 function shouldOpenCalendar(hash: string) {
@@ -63,6 +65,7 @@ export default function BookingIntercept() {
   const [openCalendarId, setOpenCalendarId] = useState<string | null>(() =>
     typeof window !== 'undefined' ? calendarIdFromHash(window.location.hash) : null,
   );
+  const [twilightNotice, setTwilightNotice] = useState<PendingTwilightBooking | null>(null);
 
   useEffect(() => {
     if (!shouldOpenCalendar(hash)) return;
@@ -74,8 +77,49 @@ export default function BookingIntercept() {
     });
   }, [hash]);
 
+  useEffect(() => {
+    if (!twilightNotice) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setTwilightNotice(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [twilightNotice]);
+
   const toggleCalendar = (id: string) => {
     setOpenCalendarId((current) => (current === id ? null : id));
+  };
+
+  const proceedToFareHarbor = (detail: FareHarborBookingDetail) => {
+    setTwilightNotice(null);
+    openFareHarborBooking(detail);
+  };
+
+  const bookScheduledRide = (itemId: string, title: string, day: SunriseDaySchedule) => {
+    const detail = toFareHarborDetail(itemId, title, day);
+    const { civilDusk } = sunTimesForDate(day.date);
+    if (rideDipsIntoTwilight(day.rideStart, day.rideEnd, day.sunset, civilDusk)) {
+      setTwilightNotice({
+        detail,
+        sunsetLabel: formatClock(day.sunset),
+        rideEndLabel: formatClock(day.rideEnd),
+      });
+      return;
+    }
+    openFareHarborBooking(detail);
+  };
+
+  const bookSunriseSlot = ({ day }: BookSlotPayload) => {
+    bookScheduledRide(SUNRISE_BEACH_RIDE.fareharborItemId, SUNRISE_BEACH_RIDE.title, day);
+  };
+
+  const bookTideRide = (title: string, itemId: string, { day }: BookTideDayPayload) => {
+    bookScheduledRide(itemId, title, day);
   };
 
   return (
@@ -177,6 +221,48 @@ export default function BookingIntercept() {
           );
         })}
       </div>
+
+      {twilightNotice && (
+        <div
+          className="booking-intercept__notice"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="twilight-notice-title"
+        >
+          <button
+            type="button"
+            className="booking-intercept__notice-backdrop"
+            aria-label="Close notice"
+            onClick={() => setTwilightNotice(null)}
+          />
+          <div className="booking-intercept__notice-panel">
+            <h2 id="twilight-notice-title">Just a heads-up about timing</h2>
+            <p>
+              This ride runs until about {twilightNotice.rideEndLabel}, which meets sunset around{' '}
+              {twilightNotice.sunsetLabel}. On Golden Bay's east-facing beaches the sun drops behind
+              the hills around then, so it can feel cooler and the light fades sooner than you might
+              expect — lovely in midsummer, less ideal for most of the year.
+            </p>
+            <p>You’re welcome to continue if that still suits you, or pick another day on the calendar.</p>
+            <div className="booking-intercept__notice-actions">
+              <button
+                type="button"
+                className="booking-intercept__notice-secondary"
+                onClick={() => setTwilightNotice(null)}
+              >
+                Choose another time
+              </button>
+              <button
+                type="button"
+                className="booking-intercept__notice-primary"
+                onClick={() => proceedToFareHarbor(twilightNotice.detail)}
+              >
+                Continue to booking
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

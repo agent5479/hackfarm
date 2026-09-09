@@ -30,7 +30,7 @@ export {
   type TideFlow,
 } from './tides';
 export { dateKeyInTz as nzDateKey, nzNoon, todayKeyNz, zonedCivilTime } from './nzTime';
-export { sunTimesForDate } from './sun';
+export { sunTimesForDate, rideDipsIntoTwilight } from './sun';
 export {
   buildSunriseDaySchedule,
   buildSunriseHorizonSchedule,
