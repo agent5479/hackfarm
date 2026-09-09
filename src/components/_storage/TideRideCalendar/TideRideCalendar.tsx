@@ -1,3 +1,8 @@
+/**
+ * Shelved: tide calendars for Paton's Rock / Rangi / Swimming.
+ * Booking intercept now uses FareHarbor "Select date" for those rides;
+ * only Sunrise keeps a live tide calendar. Re-wire from here when ready.
+ */
 import { useMemo, useState } from 'react';
 import {
   buildTideHorizonSchedule,
@@ -10,22 +15,22 @@ import {
   startOfWeekMonday,
   tideDetailSummary,
   type TideDaySchedule,
-} from '../../booking/schedule';
-import { nzNoon } from '../../booking/nzTime';
-import { PLANNER_DAYS } from '../../booking/location';
+} from '../../../booking/schedule';
+import { nzNoon } from '../../../booking/nzTime';
+import { PLANNER_DAYS } from '../../../booking/location';
 import {
   type FareHarborDateStatus,
   useFareHarborDateStatuses,
-} from '../../booking/fareharbor-availability';
+} from '../../../booking/fareharbor-availability';
 import {
   PATONS_ROCK_RIDE,
   RANGI_RIDE,
   type RideType,
-} from '../../booking/rides';
-import { useSunriseSchedule } from '../../booking/useSunriseSchedule';
-import DayCell from '../SunriseRideCalendar/DayCell';
-import TideCalendarLoading from '../TideCalendarLoading/TideCalendarLoading';
-import '../SunriseRideCalendar/SunriseRideCalendar.css';
+} from '../../../booking/rides';
+import { useSunriseSchedule } from '../../../booking/useSunriseSchedule';
+import DayCell from '../../SunriseRideCalendar/DayCell';
+import TideCalendarLoading from '../../TideCalendarLoading/TideCalendarLoading';
+import '../../SunriseRideCalendar/SunriseRideCalendar.css';
 
 type CalendarMode = 'browse' | 'book' | 'intercept';
 

@@ -64,19 +64,6 @@
   line-height: 1.45;
 }
 
-.booking-intercept__price-from {
-  margin: 0;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--color-secondary);
-}
-
-.booking-intercept__ride-block {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
 .booking-intercept__calendar {
   margin: 0;
   padding: 1rem 1rem 1.15rem;
