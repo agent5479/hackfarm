@@ -1,4 +1,9 @@
-export type FaqItem = { question: string; answer: string };
+export type FaqItem = {
+  question: string;
+  answer: string;
+  /** Optional on-page link shown after the answer (e.g. trail map). */
+  link?: { to: string; label: string };
+};
 
 export const HOMESTEAD_FAQS: FaqItem[] = [
   {
@@ -107,7 +112,8 @@ export const BYO_HORSE_FAQS: FaqItem[] = [
   {
     question: 'Where can I ride with my own horse from Hack Farm?',
     answer:
-      'Using the Hack Track you can ride along the coastline to the Mussel Inn, explore the Rangihaeata inlet, swim your horse in the horse-friendly dam, and take full-moon rides to see glow-worms on the track.',
+      'You can ride all along the beaches. Please check our interactive trail map for routes and tide-aware guidance — use it as a guide only, as tides and inlets are always shifting. Always check the tide times before a longer ride, and check in with Baerbel before you leave.',
+    link: { to: '/hack-farm-trails/', label: 'Open the interactive trail map' },
   },
 ];
 

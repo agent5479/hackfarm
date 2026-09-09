@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import scraped from '../content/scraped-content.json';
 import { decodeHtml } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
@@ -30,6 +31,11 @@ function FaqBlock({ title, faqs }: { title: string; faqs: FaqItem[] }) {
           <div key={faq.question} style={{ marginBottom: '1.25rem' }}>
             <h3>{faq.question}</h3>
             <p>{faq.answer}</p>
+            {faq.link ? (
+              <p>
+                <Link to={faq.link.to}>{faq.link.label}</Link>
+              </p>
+            ) : null}
           </div>
         ))}
       </div>

@@ -148,7 +148,9 @@ export function serviceJsonLd(name: string, description: string, path: string) {
   };
 }
 
-export function faqPageJsonLd(faqs: { question: string; answer: string }[]) {
+export function faqPageJsonLd(
+  faqs: { question: string; answer: string; link?: { to: string; label: string } }[],
+) {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -157,7 +159,9 @@ export function faqPageJsonLd(faqs: { question: string; answer: string }[]) {
       name: faq.question,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: faq.answer,
+        text: faq.link
+          ? `${faq.answer} ${faq.link.label}: ${absoluteUrl(faq.link.to)}`
+          : faq.answer,
       },
     })),
   };
