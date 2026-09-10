@@ -415,6 +415,14 @@ p { margin-bottom: 1rem; color: var(--color-text); }
   font-weight: 500;
 }
 
+.form-error {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border-left: 4px solid #c45c4a;
+  background: #fdf2f0;
+  color: var(--color-secondary);
+}
+
 form .field {
   margin-bottom: 1rem;
 }

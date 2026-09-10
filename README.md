@@ -34,7 +34,7 @@ Downloads images, fonts, FreshWDL weather files, and page copy from the live sit
 
 Copy `.env.example` to `.env.local` and set:
 
-- `VITE_FORM_ENDPOINT` — form submission URL (defaults to FormSubmit)
+- `VITE_FORMS_ENDPOINT` — Google Apps Script web app `/exec` URL (see `scripts/google-apps-script/`; falls back to mailto if unset)
 - `VITE_SITE_ORIGIN` — canonical origin without path (`https://hackfarm.co.nz`)
 - `VITE_NIWA_API_KEY` — optional live NIWA tide fetch in the Book a Ride planner
 - Or set `NIWA_API_KEY` and run `npm run tides` to write `public/data/tides.json` without exposing the key
@@ -46,6 +46,8 @@ Copy `.env.example` to `.env.local` and set:
 ## Deployment
 
 GitHub Actions deploys **from `main`** to **https://hackfarm.co.nz**.
+
+Set repository secret `VITE_FORMS_ENDPOINT` to the Apps Script web app `/exec` URL (see [scripts/google-apps-script/README.md](scripts/google-apps-script/README.md)).
 
 CSS, images, and routes use a `/` base. Canonicals, `robots.txt`, and `sitemap.xml` are generated for `VITE_SITE_ORIGIN` (default `https://hackfarm.co.nz`). `public/CNAME` keeps the custom domain on GitHub Pages.
 
@@ -67,7 +69,7 @@ See [docs/SEO-FOLLOWUP.md](docs/SEO-FOLLOWUP.md) for HTTPS, Search Console, and 
 - FreshWDL weather station (`https://hackfarm.infinityfree.me/FreshWDL/FreshWDL.html`; station FTPs `clientraw` files there)
 - Google My Maps trail map
 - Instagram grid (cached images)
-- Contact, volunteer, partner, and ride-request forms
+- Contact, volunteer, partner, and ride-request forms (Google Apps Script; mailto fallback)
 - 14 horse profile pages
 
 ## Future

@@ -46,6 +46,7 @@ jobs:
         env:
           BASE_URL: /
           VITE_SITE_ORIGIN: https://hackfarm.co.nz
+          VITE_FORMS_ENDPOINT: ${{ secrets.VITE_FORMS_ENDPOINT }}
       - name: Verify Pages files
         run: |
           test -f dist/index.html

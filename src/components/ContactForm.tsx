@@ -1,21 +1,10 @@
-import { useLocation } from 'react-router-dom';
-import { FORM_ENDPOINT } from '../lib/constants';
-import { absoluteUrl } from '../seo/site';
+import { useState, type FormEvent } from 'react';
+import { CONTACT, FORMS_ENDPOINT } from '../lib/constants';
 
 interface ContactFormProps {
   type: 'contact' | 'volunteer' | 'partner' | 'ride-request';
   title?: string;
 }
-
-/** FormSubmit recipient — public business inbox (forwards to Baerbel's Gmail). */
-const DEFAULT_FORMSUBMIT = 'https://formsubmit.co/stay@hackfarm.co.nz';
-
-const NEXT_PATH: Record<ContactFormProps['type'], string> = {
-  contact: 'contact/?sent=contact',
-  volunteer: 'contact/?sent=volunteer',
-  partner: 'partners/?sent=partner',
-  'ride-request': 'holistic-horse-rides/?sent=ride-request',
-};
 
 const FIELDS: Record<string, { name: string; label: string; type: string; required?: boolean; options?: string[] }[]> = {
   contact: [
@@ -55,13 +44,72 @@ const FIELDS: Record<string, { name: string; label: string; type: string; requir
   ],
 };
 
-export default function ContactForm({ type, title }: ContactFormProps) {
-  const location = useLocation();
-  const fields = FIELDS[type];
-  const action = FORM_ENDPOINT || DEFAULT_FORMSUBMIT;
-  const sent = new URLSearchParams(location.search).get('sent') === type;
+function formDataToPayload(type: string, data: FormData): Record<string, string> {
+  const payload: Record<string, string> = {
+    form_type: type,
+    subject: `Hack Farm ${type} form submission`,
+  };
 
-  if (sent) {
+  for (const [key, value] of data.entries()) {
+    if (key === 'subject' || key === 'form_type') continue;
+    const text = String(value).trim();
+    if (!text) continue;
+    if (key === 'help_with' && payload.help_with) {
+      payload.help_with = `${payload.help_with}, ${text}`;
+    } else {
+      payload[key] = text;
+    }
+  }
+
+  return payload;
+}
+
+function buildMailto(type: string, payload: Record<string, string>): string {
+  const lines = Object.entries(payload)
+    .filter(([key]) => key !== 'botcheck' && key !== 'subject')
+    .map(([key, value]) => `${key}: ${value}`);
+  const subject = encodeURIComponent(payload.subject || `Hack Farm ${type} form submission`);
+  const body = encodeURIComponent(lines.join('\n'));
+  return `mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
+}
+
+export default function ContactForm({ type, title }: ContactFormProps) {
+  const fields = FIELDS[type];
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [error, setError] = useState('');
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const payload = formDataToPayload(type, new FormData(form));
+
+    if (!FORMS_ENDPOINT) {
+      window.location.href = buildMailto(type, payload);
+      return;
+    }
+
+    setStatus('sending');
+    setError('');
+
+    try {
+      const response = await fetch(FORMS_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+      });
+      const result = (await response.json()) as { ok?: boolean; error?: string };
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || 'Unable to send message.');
+      }
+      form.reset();
+      setStatus('sent');
+    } catch (err) {
+      setStatus('error');
+      setError(err instanceof Error ? err.message : 'Unable to send message.');
+    }
+  }
+
+  if (status === 'sent') {
     return (
       <p className="form-success" role="status">
         Thanks — your message has been sent. We&apos;ll get back to you soon.
@@ -70,14 +118,9 @@ export default function ContactForm({ type, title }: ContactFormProps) {
   }
 
   return (
-    <form action={action} method="POST" className="contact-form">
+    <form onSubmit={handleSubmit} className="contact-form">
       {title && <h3>{title}</h3>}
-      <input type="hidden" name="_subject" value={`Hack Farm ${type} form submission`} />
-      <input type="hidden" name="_captcha" value="false" />
-      <input type="hidden" name="_template" value="table" />
-      <input type="hidden" name="_next" value={absoluteUrl(NEXT_PATH[type])} />
-      <input type="text" name="_honey" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
-      <input type="hidden" name="form_type" value={type} />
+      <input type="checkbox" name="botcheck" tabIndex={-1} autoComplete="off" style={{ display: 'none' }} aria-hidden="true" />
 
       {fields.map((field) => (
         <div key={field.name} className="field">
@@ -115,7 +158,16 @@ export default function ContactForm({ type, title }: ContactFormProps) {
         </div>
       )}
 
-      <button type="submit" className="btn btn--green">Send</button>
+      {status === 'error' && (
+        <p className="form-error" role="alert">
+          {error} You can also email us directly at{' '}
+          <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.
+        </p>
+      )}
+
+      <button type="submit" className="btn btn--green" disabled={status === 'sending'}>
+        {status === 'sending' ? 'Sending…' : 'Send'}
+      </button>
     </form>
   );
 }

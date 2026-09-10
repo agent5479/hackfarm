@@ -50,7 +50,8 @@ export const MAPS = {
 /** Live FreshWDL gauges hosted where the station FTPs clientraw files. */
 export const WEATHER_STATION_URL = 'https://hackfarm.infinityfree.me/FreshWDL/FreshWDL.html';
 
-export const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || '';
+/** Google Apps Script web app `/exec` URL. Empty → forms fall back to mailto. */
+export const FORMS_ENDPOINT = import.meta.env.VITE_FORMS_ENDPOINT || '';
 
 export function withBase(path: string): string {
   if (!path || /^(https?:|mailto:|tel:|data:)/.test(path)) return path;
