@@ -29,12 +29,11 @@ export function horseSeo(slug: string, horseTitle?: string): SeoRoute {
   };
 }
 
-/** All paths to include in sitemap and prerender (pages + horses + weather). */
+/** All paths to include in sitemap and prerender (pages + horses). */
 export function allSeoPaths(): string[] {
   return [
     ...PAGE_ROUTES.map((r) => r.path),
     ...HORSE_SLUGS.map((slug) => horsePath(slug)),
-    '/FreshWDL/FreshWDL.html',
   ];
 }
 

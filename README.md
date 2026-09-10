@@ -64,7 +64,7 @@ See [docs/SEO-FOLLOWUP.md](docs/SEO-FOLLOWUP.md) for HTTPS, Search Console, and 
 
 - FareHarbor booking (ride, stay, gift vouchers)
 - Book a Ride planner (sunrise, tides, weather) before FareHarbor
-- FreshWDL weather station (`/FreshWDL/FreshWDL.html`)
+- FreshWDL weather station (`https://hackfarm.infinityfree.me/FreshWDL/FreshWDL.html`; station FTPs `clientraw` files there)
 - Google My Maps trail map
 - Instagram grid (cached images)
 - Contact, volunteer, partner, and ride-request forms

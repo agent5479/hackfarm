@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { withBase } from '../lib/constants';
+import { WEATHER_STATION_URL, withBase } from '../lib/constants';
 import './Header.css';
 
 const NAV = [
@@ -38,7 +38,7 @@ const NAV = [
   },
   { label: 'Vaulting Team', to: '/vaulting/' },
   { label: 'Gift Voucher', to: '/horse-riding-holiday-gift-vouchers/' },
-  { label: 'Weather Station', to: '/FreshWDL/FreshWDL.html' },
+  { label: 'Weather Station', to: WEATHER_STATION_URL, external: true },
   { label: 'Contact', to: '/contact/' },
 ];
 
@@ -86,12 +86,18 @@ export default function Header() {
                   ))}
                 </div>
               </div>
+            ) : 'external' in item && item.external ? (
+              <a
+                key={item.label}
+                href={item.to}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </a>
             ) : (
-              item.to.startsWith('/FreshWDL') ? (
-                <a key={item.label} href={withBase(item.to)}>{item.label}</a>
-              ) : (
-                <Link key={item.label} to={item.to} onClick={() => setOpen(false)}>{item.label}</Link>
-              )
+              <Link key={item.label} to={item.to} onClick={() => setOpen(false)}>{item.label}</Link>
             )
           )}
         </div>

@@ -1,4 +1,4 @@
-import { CONTACT, SOCIAL } from '../lib/constants';
+import { CONTACT, SOCIAL, WEATHER_STATION_URL } from '../lib/constants';
 import { PATONS_ROCK } from '../booking/location';
 import {
   absoluteAssetUrl,
@@ -107,7 +107,7 @@ function buildDefaultGraph() {
         name: 'Hack Farm FreshWDL Weather Station',
         applicationCategory: 'WeatherApplication',
         operatingSystem: 'Web',
-        url: absoluteUrl('/FreshWDL/FreshWDL.html'),
+        url: WEATHER_STATION_URL,
         description:
           'On-site FreshWDL weather station readings from Hack Farm near Paton\'s Rock, Golden Bay.',
         provider: { '@id': `${siteUrl}#organization` },

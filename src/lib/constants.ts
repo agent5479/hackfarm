@@ -47,6 +47,9 @@ export const MAPS = {
   trailView: 'https://www.google.com/maps/d/viewer?mid=1ofkOTzT8c0nEoLjMa_xYoT75cbb-KEDv&ll=-40.778761120161995%2C172.74905889999997&z=13',
 };
 
+/** Live FreshWDL gauges hosted where the station FTPs clientraw files. */
+export const WEATHER_STATION_URL = 'https://hackfarm.infinityfree.me/FreshWDL/FreshWDL.html';
+
 export const FORM_ENDPOINT = import.meta.env.VITE_FORM_ENDPOINT || '';
 
 export function withBase(path: string): string {

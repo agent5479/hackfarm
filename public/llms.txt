@@ -17,7 +17,7 @@ Hack n Stay Golden Bay (also known as Hack Farm) is a first-party farmstay and g
 - [Special Events](https://hackfarm.co.nz/special-events/): Kids camps, horse club days, and special riding events.
 - [Gift Vouchers](https://hackfarm.co.nz/horse-riding-holiday-gift-vouchers/): Gift cards for rides, stays, and learning experiences.
 - [Contact](https://hackfarm.co.nz/contact/): Phone, email, and address for bookings and enquiries.
-- [On-site weather station](https://hackfarm.co.nz/FreshWDL/FreshWDL.html): Live FreshWDL weather readings from the property.
+- [On-site weather station](https://hackfarm.infinityfree.me/FreshWDL/FreshWDL.html): Live FreshWDL weather readings from the property.
 
 ## Social
 

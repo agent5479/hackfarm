@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { CONTACT, SOCIAL, withBase } from '../lib/constants';
+import { CONTACT, SOCIAL, WEATHER_STATION_URL, withBase } from '../lib/constants';
 import './Footer.css';
 
 const LINK_GROUPS = [
@@ -47,7 +47,7 @@ const LINK_GROUPS = [
       { label: 'Privacy Policy', to: '/privacy-policy-2/' },
       { label: 'Sitemap', to: '/sitemap/' },
       { label: 'Tide calendar', to: '/holistic-horse-rides/#tide-calendar' },
-      { label: 'The Weather Now', to: '/FreshWDL/FreshWDL.html', external: true },
+      { label: 'The Weather Now', to: WEATHER_STATION_URL, external: true },
     ],
   },
 ];
@@ -78,7 +78,9 @@ export default function Footer() {
                   {group.links.map((link) => (
                     <li key={link.label}>
                       {'external' in link && link.external ? (
-                        <a href={withBase(link.to)}>{link.label}</a>
+                        <a href={link.to} target="_blank" rel="noopener noreferrer">
+                          {link.label}
+                        </a>
                       ) : (
                         <Link to={link.to}>{link.label}</Link>
                       )}

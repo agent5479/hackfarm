@@ -31,7 +31,6 @@ const paths = [
   ...new Set([
     ...routes.map((r) => r.path),
     ...horseSlugs.map((slug) => `/horse/${slug}/`),
-    '/FreshWDL/FreshWDL.html',
   ]),
 ];
 
@@ -87,7 +86,7 @@ Hack n Stay Golden Bay (also known as Hack Farm) is a first-party farmstay and g
 - [Special Events](${absoluteUrl('/special-events/')}): Kids camps, horse club days, and special riding events.
 - [Gift Vouchers](${absoluteUrl('/horse-riding-holiday-gift-vouchers/')}): Gift cards for rides, stays, and learning experiences.
 - [Contact](${absoluteUrl('/contact/')}): Phone, email, and address for bookings and enquiries.
-- [On-site weather station](${absoluteUrl('/FreshWDL/FreshWDL.html')}): Live FreshWDL weather readings from the property.
+- [On-site weather station](https://hackfarm.infinityfree.me/FreshWDL/FreshWDL.html): Live FreshWDL weather readings from the property.
 
 ## Social
 

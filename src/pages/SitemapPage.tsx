@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import PageHero from '../components/PageHero';
-import { HORSE_SLUGS, withBase } from '../lib/constants';
+import { HORSE_SLUGS, WEATHER_STATION_URL } from '../lib/constants';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
 
@@ -18,7 +18,7 @@ const PAGES = [
   { label: 'Contact', to: '/contact/' },
   { label: 'Partners', to: '/partners/' },
   { label: 'Privacy Policy', to: '/privacy-policy-2/' },
-  { label: 'Weather Station', to: '/FreshWDL/FreshWDL.html', external: true },
+  { label: 'Weather Station', to: WEATHER_STATION_URL, external: true },
 ];
 
 export default function SitemapPage() {
@@ -33,7 +33,9 @@ export default function SitemapPage() {
             {PAGES.map((p) => (
               <li key={p.to}>
                 {'external' in p && p.external ? (
-                  <a href={withBase(p.to)}>{p.label}</a>
+                  <a href={p.to} target="_blank" rel="noopener noreferrer">
+                    {p.label}
+                  </a>
                 ) : (
                   <Link to={p.to}>{p.label}</Link>
                 )}
