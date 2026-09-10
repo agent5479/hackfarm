@@ -9,6 +9,11 @@
  */
 const TO_EMAIL = 'baerbelhack@gmail.com';
 
+/** Browser check: open the /exec URL — should show {"ok":true}, not "You need access". */
+function doGet() {
+  return json_({ ok: true, service: 'hackfarm-forms' });
+}
+
 function doPost(e) {
   try {
     if (!e || !e.postData || !e.postData.contents) {

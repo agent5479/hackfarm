@@ -92,15 +92,15 @@ export default function ContactForm({ type, title }: ContactFormProps) {
     setError('');
 
     try {
-      const response = await fetch(FORMS_ENDPOINT, {
+      // Apps Script web apps don't support readable CORS responses from browsers.
+      // no-cors + text/plain still delivers the POST; the response is opaque.
+      await fetch(FORMS_ENDPOINT, {
         method: 'POST',
+        mode: 'no-cors',
+        redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload),
       });
-      const result = (await response.json()) as { ok?: boolean; error?: string };
-      if (!response.ok || !result.ok) {
-        throw new Error(result.error || 'Unable to send message.');
-      }
       form.reset();
       setStatus('sent');
     } catch (err) {
