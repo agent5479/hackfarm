@@ -7,8 +7,8 @@ interface ContactFormProps {
   title?: string;
 }
 
-/** FormSubmit delivers here; Stay@ often never gets the one-time activation email. */
-const DEFAULT_FORMSUBMIT = 'https://formsubmit.co/baerbelhack@gmail.com';
+/** FormSubmit recipient — public business inbox (forwards to Baerbel's Gmail). */
+const DEFAULT_FORMSUBMIT = 'https://formsubmit.co/stay@hackfarm.co.nz';
 
 const NEXT_PATH: Record<ContactFormProps['type'], string> = {
   contact: 'contact/?sent=contact',
