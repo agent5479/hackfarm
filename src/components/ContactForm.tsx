@@ -1,9 +1,21 @@
+import { useLocation } from 'react-router-dom';
 import { FORM_ENDPOINT } from '../lib/constants';
+import { absoluteUrl } from '../seo/site';
 
 interface ContactFormProps {
   type: 'contact' | 'volunteer' | 'partner' | 'ride-request';
   title?: string;
 }
+
+/** FormSubmit delivers here; Stay@ often never gets the one-time activation email. */
+const DEFAULT_FORMSUBMIT = 'https://formsubmit.co/baerbelhack@gmail.com';
+
+const NEXT_PATH: Record<ContactFormProps['type'], string> = {
+  contact: 'contact/?sent=contact',
+  volunteer: 'contact/?sent=volunteer',
+  partner: 'partners/?sent=partner',
+  'ride-request': 'holistic-horse-rides/?sent=ride-request',
+};
 
 const FIELDS: Record<string, { name: string; label: string; type: string; required?: boolean; options?: string[] }[]> = {
   contact: [
@@ -44,14 +56,26 @@ const FIELDS: Record<string, { name: string; label: string; type: string; requir
 };
 
 export default function ContactForm({ type, title }: ContactFormProps) {
+  const location = useLocation();
   const fields = FIELDS[type];
-  const action = FORM_ENDPOINT || `https://formsubmit.co/Stay@hackfarm.co.nz`;
+  const action = FORM_ENDPOINT || DEFAULT_FORMSUBMIT;
+  const sent = new URLSearchParams(location.search).get('sent') === type;
+
+  if (sent) {
+    return (
+      <p className="form-success" role="status">
+        Thanks — your message has been sent. We&apos;ll get back to you soon.
+      </p>
+    );
+  }
 
   return (
     <form action={action} method="POST" className="contact-form">
       {title && <h3>{title}</h3>}
       <input type="hidden" name="_subject" value={`Hack Farm ${type} form submission`} />
       <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_next" value={absoluteUrl(NEXT_PATH[type])} />
       <input type="text" name="_honey" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
       <input type="hidden" name="form_type" value={type} />
 
