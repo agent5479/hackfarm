@@ -43,6 +43,10 @@ Copy `.env.example` to `.env.local` and set:
 
 **Book a Ride** opens a sunrise / tide / weather prequel for Paton’s Rock, then continues into the existing FareHarbor ride widget. Stay booking is unchanged.
 
+## Old site archive
+
+`/oldsitearchive/` is a frozen build of the original React scrape (commit `3b91138`) for language/copy comparison with the live site. Build it with `npm run build:oldsite-archive` (also run in the Pages deploy workflow). It is noindex and disallowed in `robots.txt`.
+
 ## Deployment
 
 GitHub Actions deploys **from `main`** to **https://hackfarm.co.nz**.

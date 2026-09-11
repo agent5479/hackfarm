@@ -47,6 +47,8 @@ jobs:
           BASE_URL: /
           VITE_SITE_ORIGIN: https://hackfarm.co.nz
           VITE_FORMS_ENDPOINT: ${{ secrets.VITE_FORMS_ENDPOINT }}
+      - name: Build original scrape archive at /oldsitearchive/
+        run: npm run build:oldsite-archive
       - name: Verify Pages files
         run: |
           test -f dist/index.html
@@ -68,6 +70,8 @@ jobs:
           grep -q 'https://hackfarm.co.nz/about/' dist/sitemap.xml
           grep -q 'https://hackfarm.co.nz/horse/donnie/' dist/sitemap.xml
           grep -q 'https://hackfarm.co.nz/sitemap.xml' dist/robots.txt
+          grep -q 'Disallow: /oldsitearchive/' dist/robots.txt
+          ! grep -q 'oldsitearchive' dist/sitemap.xml
           grep -q 'https://hackfarm.co.nz/' dist/llms.txt
           ! grep -q 'github.io' dist/sitemap.xml
           ! grep -q 'github.io' dist/robots.txt
@@ -93,6 +97,12 @@ jobs:
           grep -q 'og:image:width' dist/index.html
           grep -q 'images/og/default.jpg' dist/index.html
           grep -q 'theme-color' dist/index.html
+          test -f dist/oldsitearchive/index.html
+          test -f dist/oldsitearchive/accommodation/index.html
+          test -f dist/oldsitearchive/README.txt
+          grep -q 'noindex' dist/oldsitearchive/index.html
+          grep -q '/oldsitearchive/assets/' dist/oldsitearchive/index.html
+          ! test -f dist/oldsitearchive/CNAME
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
