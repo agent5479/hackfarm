@@ -16,7 +16,7 @@ const LINK_GROUPS = [
     links: [
       { label: 'Book a ride', to: '/holistic-horse-rides/#book-rides' },
       { label: 'The Hack Track', to: '/holistic-horse-rides/#short-rides' },
-      { label: "Paton's Rock Beach Ride", to: '/holistic-horse-rides/#short-rides' },
+      { label: 'Patons Rock Beach Ride', to: '/holistic-horse-rides/#short-rides' },
       { label: 'Sunrise Ride', to: '/holistic-horse-rides/#sunrise-rides' },
       { label: 'Swimming with Horses', to: '/holistic-horse-rides/#swimming' },
     ],
@@ -47,6 +47,7 @@ const LINK_GROUPS = [
       { label: 'Privacy Policy', to: '/privacy-policy-2/' },
       { label: 'Sitemap', to: '/sitemap/' },
       { label: 'Tide calendar', to: '/holistic-horse-rides/#tide-calendar' },
+      { label: 'Interactive trail map', to: '/hack-farm-trails/' },
       { label: 'The Weather Now', to: WEATHER_STATION_URL, external: true },
     ],
   },
@@ -67,8 +68,10 @@ export default function Footer() {
               <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
               <a href={SOCIAL.tripadvisor} target="_blank" rel="noopener noreferrer">Tripadvisor</a>
               <a href={SOCIAL.messenger} target="_blank" rel="noopener noreferrer">Messenger</a>
-              <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>
             </div>
+            <p className="footer__phone">
+              <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>
+            </p>
           </div>
           <div className="footer__links">
             {LINK_GROUPS.map((group) => (

@@ -33,7 +33,7 @@ export const OTHER_FAREHARBOR_RIDES: FareHarborRide[] = [
   },
   {
     id: 'patons-rock',
-    title: "Paton's Rock Beach Ride",
+    title: 'Patons Rock Beach Ride',
     meta: 'incl. fees & taxes · 2.5 hours · Ages 7+ · Ride-play-explore on Golden Bay beach',
     priceFrom: '$199',
     image: '/images/uploads/2021/07/Patons-Rock-Beach-Ride-Poster.jpg',

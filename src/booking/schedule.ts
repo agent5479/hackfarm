@@ -41,6 +41,17 @@ export function formatClock(date: Date): string {
   }).format(date);
 }
 
+/** Round an instant to the nearest step (default 15 min) for suggested booking starts only. */
+export function roundToNearestMinutes(date: Date, stepMin = 15): Date {
+  const ms = stepMin * 60_000;
+  return new Date(Math.round(date.getTime() / ms) * ms);
+}
+
+/** Guest-facing suggested start — nearest 15 minutes, NZ clock. */
+export function formatSuggestedStart(date: Date): string {
+  return formatClock(roundToNearestMinutes(date, 15));
+}
+
 export function formatDayLabel(dateKey: string): string {
   return new Intl.DateTimeFormat('en-NZ', {
     timeZone: PATONS_ROCK.timezone,

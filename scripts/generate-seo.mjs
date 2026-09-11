@@ -70,16 +70,16 @@ Sitemap: ${absoluteUrl('sitemap.xml')}
 
 const llms = `# Hack n Stay Golden Bay (Hack Farm)
 
-> Eco farmstay, animal-friendly campground, and holistic beach horse rides near Paton's Rock, Golden Bay, New Zealand.
+> Eco farmstay, animal-friendly campground, and holistic beach horse rides near Patons Rock, Golden Bay, New Zealand.
 
 Hack n Stay Golden Bay (also known as Hack Farm) is a first-party farmstay and guided horse experience business run by Baerbel Hack at 22 Grant Road, Puramahoi, Takaka 7182, Golden Bay, South Island, New Zealand. Phone: +64 27 525 9434. Email: Stay@hackfarm.co.nz.
 
 ## Key pages
 
-- [Home](${absoluteUrl('/')}): Overview of farmstay, camping, and beach horse rides near Paton's Rock.
+- [Home](${absoluteUrl('/')}): Overview of farmstay, camping, and beach horse rides near Patons Rock.
 - [About](${absoluteUrl('/about/')}): Brand and founder story — Hack Farm, Hack n Stay, Baerbel Hack, and the Hack Vaulties club.
 - [Accommodation](${absoluteUrl('/accommodation/')}): Farmstay rooms, dog-friendly campground, and bring-your-own-horse stays.
-- [Holistic Horse Rides](${absoluteUrl('/holistic-horse-rides/')}): Guided beach and trail rides with a tide-aware sunrise planner for Paton's Rock.
+- [Holistic Horse Rides](${absoluteUrl('/holistic-horse-rides/')}): Guided beach and trail rides with a tide-aware sunrise planner for Patons Rock.
 - [Hack Farm Trails](${absoluteUrl('/hack-farm-trails/')}): Interactive trail map and tide guidance for BYO horse riders.
 - [Our Horses](${absoluteUrl('/our-horses/')}): Meet the Hack Farm herd used for rides, lessons, and vaulting.
 - [Learning Experiences](${absoluteUrl('/learning-experiences/')}): Riding lessons, horsemanship, and vaulting for all ages.

@@ -14,7 +14,7 @@ export const HOMESTEAD_FAQS: FaqItem[] = [
   {
     question: 'Can I bring my own horse to stay?',
     answer:
-      'Yes. Horse stays are available for $10 per horse. You can ride down to the beach, explore the trails, or book a lesson on your own horse.',
+      'Yes. You can bring your own horse to stay. Ride down to the beach, explore the trails, or book a lesson on your own horse.',
   },
   {
     question: 'Is food provided in the farmhouse kitchen?',
@@ -23,8 +23,7 @@ export const HOMESTEAD_FAQS: FaqItem[] = [
   },
   {
     question: 'Is Wi-Fi available for house guests?',
-    answer:
-      'Yes. Wi-Fi is available for house guests on a slow copper connection. It is suitable for planning and light social media, not for streaming movies or Netflix.',
+    answer: 'Yes. Wi-Fi is available for house guests and the connection is stable.',
   },
   {
     question: 'Can I stay long-term at the homestead?',
@@ -107,7 +106,7 @@ export const BYO_HORSE_FAQS: FaqItem[] = [
   {
     question: 'Do barefoot horses need boots on the trails?',
     answer:
-      'Yes. If your horse is barefoot, bring at least front boots. Beaches are soft but rocky areas can be tough on feet.',
+      'If your horse is barefoot, bring at least front boots. Beaches are soft but rocky areas can be tough on feet.',
   },
   {
     question: 'Where can I ride with my own horse from Hack Farm?',

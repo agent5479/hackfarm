@@ -1,10 +1,27 @@
 export const BOOKING = {
   ride: 'https://fareharbor.com/embeds/book/hackfarm/?full-items=yes&flow=543158',
+  /** Single rooms, campground, horse paddocks — FareHarbor stay flow (not whole-house). */
   stay: 'https://fareharbor.com/embeds/book/hackfarm/?full-items=yes&flow=543323',
   gift: 'https://fareharbor.com/embeds/book/hackfarm/items/294930/?full-items=yes&flow=542642',
   cart: 'https://fareharbor.com/embeds/cart/?u=ff5d693b-0d79-4cd7-83ce-d3c61d45cc32&from-ssl=yes&g4=no&cp=no&csp=no',
   rideFlow: '543158',
+  /**
+   * Whole-house rental via Golden Bay Holiday Homes’ Guesty engine.
+   * Deep-link pattern matches GBHH: /en/properties/{id} (+ occupancy query defaults).
+   */
+  houseGbhhId: '6a81299064bba70010803296',
+  houseGbhhBase: 'https://goldenbayholidayhomes.guestybookings.com/en',
 };
+
+/** Guesty deep link for booking the whole house (external — do not iframe). */
+export function houseBookingUrl(opts?: { adults?: number; minOccupancy?: number }): string {
+  const adults = Math.max(1, Math.floor(opts?.adults ?? 1));
+  const minOccupancy = Math.max(1, Math.floor(opts?.minOccupancy ?? adults));
+  const url = new URL(`${BOOKING.houseGbhhBase}/properties/${BOOKING.houseGbhhId}`);
+  url.searchParams.set('minOccupancy', String(minOccupancy));
+  url.searchParams.set('adults', String(adults));
+  return url.toString();
+}
 
 export function fareHarborRideUrl(
   itemId?: string,

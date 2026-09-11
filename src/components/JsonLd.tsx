@@ -77,7 +77,7 @@ function buildDefaultGraph() {
         logo,
         parentOrganization: { '@id': `${siteUrl}#organization` },
         description:
-          'Eco farmstay, animal-friendly campground, and holistic horse experiences near Paton\'s Rock, Golden Bay, New Zealand.',
+          'Eco farmstay, animal-friendly campground, and holistic horse experiences near Patons Rock, Golden Bay, New Zealand.',
       },
       {
         '@type': 'TouristAttraction',
@@ -91,7 +91,7 @@ function buildDefaultGraph() {
         sameAs,
         touristType: ['Horse riding', 'Farmstay', 'Family'],
         description:
-          'Beach and trail horse rides, vaulting, and farmstay accommodation at Hack Farm near Paton\'s Rock.',
+          'Beach and trail horse rides, vaulting, and farmstay accommodation at Hack Farm near Patons Rock.',
       },
       {
         '@type': 'WebSite',
@@ -109,7 +109,7 @@ function buildDefaultGraph() {
         operatingSystem: 'Web',
         url: WEATHER_STATION_URL,
         description:
-          'On-site FreshWDL weather station readings from Hack Farm near Paton\'s Rock, Golden Bay.',
+          'On-site FreshWDL weather station readings from Hack Farm near Patons Rock, Golden Bay.',
         provider: { '@id': `${siteUrl}#organization` },
       },
     ],

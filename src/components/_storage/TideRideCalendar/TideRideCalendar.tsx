@@ -1,5 +1,5 @@
 /**
- * Shelved: tide calendars for Paton's Rock / Rangi / Swimming.
+ * Shelved: tide calendars for Patons Rock / Rangi / Swimming.
  * Booking intercept now uses FareHarbor "Select date" for those rides;
  * only Sunrise keeps a live tide calendar. Re-wire from here when ready.
  */
@@ -61,8 +61,8 @@ const LOW_TIDE_SIBLING: Record<string, { itemId: string; badge: string; title: s
   },
   [RANGI_RIDE.id]: {
     itemId: PATONS_ROCK_RIDE.fareharborItemId!,
-    badge: "Paton's booked",
-    title: "Already booked on the Paton's Rock ride",
+    badge: 'Patons booked',
+    title: 'Already booked on the Patons Rock ride',
   },
 };
 

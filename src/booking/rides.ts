@@ -33,7 +33,7 @@ export interface RideType {
 export const RIDE_TYPES: RideType[] = [
   {
     id: 'sunrise',
-    name: "Sunrise Beach Ride — Paton's Rock",
+    name: 'Sunrise Beach Ride — Patons Rock',
     durationHours: 2,
     daylight: 'before-sunrise',
     usesTides: true,
@@ -47,7 +47,7 @@ export const RIDE_TYPES: RideType[] = [
   },
   {
     id: 'patons-rock',
-    name: "Paton's Rock Beach Ride",
+    name: 'Patons Rock Beach Ride',
     durationHours: 2.5,
     daylight: 'flex-tide',
     usesTides: true,

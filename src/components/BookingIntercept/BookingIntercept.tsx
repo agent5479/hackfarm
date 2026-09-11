@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { OTHER_FAREHARBOR_RIDES, SUNRISE_BEACH_RIDE } from '../../booking/fareharbor-catalog';
-import { formatClock, type SunriseDaySchedule } from '../../booking/schedule';
+import { formatClock, formatSuggestedStart, type SunriseDaySchedule } from '../../booking/schedule';
 import { rideDipsIntoTwilight, sunTimesForDate } from '../../booking/sun';
 import { openFareHarborBooking, type FareHarborBookingDetail } from '../../lib/booking-events';
 import { optimizedUrl } from '../../lib/images';
@@ -24,7 +24,7 @@ function toFareHarborDetail(
   return {
     itemId,
     date: day.date,
-    rideStart: formatClock(day.rideStart),
+    rideStart: formatSuggestedStart(day.rideStart),
     title,
   };
 }

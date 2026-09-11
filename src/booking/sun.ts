@@ -60,7 +60,7 @@ export function sunTimesForDate(
 /**
  * True when the ride runs into the evening sunset / civil-twilight window.
  * Tide rides are clamped to daylight, so late placements often end at sunset —
- * those still count as dipping into twilight for beach comfort at Paton's Rock.
+ * those still count as dipping into twilight for beach comfort at Patons Rock.
  */
 export function rideDipsIntoTwilight(
   rideStart: Date,

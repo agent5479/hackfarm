@@ -1,7 +1,6 @@
 import { SUNRISE_RIDE } from '../booking/rides';
-import { formatClock } from '../booking/schedule';
+import { formatSuggestedStart, type SunriseDaySchedule } from '../booking/schedule';
 import SunriseRideCalendar from '../components/SunriseRideCalendar/SunriseRideCalendar';
-import type { SunriseDaySchedule } from '../booking/schedule';
 import './RidePlanner.css';
 
 interface RidePlannerProps {
@@ -13,14 +12,14 @@ export default function RidePlanner({ onContinue }: RidePlannerProps) {
     onContinue({
       itemId: SUNRISE_RIDE.fareharborItemId,
       date: day.date,
-      rideStart: formatClock(day.rideStart),
+      rideStart: formatSuggestedStart(day.rideStart),
     });
   };
 
   return (
     <div className="ride-planner">
       <p className="ride-planner__lead">
-        Sunrise beach rides at Paton&apos;s Rock run Wed, Fri & Sun. Pick a week, check sunrise and tide, then continue to live booking.
+        Sunrise beach rides at Patons Rock run Wed, Fri & Sun. Pick a week, check sunrise and tide, then continue to live booking.
       </p>
       <p className="ride-planner__hint">{SUNRISE_RIDE.hint}</p>
 

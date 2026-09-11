@@ -38,11 +38,11 @@ const RIDE_CATEGORIES: RideCategory[] = [
         bookingLabel: 'Book Hack Track',
       },
       {
-        title: "Paton's Rock Beach Ride",
+        title: 'Patons Rock Beach Ride',
         description:
           'Our most popular ride for all abilities. Follow the Hack Track down to the beach and explore Golden Bay\'s coastal vistas.',
         bookingHref: '#patons-rock',
-        bookingLabel: "Book Paton's Rock",
+        bookingLabel: 'Book Patons Rock',
       },
       {
         title: 'Sunrise Beach Ride',
@@ -54,7 +54,7 @@ const RIDE_CATEGORIES: RideCategory[] = [
       {
         title: 'Swimming with Horses',
         description:
-          'Ride to Paton\'s Rock Beach, untack, and splash in crystal-clear water with your horse. Magical and weather dependent.',
+          'Ride to Patons Rock Beach, untack, and splash in crystal-clear water with your horse. Magical and weather dependent.',
         bookingHref: '#swimming',
         bookingLabel: 'Book swimming ride',
       },
@@ -165,9 +165,9 @@ export default function RidesPage() {
             '/holistic-horse-rides/',
           ),
           softwareApplicationJsonLd({
-            name: "Paton's Rock Sunrise & Tide Ride Planner",
+            name: 'Patons Rock Sunrise & Tide Ride Planner',
             description:
-              "First-party booking planner for Hack n Stay sunrise beach rides at Paton's Rock. Shows sunrise timing and tide clearance for Wed, Fri and Sun rides before continuing to live FareHarbor booking.",
+              'First-party booking planner for Hack n Stay sunrise beach rides at Patons Rock. Shows sunrise timing and tide clearance for Wed, Fri and Sun rides before continuing to live FareHarbor booking.',
             path: '/holistic-horse-rides/',
             applicationCategory: 'TravelApplication',
           }),
@@ -191,12 +191,12 @@ export default function RidesPage() {
         <div className="container">
           <h2>What does the sunrise and tide Ride Planner do?</h2>
           <p>
-            The Ride Planner is a first-party tool for Paton&apos;s Rock beach rides. It shows sunrise
+            The Ride Planner is a first-party tool for Patons Rock beach rides. It shows sunrise
             timing and tide clearance for Wednesday, Friday and Sunday sunrise rides so
             you can pick a workable week before continuing to live FareHarbor booking.
           </p>
           <p>
-            It is built for guests booking Hack n Stay guided rides at Hack Farm near Paton&apos;s
+            It is built for guests booking Hack n Stay guided rides at Hack Farm near Patons
             Rock in Golden Bay — not a generic tide table. Use it when tides matter; Hack Track
             on-farm rides can still be booked on any open date.
           </p>
@@ -260,7 +260,7 @@ export default function RidesPage() {
         <div className="container">
           <h2>Book your ride</h2>
           <p>
-            Sunrise, Paton&apos;s Rock, Rangi, and swimming rides need tide clearance —
+            Sunrise, Patons Rock, Rangi, and swimming rides need tide clearance —
             check the calendar first. Hack Track can be booked on any open date.
           </p>
           <BookingIntercept />

@@ -32,6 +32,15 @@
   letter-spacing: 0.05em;
 }
 
+.footer__phone {
+  margin-top: 0.75rem;
+}
+
+.footer__phone a {
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
 .footer__links {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));

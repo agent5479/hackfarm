@@ -36,7 +36,7 @@ export default function AboutPage() {
           <p>
             {decodeHtml(
               home.paragraphs[0] ||
-                "Located in beautiful Golden Bay, Hack Farm is an eco farmstay and animal-friendly campground just a short walk or ride from Paton's Rock beach.",
+                "Located in beautiful Golden Bay, Hack Farm is an eco farmstay and animal-friendly campground just a short walk or ride from Patons Rock beach.",
             )}
           </p>
           <p>
@@ -81,7 +81,7 @@ export default function AboutPage() {
           <h2>What we offer</h2>
           <p>
             Guided beach and trail rides, farmstay and camping, bring-your-own-horse holidays, riding and horsemanship
-            lessons, kids camps, and vaulting — all based at our property near Paton&apos;s Rock in Golden Bay,
+            lessons, kids camps, and vaulting — all based at our property near Patons Rock in Golden Bay,
             New Zealand.
           </p>
         </div>

@@ -40,6 +40,7 @@ export {
   buildTideHorizonSchedule,
   detailSummary,
   formatClock,
+  formatSuggestedStart,
   formatDayLabel,
   formatHorizonRange,
   formatMonthTitle,
