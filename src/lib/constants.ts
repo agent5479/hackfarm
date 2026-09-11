@@ -65,7 +65,7 @@ export const MAPS = {
 };
 
 /** Live FreshWDL gauges hosted where the station FTPs clientraw files. */
-export const WEATHER_STATION_URL = 'https://hackfarm.infinityfree.me/FreshWDL/FreshWDL.html';
+export const WEATHER_STATION_URL = 'http://gbtech.helioho.st/FreshWDL/FreshWDL2.html';
 
 /** Google Apps Script web app `/exec` URL. Empty → forms fall back to mailto. */
 export const FORMS_ENDPOINT = import.meta.env.VITE_FORMS_ENDPOINT || '';
