@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { routerBasename } from './lib/constants';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
@@ -18,10 +19,31 @@ import SitemapPage from './pages/SitemapPage';
 import AboutPage from './pages/AboutPage';
 import HorseSlashRedirect from './pages/HorseSlashRedirect';
 
+/** If the live SPA lands on /oldsitearchive/* (via 404.html), force a real document load of the archive. */
+function OldsiteArchiveEscape() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    const rest = pathname.replace(/^\/oldsitearchive\/?/, '');
+    const dest = rest
+      ? `/oldsitearchive/${rest}${rest.endsWith('/') ? '' : '/'}`
+      : '/oldsitearchive/';
+    // Query forces a full navigation even when the path matches the current SPA URL.
+    window.location.replace(`${dest}?standalone=1${hash || ''}`);
+  }, [pathname, hash]);
+  return (
+    <p style={{ padding: '2rem', textAlign: 'center' }}>
+      Opening archived site…{' '}
+      <a href="/oldsitearchive/?standalone=1">Continue</a>
+    </p>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter basename={routerBasename}>
       <Routes>
+        <Route path="oldsitearchive/*" element={<OldsiteArchiveEscape />} />
+        <Route path="oldsitearchive" element={<OldsiteArchiveEscape />} />
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="about/" element={<AboutPage />} />

@@ -66,6 +66,25 @@ function run(command, cwd) {
   execSync(command, { cwd, stdio: 'inherit', env: process.env });
 }
 
+/** Shallow CI clones only have HEAD — fetch the pinned archive commit when missing. */
+function ensureArchiveCommit() {
+  try {
+    execSync(`git rev-parse --verify ${ARCHIVE_COMMIT}^{commit}`, {
+      cwd: root,
+      stdio: 'ignore',
+    });
+    return;
+  } catch {
+    /* need fetch */
+  }
+  console.log(`Fetching archive commit ${ARCHIVE_COMMIT} (not in shallow clone)...`);
+  run(`git fetch --depth 1 origin ${ARCHIVE_COMMIT}`, root);
+  execSync(`git rev-parse --verify ${ARCHIVE_COMMIT}^{commit}`, {
+    cwd: root,
+    stdio: 'ignore',
+  });
+}
+
 function rewriteRootAbsolutePaths(text) {
   return text
     .replaceAll('"/images/', `"${ARCHIVE_BASE_SLASH}images/`)
@@ -166,6 +185,7 @@ function main() {
   console.log(`Building oldsite archive from ${ARCHIVE_COMMIT}...`);
 
   try {
+    ensureArchiveCommit();
     run(`git worktree add --detach "${worktree}" ${ARCHIVE_COMMIT}`, root);
     patchWorktree(worktree);
     run('npm ci', worktree);
