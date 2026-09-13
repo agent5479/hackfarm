@@ -70,7 +70,7 @@ See [docs/SEO-FOLLOWUP.md](docs/SEO-FOLLOWUP.md) for HTTPS, Search Console, and 
 
 - FareHarbor booking (ride, stay, gift vouchers)
 - Book a Ride planner (sunrise, tides, weather) before FareHarbor
-- FreshWDL weather station (`http://gbtech.helioho.st/FreshWDL/FreshWDL2.html`; station FTPs `clientraw` files there)
+- FreshWDL weather station (`https://gbweather.helioho.st/FreshWDL/FreshWDL2.html`; station FTPs `clientraw` files there)
 - Google My Maps trail map
 - Instagram grid (cached images)
 - Contact, volunteer, partner, and ride-request forms (Google Apps Script; mailto fallback)
