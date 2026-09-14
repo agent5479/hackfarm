@@ -16,7 +16,9 @@ Still check:
 ## 2. Post-cutover SEO ops
 
 - Add a Google Search Console property for the live domain and submit `sitemap.xml`.
-- Audit old WordPress URLs and add 301s (or GitHub Pages redirects) for anything that still receives traffic (including awkward slugs like `/privacy-policy-2/`).
+- Audit remaining old WordPress URLs and add redirects for anything that still receives traffic.
+- Done: `/privacy-policy-2/` → `/privacy-policy/` via static `public/privacy-policy-2/index.html` (meta refresh + JS) and SPA `<Navigate>`; sitemap lists only the new path.
+- Done: unknown SPA routes show `NotFoundPage` with `noindex, follow` instead of redirecting to the homepage.
 
 ## 3. Local / Google Business Profile
 

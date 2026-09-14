@@ -27,7 +27,7 @@ Working checklist for AI search visibility (Gemini, ChatGPT, Perplexity, Claude)
 - [~] Custom domain live at `hackfarm.co.nz`; enforce HTTPS in Pages once the certificate is ready. See `docs/SEO-FOLLOWUP.md`.
 - [x] Explicit `<link rel="canonical">` on every page via `usePageMeta` (absolute `https://hackfarm.co.nz`).
 - [x] `sitemap.xml` present, generated, and referenced in `robots.txt`.
-- [~] Validate robots/sitemap for stale URLs after cutover and any slug cleanups (e.g. `/privacy-policy-2/`).
+- [x] Validate robots/sitemap for stale URLs after cutover; privacy canonical is `/privacy-policy/` with static + SPA redirects from `/privacy-policy-2/`. Unknown SPA routes render a dedicated Not Found page with `noindex` (not homepage soft-404s).
 
 ## 2. Icons & Link-Preview Images
 

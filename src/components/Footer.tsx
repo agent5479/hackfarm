@@ -44,7 +44,7 @@ const LINK_GROUPS = [
     links: [
       { label: 'About', to: '/about/' },
       { label: 'Partner With Us', to: '/partners/' },
-      { label: 'Privacy Policy', to: '/privacy-policy-2/' },
+      { label: 'Privacy Policy', to: '/privacy-policy/' },
       { label: 'Sitemap', to: '/sitemap/' },
       { label: 'Tide calendar', to: '/holistic-horse-rides/#tide-calendar' },
       { label: 'Interactive trail map', to: '/hack-farm-trails/' },

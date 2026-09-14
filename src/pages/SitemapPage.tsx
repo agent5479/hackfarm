@@ -17,7 +17,7 @@ const PAGES = [
   { label: 'Gift Vouchers', to: '/horse-riding-holiday-gift-vouchers/' },
   { label: 'Contact', to: '/contact/' },
   { label: 'Partners', to: '/partners/' },
-  { label: 'Privacy Policy', to: '/privacy-policy-2/' },
+  { label: 'Privacy Policy', to: '/privacy-policy/' },
   { label: 'Weather Station', to: WEATHER_STATION_URL, external: true },
 ];
 

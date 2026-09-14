@@ -19,12 +19,23 @@ export function getPageSeo(path: string): SeoRoute | undefined {
   return PAGE_BY_PATH.get(key === '' ? '/' : key) ?? PAGE_BY_PATH.get(path);
 }
 
-export function horseSeo(slug: string, horseTitle?: string): SeoRoute {
+export function horseSeo(
+  slug: string,
+  horseTitle?: string,
+  h2s?: string[],
+): SeoRoute {
   const name = horseTitle || slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  const traits = (h2s || [])
+    .map((h) => {
+      const m = h.match(/^(Breed|Suited For)\s*\|\s*(.+)$/i);
+      return m ? m[2].trim() : '';
+    })
+    .filter(Boolean);
+  const traitBit = traits.length ? ` ${traits.join(' · ')}.` : '';
   return {
     path: horsePath(slug),
     title: name,
-    description: `${name} — one of the Hack Farm herd at Hack n Stay Golden Bay. Meet our horses for beach rides, lessons, and vaulting.`,
+    description: `${name} — one of the Hack Farm herd at Hack n Stay Golden Bay.${traitBit} Meet our horses for beach rides, lessons, and vaulting.`,
     image: DEFAULT_OG_IMAGE,
   };
 }

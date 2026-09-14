@@ -16,6 +16,8 @@ export interface PageMetaInput {
   description?: string;
   path: string;
   image?: string;
+  /** Defaults to index, follow when omitted (clears a prior noindex from 404). */
+  robots?: string;
 }
 
 function ensureMeta(attr: 'name' | 'property', key: string, content: string) {
@@ -38,7 +40,7 @@ function ensureLink(rel: string, href: string) {
   el.setAttribute('href', href);
 }
 
-export function usePageMeta({ title, description, path, image }: PageMetaInput) {
+export function usePageMeta({ title, description, path, image, robots }: PageMetaInput) {
   useEffect(() => {
     const fullTitle = formatDocumentTitle(title);
     const desc = description || DEFAULT_DESCRIPTION;
@@ -47,6 +49,7 @@ export function usePageMeta({ title, description, path, image }: PageMetaInput) 
 
     document.title = fullTitle;
     ensureMeta('name', 'description', desc);
+    ensureMeta('name', 'robots', robots || 'index, follow');
     ensureLink('canonical', url);
 
     ensureMeta('property', 'og:title', fullTitle);
@@ -65,7 +68,7 @@ export function usePageMeta({ title, description, path, image }: PageMetaInput) 
     ensureMeta('name', 'twitter:description', desc);
     ensureMeta('name', 'twitter:image', img);
     ensureMeta('name', 'twitter:image:alt', DEFAULT_OG_ALT);
-  }, [title, description, path, image]);
+  }, [title, description, path, image, robots]);
 }
 
 export function useFareHarborCart(backUrl?: string) {

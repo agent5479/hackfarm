@@ -17,6 +17,7 @@ import PartnersPage from './pages/PartnersPage';
 import PrivacyPage from './pages/PrivacyPage';
 import SitemapPage from './pages/SitemapPage';
 import AboutPage from './pages/AboutPage';
+import NotFoundPage from './pages/NotFoundPage';
 import HorseSlashRedirect from './pages/HorseSlashRedirect';
 
 /** If the live SPA lands on /oldsitearchive/* (via 404.html), force a real document load of the archive. */
@@ -70,11 +71,13 @@ export default function App() {
           <Route path="contact" element={<Navigate to="/contact/" replace />} />
           <Route path="partners/" element={<PartnersPage />} />
           <Route path="partners" element={<Navigate to="/partners/" replace />} />
-          <Route path="privacy-policy-2/" element={<PrivacyPage />} />
-          <Route path="privacy-policy-2" element={<Navigate to="/privacy-policy-2/" replace />} />
+          <Route path="privacy-policy/" element={<PrivacyPage />} />
+          <Route path="privacy-policy" element={<Navigate to="/privacy-policy/" replace />} />
+          <Route path="privacy-policy-2/" element={<Navigate to="/privacy-policy/" replace />} />
+          <Route path="privacy-policy-2" element={<Navigate to="/privacy-policy/" replace />} />
           <Route path="sitemap/" element={<SitemapPage />} />
           <Route path="sitemap" element={<Navigate to="/sitemap/" replace />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

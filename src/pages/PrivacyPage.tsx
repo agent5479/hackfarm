@@ -7,7 +7,7 @@ import { getPageSeo } from '../seo/routes';
 const content = scraped.pages.privacy;
 
 export default function PrivacyPage() {
-  usePageMeta(getPageSeo('/privacy-policy-2/')!);
+  usePageMeta(getPageSeo('/privacy-policy/')!);
 
   return (
     <>

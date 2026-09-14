@@ -11,7 +11,7 @@ import { horseSeo } from '../seo/routes';
 export default function HorseDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const horse = scraped.horses.find((h) => h.slug === slug);
-  const seo = horseSeo(slug || 'horse', horse?.title);
+  const seo = horseSeo(slug || 'horse', horse?.title, horse?.h2s);
   usePageMeta({
     ...seo,
     image: slug ? horseImage(slug) : seo.image,

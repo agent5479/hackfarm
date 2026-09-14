@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -100,9 +100,31 @@ Hack n Stay Golden Bay (also known as Hack Farm) is a first-party farmstay and g
 - [Sitemap](${absoluteUrl('/sitemap/')}): Full list of public pages on this site.
 `;
 
+const privacyCanonical = absoluteUrl('/privacy-policy/');
+const privacyRedirectHtml = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Privacy Policy moved | Hack n Stay Golden Bay</title>
+    <meta http-equiv="refresh" content="0;url=${privacyCanonical}" />
+    <link rel="canonical" href="${privacyCanonical}" />
+    <meta name="robots" content="noindex, follow" />
+    <script>location.replace(${JSON.stringify(privacyCanonical)});</script>
+  </head>
+  <body>
+    <p>This page has moved to <a href="${privacyCanonical}">${privacyCanonical}</a>.</p>
+  </body>
+</html>
+`;
+
 writeFileSync(join(root, 'public/sitemap.xml'), sitemap);
 writeFileSync(join(root, 'public/robots.txt'), robots);
 writeFileSync(join(root, 'public/llms.txt'), llms);
+
+const privacyRedirectDir = join(root, 'public/privacy-policy-2');
+mkdirSync(privacyRedirectDir, { recursive: true });
+writeFileSync(join(privacyRedirectDir, 'index.html'), privacyRedirectHtml);
+
 console.log(
-  `Wrote public/sitemap.xml (${paths.length} urls), public/robots.txt, and public/llms.txt for ${origin}${base}`,
+  `Wrote public/sitemap.xml (${paths.length} urls), public/robots.txt, public/llms.txt, and public/privacy-policy-2/index.html for ${origin}${base}`,
 );
