@@ -1,71 +1,81 @@
+/* FareHarbor flow 543158 layout: 2 featured + 3 standard on desktop */
 .booking-intercept__list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 1.25rem;
 }
 
 .booking-intercept__ride {
-  display: grid;
-  grid-template-columns: 168px minmax(0, 1fr);
-  gap: 0;
+  display: flex;
+  flex-direction: column;
   margin: 0;
-  background: #f7faf5;
-  border: 2px solid var(--color-green);
-  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #d8d8d8;
+  border-radius: 8px;
   overflow: hidden;
   scroll-margin-top: 5rem;
+  min-width: 0;
+}
+
+.booking-intercept__ride--featured {
+  grid-column: span 3;
+}
+
+.booking-intercept__ride--standard {
+  grid-column: span 2;
 }
 
 .booking-intercept__ride-image {
   display: block;
   width: 100%;
-  height: 100%;
-  /* Match poster art (~1240×1754); landscape assets fill via cover */
-  min-height: calc(168px * 7 / 5);
-  aspect-ratio: 5 / 7;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
   object-position: center;
+  background: #e8e8e8;
 }
 
 .booking-intercept__ride-body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 0.35rem;
-  padding: 1.1rem 1.25rem;
+  flex: 1;
+  gap: 0.45rem;
+  padding: 1rem 1.1rem 1.1rem;
 }
 
 .booking-intercept__ride-body h3 {
   margin: 0;
-  font-family: var(--font-heading);
-  font-size: 1.45rem;
-  color: var(--color-secondary);
-  line-height: 1.2;
-}
-
-.booking-intercept__ride-body .booking-intercept__select {
-  align-self: flex-start;
-  margin-top: 0.55rem;
-}
-
-.booking-intercept__eyebrow {
-  margin: 0;
-  font-size: 0.72rem;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-green);
+  color: #222;
+  line-height: 1.3;
 }
 
 .booking-intercept__meta {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: #666;
   line-height: 1.45;
+  flex: 1;
+}
+
+.booking-intercept__ride-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.65rem;
+}
+
+.booking-intercept__price {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #444;
 }
 
 .booking-intercept__calendar {
-  margin: 0;
+  margin: 1.25rem 0 0;
   padding: 1rem 1rem 1.15rem;
   background: #fff;
   border: 1px solid #c5ddc8;
@@ -203,21 +213,36 @@
   background: #f7faf5;
 }
 
-@media (max-width: 720px) {
-  .booking-intercept__ride {
-    grid-template-columns: 120px minmax(0, 1fr);
+@media (max-width: 980px) {
+  .booking-intercept__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .booking-intercept__ride-image {
-    min-height: calc(120px * 7 / 5);
+  .booking-intercept__ride--featured,
+  .booking-intercept__ride--standard {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .booking-intercept__list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
-  .booking-intercept__ride-body {
-    padding: 0.85rem 0.9rem;
+  .booking-intercept__ride--featured,
+  .booking-intercept__ride--standard {
+    grid-column: auto;
   }
 
-  .booking-intercept__ride-body h3 {
-    font-size: 1.2rem;
+  .booking-intercept__ride-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .booking-intercept__select {
+    width: 100%;
+    text-align: center;
   }
 
   .booking-intercept__calendar {
@@ -239,10 +264,5 @@
 
   .booking-intercept__calendar .sunrise-cal__month-title {
     font-size: 1rem;
-  }
-
-  .booking-intercept__select {
-    width: 100%;
-    text-align: center;
   }
 }

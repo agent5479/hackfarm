@@ -31,7 +31,7 @@ const RIDE_CATEGORIES: RideCategory[] = [
     title: 'Short Rides',
     rides: [
       {
-        title: 'The Hack Track / Fairy Trail Loop',
+        title: 'Hack Track / Fairy Trail Loop Ride',
         description:
           'The perfect introduction to balanced riding for riders of all ages — a 1 hour ride through rolling farm country, native forest, and ocean views. On-farm and bushland only.',
         bookingHref: '#hack-track',
@@ -52,7 +52,7 @@ const RIDE_CATEGORIES: RideCategory[] = [
         bookingLabel: 'Book sunrise',
       },
       {
-        title: 'Swimming with Horses',
+        title: 'Swimming / Playing with Horses in the Water',
         description:
           'Ride to Patons Rock Beach, untack, and splash in crystal-clear water with your horse. Magical and weather dependent.',
         bookingHref: '#swimming',
@@ -65,7 +65,7 @@ const RIDE_CATEGORIES: RideCategory[] = [
     title: 'Full Day Rides',
     rides: [
       {
-        title: 'The Rangi Ride',
+        title: 'Rangi Ride',
         description:
           'Beach, headland, estuary and reserve — up to about 4.5 hours through changing landscape, birdlife and great beaches. Intermediate to experienced riders.',
         bookingHref: '#rangi',
@@ -260,8 +260,9 @@ export default function RidesPage() {
         <div className="container">
           <h2>Book your ride</h2>
           <p>
-            Sunrise, Patons Rock, Rangi, and swimming rides need tide clearance —
-            check the calendar first. Hack Track can be booked on any open date.
+            Rides are listed in the same order as FareHarbor booking. Sunrise, Patons Rock,
+            Rangi, and swimming rides need tide clearance — check the calendar first for
+            sunrise. Hack Track can be booked on any open date.
           </p>
           <BookingIntercept />
         </div>

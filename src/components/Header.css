@@ -31,7 +31,9 @@
 
 .header--wood-nav .header__nav {
   background-color: #54595f;
-  background-image: var(--header-wood);
+  background-image:
+    linear-gradient(rgba(40, 42, 46, 0.55), rgba(40, 42, 46, 0.55)),
+    var(--header-wood);
   background-position: center;
   background-size: cover;
 }
@@ -53,6 +55,25 @@
   color: #fff;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
   padding: 0.25rem 0;
+}
+
+/* Transparent home nav sits over bright hero sky — soft bar + extra shadow */
+.header:not(.header--wood-nav) .header__nav {
+  background: linear-gradient(
+    to bottom,
+    rgba(18, 20, 24, 0.55) 0%,
+    rgba(18, 20, 24, 0.28) 70%,
+    rgba(18, 20, 24, 0) 100%
+  );
+}
+
+.header:not(.header--wood-nav) .header__nav .header__links > a,
+.header:not(.header--wood-nav) .header__nav-item > a,
+.header:not(.header--wood-nav) .header__toggle {
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.95),
+    0 0 10px rgba(0, 0, 0, 0.65),
+    0 2px 14px rgba(0, 0, 0, 0.45);
 }
 
 .header__nav .header__links > a:hover,

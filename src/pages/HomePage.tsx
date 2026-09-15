@@ -33,7 +33,7 @@ const FEATURES = [
       img: '/images/uploads/2021/04/Horses-trekking-One-Color.jpg',
       size: '100%',
       pos: '50% 50%',
-      opacity: 0.62,
+      opacity: 0.38,
     },
   },
   {
@@ -48,7 +48,7 @@ const FEATURES = [
       img: '/images/uploads/2021/02/Sillouette-Vaulting.png',
       size: '100%',
       pos: '100% 100%',
-      opacity: 1,
+      opacity: 0.55,
     },
   },
   {
@@ -68,7 +68,7 @@ const FEATURES = [
       img: '/images/uploads/2021/02/Jumping-girl-v2.png',
       size: '100%',
       pos: '100% 100%',
-      opacity: 1,
+      opacity: 0.5,
     },
   },
   {
@@ -88,7 +88,7 @@ const FEATURES = [
       img: '/images/uploads/2021/03/Horsemanship-Sillouette.png',
       size: '31%',
       pos: '50% 100%',
-      opacity: 1,
+      opacity: 0.55,
     },
   },
   {
@@ -103,7 +103,7 @@ const FEATURES = [
       img: '/images/uploads/2021/03/BYO-horse.png',
       size: 'cover',
       pos: '0% 0%',
-      opacity: 0.18,
+      opacity: 0.14,
     },
   },
 ];
