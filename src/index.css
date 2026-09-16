@@ -186,6 +186,12 @@ p { margin-bottom: 1rem; color: var(--color-text); }
 }
 
 .hero-rotator {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  column-gap: 0.35em;
+  row-gap: 0.1em;
   font-family: var(--font-heading);
   color: #fff;
   text-shadow:
