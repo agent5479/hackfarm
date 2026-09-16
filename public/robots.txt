@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /oldsitearchive/
+Disallow: /volunteer/
 
 User-agent: GPTBot
 Allow: /

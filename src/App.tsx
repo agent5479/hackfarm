@@ -13,6 +13,7 @@ import VaultingPage from './pages/VaultingPage';
 import EventsPage from './pages/EventsPage';
 import GiftsPage from './pages/GiftsPage';
 import ContactPage from './pages/ContactPage';
+import VolunteerPage from './pages/VolunteerPage';
 import PartnersPage from './pages/PartnersPage';
 import PrivacyPage from './pages/PrivacyPage';
 import SitemapPage from './pages/SitemapPage';
@@ -69,6 +70,8 @@ export default function App() {
           <Route path="horse-riding-holiday-gift-vouchers" element={<Navigate to="/horse-riding-holiday-gift-vouchers/" replace />} />
           <Route path="contact/" element={<ContactPage />} />
           <Route path="contact" element={<Navigate to="/contact/" replace />} />
+          <Route path="volunteer/" element={<VolunteerPage />} />
+          <Route path="volunteer" element={<Navigate to="/volunteer/" replace />} />
           <Route path="partners/" element={<PartnersPage />} />
           <Route path="partners" element={<Navigate to="/partners/" replace />} />
           <Route path="privacy-policy/" element={<PrivacyPage />} />

@@ -59,6 +59,7 @@ Allow: /`,
 const robots = `User-agent: *
 Allow: /
 Disallow: /oldsitearchive/
+Disallow: /volunteer/
 
 ${robotsAiBlocks}
 

@@ -46,6 +46,7 @@ const LINK_GROUPS = [
       { label: 'Partner With Us', to: '/partners/' },
       { label: 'Privacy Policy', to: '/privacy-policy/' },
       { label: 'Sitemap', to: '/sitemap/' },
+      { label: 'Volunteer', to: '/volunteer/' },
       { label: 'Tide calendar', to: '/holistic-horse-rides/#tide-calendar' },
       { label: 'Interactive trail map', to: '/hack-farm-trails/' },
       { label: 'The Weather Now', to: WEATHER_STATION_URL, external: true },

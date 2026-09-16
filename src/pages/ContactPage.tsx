@@ -23,17 +23,10 @@ export default function ContactPage() {
         </div>
       </section>
       <section className="section section--white">
-        <div className="container two-col">
-          <div>
-            <h2>Have a question? Say hello!</h2>
-            <p>{decodeHtml(content.paragraphs[0] || 'We look forward to hearing from you.')}</p>
-            <ContactForm type="contact" />
-          </div>
-          <div>
-            <h2>Volunteer Request</h2>
-            <p>Tell us a bit about yourself and we'll get back to you 🙂</p>
-            <ContactForm type="volunteer" />
-          </div>
+        <div className="container" style={{ maxWidth: 560 }}>
+          <h2>Have a question? Say hello!</h2>
+          <p>{decodeHtml(content.paragraphs[0] || 'We look forward to hearing from you.')}</p>
+          <ContactForm type="contact" />
         </div>
       </section>
     </>
