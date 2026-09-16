@@ -75,10 +75,10 @@ function buildMailto(type: string, payload: Record<string, string>): string {
 
 export default function ContactForm({ type, title }: ContactFormProps) {
   const fields = FIELDS[type];
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'sent' | 'error'>('idle');
   const [error, setError] = useState('');
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const payload = formDataToPayload(type, new FormData(form));
@@ -88,18 +88,22 @@ export default function ContactForm({ type, title }: ContactFormProps) {
       return;
     }
 
-    setStatus('sending');
     setError('');
 
     try {
-      // Apps Script web apps don't support readable CORS responses from browsers.
-      // no-cors + text/plain still delivers the POST; the response is opaque.
-      await fetch(FORMS_ENDPOINT, {
+      // Apps Script: no readable CORS; no-cors + text/plain still delivers the POST.
+      // keepalive lets the request finish if the user navigates away or refreshes.
+      // Confirm immediately — the opaque response cannot prove delivery anyway, and
+      // waiting on cold starts makes the form look hung.
+      void fetch(FORMS_ENDPOINT, {
         method: 'POST',
         mode: 'no-cors',
+        keepalive: true,
         redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload),
+      }).catch(() => {
+        /* Late failures after confirmation are rare once the request left the browser. */
       });
       form.reset();
       setStatus('sent');
@@ -112,7 +116,7 @@ export default function ContactForm({ type, title }: ContactFormProps) {
   if (status === 'sent') {
     return (
       <p className="form-success" role="status">
-        Thanks — your message has been sent. We&apos;ll get back to you soon.
+        Thanks — your message is on its way. You can leave this page; we&apos;ll reply by email.
       </p>
     );
   }
@@ -165,8 +169,8 @@ export default function ContactForm({ type, title }: ContactFormProps) {
         </p>
       )}
 
-      <button type="submit" className="btn btn--green" disabled={status === 'sending'}>
-        {status === 'sending' ? 'Sending…' : 'Send'}
+      <button type="submit" className="btn btn--green">
+        Send
       </button>
     </form>
   );
