@@ -286,9 +286,9 @@ p { margin-bottom: 1rem; color: var(--color-text); }
   background:
     linear-gradient(
       to bottom,
-      rgba(18, 18, 18, 0.42) 0%,
-      rgba(18, 18, 18, 0.58) 48%,
-      rgba(18, 18, 18, 0.62) 100%
+      rgba(18, 18, 18, 0.16) 0%,
+      rgba(18, 18, 18, 0.24) 48%,
+      rgba(18, 18, 18, 0.28) 100%
     );
 }
 
@@ -304,9 +304,9 @@ p { margin-bottom: 1rem; color: var(--color-text); }
   background:
     linear-gradient(
       to bottom,
-      rgba(18, 18, 18, 0.52) 0%,
-      rgba(18, 18, 18, 0.66) 48%,
-      rgba(18, 18, 18, 0.7) 100%
+      rgba(18, 18, 18, 0.22) 0%,
+      rgba(18, 18, 18, 0.3) 48%,
+      rgba(18, 18, 18, 0.34) 100%
     );
   transition: background 0.2s ease;
 }
@@ -321,8 +321,8 @@ p { margin-bottom: 1rem; color: var(--color-text); }
   width: min(26rem, 88%);
   height: min(18rem, 72%);
   border-radius: 1.25rem;
-  background: rgba(10, 10, 10, 0.55);
-  box-shadow: 0 0 48px 28px rgba(10, 10, 10, 0.35);
+  background: rgba(10, 10, 10, 0.36);
+  box-shadow: 0 0 40px 22px rgba(10, 10, 10, 0.2);
   pointer-events: none;
 }
 
@@ -335,8 +335,9 @@ p { margin-bottom: 1rem; color: var(--color-text); }
 .photo-tile p {
   color: #fff;
   text-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.9),
-    0 2px 12px rgba(0, 0, 0, 0.55);
+    0 1px 3px rgba(0, 0, 0, 0.9),
+    0 2px 16px rgba(0, 0, 0, 0.7),
+    0 0 2px rgba(0, 0, 0, 0.45);
 }
 
 .photo-tile h2 {
