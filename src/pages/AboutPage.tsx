@@ -1,17 +1,21 @@
-import scraped from '../content/scraped-content.json';
-import { decodeHtml } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
 import { JsonLd, personJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import EditableText from '../cms/EditableText';
+import { useCms } from '../cms/ContentProvider';
 
-const home = scraped.pages.home;
-const vaulting = scraped.pages.vaulting;
 const seo = getPageSeo('/about/')!;
+
+type AboutDoc = {
+  sections: { body: string[] }[];
+};
 
 export default function AboutPage() {
   usePageMeta(seo);
+  const { getDoc } = useCms();
+  const about = getDoc<AboutDoc>('about');
 
   return (
     <>
@@ -26,8 +30,8 @@ export default function AboutPage() {
         })}
       />
       <PageHero
-        title="About Hack n Stay"
-        subtitle="Eco farmstay, holistic horseback experiences, and community vaulting in Golden Bay, Nelson Tasman"
+        title={<EditableText doc="about" as="span" path="hero.title" />}
+        subtitle={<EditableText doc="about" as="span" path="hero.subtitle" />}
         background="/images/uploads/2021/03/20190801_Hackfarm_Panorama-rainbow.jpg"
         breadcrumbs={[
           { name: 'Home', path: '/' },
@@ -36,43 +40,19 @@ export default function AboutPage() {
       />
       <section className="section section--cream">
         <div className="container">
-          <h2>Hack Farm &amp; Hack n Stay Golden Bay</h2>
-          <p>
-            {decodeHtml(
-              home.paragraphs[0] ||
-                "Located in beautiful Golden Bay, Hack Farm is an eco farmstay and animal-friendly campground just a short walk or ride from Patons Rock beach.",
-            )}
-          </p>
-          <p>
-            Near Abel Tasman National Park and Nelson at the top of New Zealand&apos;s South Island, we are a
-            natural stop for guests exploring Collingwood, Farewell Spit, and Kahurangi — with horse riding
-            always at the heart of the stay.
-          </p>
-          <p>
-            {decodeHtml(
-              home.paragraphs[5] ||
-                'We offer riders of all experience levels opportunities to learn more about the foundations of good horsemanship whilst experiencing stunning coastal scenery on horseback.',
-            )}
-          </p>
+          <EditableText doc="about" as="h2" path="sections.0.title" />
+          {about.sections[0]?.body.map((_, i) => (
+            <EditableText key={i} doc="about" as="p" path={`sections.0.body.${i}`} />
+          ))}
         </div>
       </section>
       <section className="section section--white">
         <div className="container two-col">
           <div>
-            <h2>Baerbel Hack</h2>
-            <p>
-              {decodeHtml(
-                home.paragraphs[9] ||
-                  vaulting.paragraphs[0] ||
-                  'Baerbel is passionate about sharing the magic of connected riding and vaulting with guests of all ages.',
-              )}
-            </p>
-            <p>
-              {decodeHtml(
-                vaulting.paragraphs.find((p) => p.includes('Hack Vaulties')) ||
-                  "The Hack Vaulties club first came together in 2015 under the guidance of Baerbel Hack with the aim of making horse riding accessible to riders from all walks of life.",
-              )}
-            </p>
+            <EditableText doc="about" as="h2" path="sections.1.title" />
+            {about.sections[1]?.body.map((_, i) => (
+              <EditableText key={i} doc="about" as="p" path={`sections.1.body.${i}`} />
+            ))}
           </div>
           <div>
             <img
@@ -87,12 +67,10 @@ export default function AboutPage() {
       </section>
       <section className="section section--cream">
         <div className="container">
-          <h2>What we offer</h2>
-          <p>
-            Guided beach and trail rides, farmstay and camping, bring-your-own-horse holidays, riding and horsemanship
-            lessons, kids camps, and vaulting — all based at our property near Patons Rock in Golden Bay,
-            Nelson Tasman, New Zealand.
-          </p>
+          <EditableText doc="about" as="h2" path="sections.2.title" />
+          {about.sections[2]?.body.map((_, i) => (
+            <EditableText key={i} doc="about" as="p" path={`sections.2.body.${i}`} />
+          ))}
         </div>
       </section>
     </>

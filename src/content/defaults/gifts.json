@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "title": "Horse Riding Holiday Gift Vouchers",
+    "subtitle": "Give them the gift of a memorable experience"
+  },
+  "intro": [
+    "Gift vouchers and gift cards available to purchase.",
+    "Our Gift Cards can be purchased online and credited with any amount to be put toward rides/accommodation/lessons/vaulting experiences with Hack N Stay.",
+    "Once purchased, the gift card can either be emailed immediately to the recipient (great for a last-minute but thoughtful gift) or alternatively we can hand-fill one of our Hack Farm Vouchers on site and mail the physical copy to the recipient. If you'd like us to mail the Gift Voucher, please send us an email with the Gift Card's unique number and the recipient's name & address.",
+    "Simply follow the link below to purchase a gift card for any amount. Use your credit card at checkout and then choose to either email the gift voucher immediately to the recipient with a little message, or alternatively flick us an email with the recipient's name and postal address and we can mail them a physical copy of the voucher.",
+    "To use your voucher, simply click on \"book now\" on any one of our rides/rooms/lessons and fill out your details.",
+    "Directly under Contact & Payment, you will find a button to \"Apply Gift Card\". Click on this and then type in the Voucher Number from your gift card. The gift card amount will then automatically be deducted from the booking total and you can either pay the difference, or the credit will be stored under the same number ready to go towards your next visit with Hack n Stay."
+  ],
+  "steps": [
+    {
+      "title": "Step 1 - How To Purchase",
+      "body": "Follow the link below to purchase a gift card for any amount."
+    },
+    {
+      "title": "Step 2 - Redeeming Your Voucher",
+      "body": "Click \"book now\" on any ride/room/lesson, fill out your details, then click \"Apply Gift Card\" and enter your voucher number."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Do I need to book a specific date?",
+      "answer": "No - the gift voucher is credit toward a future ride. It is redeemed when you complete a booking."
+    },
+    {
+      "question": "What can I use the gift voucher for?",
+      "answer": "Any riding, learning or accommodation option on the website."
+    },
+    {
+      "question": "Can I exchange my voucher for cash?",
+      "answer": "Gift cards are non-refundable and cannot be exchanged for cash."
+    }
+  ]
+}

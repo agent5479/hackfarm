@@ -62,6 +62,7 @@ export function isFirebaseConfigured(): boolean {
   return getFirebase() !== null;
 }
 
-/** Realtime Database paths for CMS copy. */
-export const HOME_CONTENT_PATH = 'content/home';
-export const RIDES_CONTENT_PATH = 'content/rides';
+/** Realtime Database CMS docs live under content/{docId}. */
+export function cmsContentPath(docId: string): string {
+  return `content/${docId}`;
+}

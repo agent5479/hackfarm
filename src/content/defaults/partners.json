@@ -1,0 +1,29 @@
+{
+  "hero": {
+    "title": "Partner With Us",
+    "subtitle": "Earn 10% commission on referrals"
+  },
+  "intro": [
+    "Our affiliate partner program gives you the opportunity to automatically earn up to 10% commission every time someone books one of our rides using your unique link or promo code.",
+    "Our affiliate partner program is the perfect complement for accommodation providers, tourism operators and travel agents looking to showcase our region whilst earning commission for bookings as a thank you from us. It's easy to apply and once you're set up it's even easier to earn from referrals.",
+    "Register to become a promotional partner.",
+    "Add Link to your Website /Share Promo Code / Pin up Poster.",
+    "Offer your guests our range of exceptional horseback experiences."
+  ],
+  "sections": [
+    {
+      "title": "Booking Methods",
+      "body": [
+        "Once approved, you'll receive a unique partner link. Any bookings made using your link earn 10% commission.",
+        "QR Poster",
+        "Display a poster with your unique QR code to earn 10% automatically."
+      ]
+    },
+    {
+      "title": "Partner Registration",
+      "body": [
+        "Fill out the form and we'll get back to you once your account is set up."
+      ]
+    }
+  ]
+}

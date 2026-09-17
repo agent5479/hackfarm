@@ -1,11 +1,23 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
 import scraped from '../content/scraped-content.json';
-import { decodeHtml, HORSE_SLUGS, type HorseSlug } from '../lib/constants';
+import { HORSE_SLUGS, type HorseSlug } from '../lib/constants';
 import { horseImage } from '../lib/horse-images';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { horseSeo } from '../seo/routes';
+import EditableText from '../cms/EditableText';
+import { useCms } from '../cms/ContentProvider';
+
+type HorseEntry = {
+  title: string;
+  headings: string[];
+  paragraphs: string[];
+};
+
+type HorsesDoc = {
+  bySlug: Record<string, HorseEntry>;
+};
 
 export default function HorseDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -15,15 +27,18 @@ export default function HorseDetailPage() {
     ...seo,
     image: slug ? horseImage(slug) : seo.image,
   });
+  const { getDoc } = useCms();
+  const horsesDoc = getDoc<HorsesDoc>('horses');
+  const entry = slug ? horsesDoc.bySlug[slug] : undefined;
 
-  if (!slug || !HORSE_SLUGS.includes(slug as HorseSlug) || !horse) {
+  if (!slug || !HORSE_SLUGS.includes(slug as HorseSlug) || !horse || !entry) {
     return <Navigate to="/our-horses/" replace />;
   }
 
   return (
     <>
       <PageHero
-        title={horse.title}
+        title={<EditableText doc="horses" as="span" path={`bySlug.${slug}.title`} />}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Our Horses', path: '/our-horses/' },
@@ -39,11 +54,11 @@ export default function HorseDetailPage() {
             decoding="async"
           />
           <div>
-            {horse.h2s.map((h) => (
-              <h2 key={h}>{decodeHtml(h)}</h2>
+            {entry.headings.map((_, i) => (
+              <EditableText key={i} doc="horses" as="h2" path={`bySlug.${slug}.headings.${i}`} />
             ))}
-            {horse.paragraphs.slice(0, 8).map((p, i) => (
-              <p key={i}>{decodeHtml(p)}</p>
+            {entry.paragraphs.map((_, i) => (
+              <EditableText key={i} doc="horses" as="p" path={`bySlug.${slug}.paragraphs.${i}`} />
             ))}
           </div>
         </div>
@@ -60,7 +75,7 @@ export default function HorseDetailPage() {
                   loading="lazy"
                   decoding="async"
                 />
-                <h3>{h.title}</h3>
+                <EditableText doc="horses" as="h3" path={`bySlug.${h.slug}.title`} />
               </Link>
             ))}
           </div>

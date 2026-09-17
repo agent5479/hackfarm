@@ -1,21 +1,26 @@
-import scraped from '../content/scraped-content.json';
-import { decodeHtml } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
 import ContactForm from '../components/ContactForm';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import EditableText from '../cms/EditableText';
+import { useCms } from '../cms/ContentProvider';
 
-const content = scraped.pages.partners;
+type PartnersDoc = {
+  intro: string[];
+  sections: { title: string; body: string[] }[];
+};
 
 export default function PartnersPage() {
   usePageMeta(getPageSeo('/partners/')!);
+  const { getDoc } = useCms();
+  const content = getDoc<PartnersDoc>('partners');
 
   return (
     <>
       <PageHero
-        title="Partner With Us"
-        subtitle="Earn 10% commission on referrals"
+        title={<EditableText doc="partners" as="span" path="hero.title" />}
+        subtitle={<EditableText doc="partners" as="span" path="hero.subtitle" />}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Partners', path: '/partners/' },
@@ -23,8 +28,8 @@ export default function PartnersPage() {
       />
       <section className="section section--cream">
         <div className="container">
-          {content.paragraphs.slice(0, 5).map((p, i) => (
-            <p key={i}>{decodeHtml(p)}</p>
+          {content.intro.map((_, i) => (
+            <EditableText key={i} doc="partners" as="p" path={`intro.${i}`} />
           ))}
         </div>
       </section>
@@ -37,10 +42,10 @@ export default function PartnersPage() {
             decoding="async"
           />
           <div>
-            <h2>Booking Methods</h2>
-            <p>Once approved, you'll receive a unique partner link. Any bookings made using your link earn 10% commission.</p>
-            <h3>QR Poster</h3>
-            <p>Display a poster with your unique QR code to earn 10% automatically.</p>
+            <EditableText doc="partners" as="h2" path="sections.0.title" />
+            <EditableText doc="partners" as="p" path="sections.0.body.0" />
+            <EditableText doc="partners" as="h3" path="sections.0.body.1" />
+            <EditableText doc="partners" as="p" path="sections.0.body.2" />
             <img
               src={optimizedUrl('/images/uploads/2021/09/qrcode_2572792_-1.png', 'thumb')}
               alt="Partner QR code example"
@@ -53,8 +58,10 @@ export default function PartnersPage() {
       </section>
       <section className="section section--cream">
         <div className="container">
-          <h2>Partner Registration</h2>
-          <p>Fill out the form and we'll get back to you once your account is set up.</p>
+          <EditableText doc="partners" as="h2" path="sections.1.title" />
+          {content.sections[1]?.body.map((_, i) => (
+            <EditableText key={i} doc="partners" as="p" path={`sections.1.body.${i}`} />
+          ))}
           <ContactForm type="partner" />
         </div>
       </section>

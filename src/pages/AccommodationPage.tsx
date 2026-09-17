@@ -1,84 +1,55 @@
 import { Link } from 'react-router-dom';
-import scraped from '../content/scraped-content.json';
-import { decodeHtml, houseBookingUrl } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
 import { JsonLd, serviceJsonLd, faqPageJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
-import {
-  ALL_ACCOMMODATION_FAQS,
-  BYO_HORSE_FAQS,
-  CAMPING_FAQS,
-  HOMESTEAD_FAQS,
-  type FaqItem,
-} from '../content/faqs';
+import { ALL_ACCOMMODATION_FAQS } from '../content/faqs';
+import EditableText from '../cms/EditableText';
+import { useCms } from '../cms/ContentProvider';
 
-const content = scraped.pages.accommodation;
-const p = content.paragraphs;
-
-/** Curated from scrape order (archive commit language), with owner trims applied. */
-const SECTIONS: {
-  id: string;
-  title: string;
-  img: string;
-  paragraphs: string[];
-  footer?: 'gbhh';
-}[] = [
-  {
-    id: 'homestead',
-    title: 'Farmstay',
-    img: '/images/uploads/2021/02/House-from-afar.jpg',
-    paragraphs: [
-      p[4], // Comfortable Rooms in a historic farmhouse
-      p[5], // funky horse-inspired homestead…
-      p[6], // Check in…
-      // omit long-term promo p[7]
-      p[8].replace(/\s*Minimum stay two nights\./i, ''), // Green Foal without min stay
-      p[9], // bunkroom
-      p[10], // Blue / 3x single-share
-    ],
-    footer: 'gbhh',
-  },
-  {
-    id: 'camp-ground',
-    title: 'Camping in Golden Bay',
-    img: '/images/uploads/2021/02/hackfarm-Campsite.jpg',
-    paragraphs: [
-      p[26], // Sleep under the stars…
-      p[27], // Dog Friendly campground…
-      p[28], // Check in…
-      // omit long-term promo p[29]
-      p[30], // Drive in…
-      p[31], // Tent…
-      p[32], // Powered site note
-    ],
-  },
-  {
-    id: 'horse-stay',
-    title: 'Horse Stay',
-    img: '/images/uploads/2021/03/VaultingHorseClubDay.jpg',
-    paragraphs: [
-      p[47], // Bring your own horse…
-      p[48], // vision / paddocks / Patons Rock
-      p[49], // Holding Yard…
-      p[50], // Ride with guides…
-    ],
-  },
+const SECTIONS: { id: string; img: string }[] = [
+  { id: 'homestead', img: '/images/uploads/2021/02/House-from-afar.jpg' },
+  { id: 'camp-ground', img: '/images/uploads/2021/02/hackfarm-Campsite.jpg' },
+  { id: 'horse-stay', img: '/images/uploads/2021/03/VaultingHorseClubDay.jpg' },
 ];
 
-function FaqBlock({ title, faqs }: { title: string; faqs: FaqItem[] }) {
+type AccommodationDoc = {
+  intro: string[];
+  sections: { id: string; title: string; body: string[]; footer?: string }[];
+  faqs: {
+    homestead: { question: string; answer: string }[];
+    camping: { question: string; answer: string }[];
+    byoHorse: {
+      question: string;
+      answer: string;
+      link?: { to: string; label: string };
+    }[];
+  };
+};
+
+function FaqBlock({
+  title,
+  faqKey,
+  items,
+}: {
+  title: string;
+  faqKey: 'homestead' | 'camping' | 'byoHorse';
+  items: { question: string; answer: string; link?: { to: string; label: string } }[];
+}) {
   return (
     <section className="section section--cream">
       <div className="container">
         <h2>{title}</h2>
-        {faqs.map((faq) => (
-          <div key={faq.question} style={{ marginBottom: '1.25rem' }}>
-            <h3>{faq.question}</h3>
-            <p>{faq.answer}</p>
+        {items.map((faq, i) => (
+          <div key={i} style={{ marginBottom: '1.25rem' }}>
+            <EditableText doc="accommodation" as="h3" path={`faqs.${faqKey}.${i}.question`} />
+            <EditableText doc="accommodation" as="p" path={`faqs.${faqKey}.${i}.answer`} />
             {faq.link ? (
               <p>
-                <Link to={faq.link.to}>{faq.link.label}</Link>
+                <Link to={faq.link.to}>
+                  <EditableText doc="accommodation" as="span" path={`faqs.${faqKey}.${i}.link.label`} />
+                </Link>
               </p>
             ) : null}
           </div>
@@ -91,6 +62,8 @@ function FaqBlock({ title, faqs }: { title: string; faqs: FaqItem[] }) {
 export default function AccommodationPage() {
   const seo = getPageSeo('/accommodation/')!;
   usePageMeta(seo);
+  const { getDoc } = useCms();
+  const content = getDoc<AccommodationDoc>('accommodation');
 
   return (
     <>
@@ -101,8 +74,8 @@ export default function AccommodationPage() {
         ]}
       />
       <PageHero
-        title="Accommodation"
-        subtitle="Dog-friendly eco farmstay and campground near Takaka and Abel Tasman"
+        title={<EditableText doc="accommodation" as="span" path="hero.title" />}
+        subtitle={<EditableText doc="accommodation" as="span" path="hero.subtitle" />}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Accommodation', path: '/accommodation/' },
@@ -110,13 +83,8 @@ export default function AccommodationPage() {
       />
       <section className="section section--cream">
         <div className="container">
-          <p>
-            Hack n Stay offers farmstay rooms, a dog-friendly campground, and bring-your-own-horse stays
-            near Patons Rock beach in Golden Bay — a comfortable base near Abel Tasman. Guests exploring
-            Golden Bay (including Kahurangi 500 bike riders) often extend their stay.
-          </p>
-          {content.paragraphs.slice(0, 3).map((para, i) => (
-            <p key={i}>{decodeHtml(para)}</p>
+          {content.intro.map((_, i) => (
+            <EditableText key={i} doc="accommodation" as="p" path={`intro.${i}`} />
           ))}
         </div>
       </section>
@@ -125,24 +93,18 @@ export default function AccommodationPage() {
           <div className="container two-col">
             <img
               src={optimizedUrl(s.img, 'content')}
-              alt={s.title}
+              alt={content.sections[idx]?.title ?? s.id}
               style={{ borderRadius: 4 }}
               loading="lazy"
               decoding="async"
             />
             <div>
-              <h2>{s.title}</h2>
-              {s.paragraphs.map((para, i) => (
-                <p key={i}>{decodeHtml(para)}</p>
+              <EditableText doc="accommodation" as="h2" path={`sections.${idx}.title`} />
+              {content.sections[idx]?.body.map((_, i) => (
+                <EditableText key={i} doc="accommodation" as="p" path={`sections.${idx}.body.${i}`} />
               ))}
-              {s.footer === 'gbhh' ? (
-                <p>
-                  Book the whole house through Golden Bay Holiday Homes (
-                  <a href={houseBookingUrl()} target="_blank" rel="noopener noreferrer">
-                    check availability
-                  </a>
-                  ). Book a single room with the Book your Stay button (FareHarbor).
-                </p>
+              {content.sections[idx]?.footer ? (
+                <EditableText doc="accommodation" as="p" path={`sections.${idx}.footer`} />
               ) : null}
             </div>
           </div>
@@ -151,15 +113,12 @@ export default function AccommodationPage() {
       <section className="section section--white">
         <div className="container">
           <h2>Facilities include:</h2>
-          <p>
-            Communal kitchen, showers, rope swing, lake, climbing wall, trails to the beach, fruit trees,
-            vegetable garden and much, much more.
-          </p>
+          <EditableText doc="accommodation" as="p" path="facilities" />
         </div>
       </section>
-      <FaqBlock title="Frequently asked homestead questions" faqs={HOMESTEAD_FAQS} />
-      <FaqBlock title="Frequently asked camping questions" faqs={CAMPING_FAQS} />
-      <FaqBlock title="Frequently asked BYO horse questions" faqs={BYO_HORSE_FAQS} />
+      <FaqBlock title="Frequently asked homestead questions" faqKey="homestead" items={content.faqs.homestead} />
+      <FaqBlock title="Frequently asked camping questions" faqKey="camping" items={content.faqs.camping} />
+      <FaqBlock title="Frequently asked BYO horse questions" faqKey="byoHorse" items={content.faqs.byoHorse} />
     </>
   );
 }

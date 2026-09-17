@@ -1,6 +1,6 @@
 # Firebase inline content editing (Realtime Database)
 
-Home-page card and section text can be edited by a signed-in owner. Visitors read the same copy from **Firebase Realtime Database**; if Firebase is unset or unreachable, the site uses bundled defaults in `src/content/defaults/home.ts`.
+Marketing-page text can be edited by a signed-in owner. Visitors read the same copy from **Firebase Realtime Database**; if Firebase is unset or unreachable, the site uses bundled defaults in `src/content/defaults/*.json`.
 
 This project uses **Realtime Database** (not Cloud Firestore) so the free tier can be enabled without a billing/credit-card upgrade in typical Spark setups.
 
@@ -84,19 +84,21 @@ After first login you can tighten write to a UID instead:
 ".write": "auth != null && auth.uid == 'OWNER_UID_HERE'"
 ```
 
-### Data path
+### Data paths
 
-Home copy lives at:
+Marketing copy lives under:
 
 ```text
-/content/home
+/content/{docId}
 ```
 
-Shape matches `HomeContent` in `src/cms/types.ts` (hero, intro, tiles, features, testimonials).
+Document IDs (see `src/cms/docs.ts`): `home`, `rides`, `about`, `accommodation`, `learning`, `vaulting`, `events`, `gifts`, `trails`, `contact`, `partners`, `volunteer`, `privacy`, `horses`.
+
+Defaults live in `src/content/defaults/{docId}.json`. Build-time snapshots land in `src/content/generated/{docId}.json`.
 
 ### Pre-load current site text (do this once before first deploy)
 
-Writes [`src/content/defaults/home.json`](../src/content/defaults/home.json) to `/content/home` so the database is not empty.
+Writes each `src/content/defaults/{docId}.json` to `/content/{docId}` so the database is not empty. Skips paths that already have data unless `--force`.
 
 1. In `.env.local`, set `FIREBASE_SEED_EMAIL` / `FIREBASE_SEED_PASSWORD` (owner Auth user) plus the usual `VITE_FIREBASE_*` values.
 2. Run:
@@ -105,14 +107,14 @@ Writes [`src/content/defaults/home.json`](../src/content/defaults/home.json) to 
 npm run cms-seed-home
 ```
 
-3. Confirm in Firebase Console → Realtime Database that `/content/home` is populated.
+3. Confirm in Firebase Console → Realtime Database that `/content/*` docs are populated.
 4. To overwrite later: `npm run cms-seed-home -- --force`
 
 ## Owner workflow
 
 1. Open `https://hackfarm.co.nz/edit/` (or `http://localhost:5173/edit/` in dev).
 2. Sign in with the owner email/password.
-3. Open the home page — outlined fields are editable.
+3. Use the page links on `/edit/` — outlined fields are editable.
 4. Edit text → **Save** or **Discard** on the bottom bar.
 5. Sign out from `/edit/` when finished.
 
@@ -121,8 +123,8 @@ npm run cms-seed-home
 Browsers pick up Saves from Realtime Database immediately. **Search indexes** need the text baked into the static HTML:
 
 1. Owner **Saves** in `/edit/`.
-2. Deploy `main` (GitHub Actions runs `scripts/fetch-home-content.mjs` before Vite/prerender, pulling `/content/home` into `src/content/generated/home.json` so production HTML matches her copy).
-3. Then request reindex in [Google Search Console](https://search.google.com/search-console) and [Bing Webmaster Tools](https://www.bing.com/webmasters) for `https://hackfarm.co.nz/`.
+2. Deploy `main` (GitHub Actions runs `scripts/fetch-home-content.mjs` before Vite/prerender, pulling each `/content/{docId}` into `src/content/generated/{docId}.json` so production HTML matches her copy).
+3. Then request reindex in [Google Search Console](https://search.google.com/search-console) and [Bing Webmaster Tools](https://www.bing.com/webmasters) for affected URLs.
 
 Local bake without a full deploy: `npm run cms-home` (needs `VITE_FIREBASE_DATABASE_URL` in `.env.local`), then `npm run build`.
 
@@ -132,7 +134,7 @@ Local bake without a full deploy: `npm run cms-home` (needs `VITE_FIREBASE_DATAB
 
 1. GitHub → Settings → Secrets and variables → Actions → add/set repository secret **`VITE_CMS_DISABLED`** = `1`.
 2. Re-run the Pages workflow (or push an empty commit / Actions → “Run workflow”).
-3. Production rebuilds with **bundled defaults only**: no RTDB fetch, no `/edit/` login, site looks like the pre-CMS copy in `src/content/defaults/home.json`.
+3. Production rebuilds with **bundled defaults only**: no RTDB fetch, no `/edit/` login, site looks like the pre-CMS copy in `src/content/defaults/*.json`.
 
 To turn CMS back on: delete `VITE_CMS_DISABLED` (or set it empty) and redeploy.
 
@@ -142,11 +144,11 @@ To turn CMS back on: delete `VITE_CMS_DISABLED` (or set it empty) and redeploy.
 2. If needed: `git revert` the CMS merge commit(s) on `main` and push — Pages redeploys automatically.
 3. Or reset `main` to `pre-cms-stable` only if you accept a force-push (prefer revert).
 
-RTDB data is independent of the site deploy; disabling/reverting CMS does not delete `/content/home`.
+RTDB data is independent of the site deploy; disabling/reverting CMS does not delete `/content/*`.
 
 ## Notes
 
-- Images, links, layout, and other pages are out of scope for the home MVP.
+- Images, layout, and FareHarbor booking data stay out of CMS scope; only marketing copy strings are editable.
 - Between deploys, visitors still load the latest RTDB text after page load; crawlers that use prerendered HTML see the last baked snapshot until the next deploy.
-- Leaving Firebase env vars empty keeps the site on defaults only (login disabled; fetch script leaves the empty `{}` snapshot).
+- Leaving Firebase env vars empty keeps the site on defaults only (login disabled; fetch script leaves empty `{}` snapshots).
 - `FIREBASE_SEED_*` is local-only; never add it to GitHub Actions secrets.

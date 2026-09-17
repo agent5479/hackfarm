@@ -1,11 +1,9 @@
-import scraped from '../content/scraped-content.json';
-import { decodeHtml, CONTACT } from '../lib/constants';
+import { CONTACT } from '../lib/constants';
 import PageHero from '../components/PageHero';
 import ContactForm from '../components/ContactForm';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
-
-const content = scraped.pages.contact;
+import EditableText from '../cms/EditableText';
 
 export default function ContactPage() {
   usePageMeta(getPageSeo('/contact/')!);
@@ -13,8 +11,8 @@ export default function ContactPage() {
   return (
     <>
       <PageHero
-        title="Contact"
-        subtitle="Takaka, Golden Bay — Nelson Tasman, New Zealand"
+        title={<EditableText doc="contact" as="span" path="hero.title" />}
+        subtitle={<EditableText doc="contact" as="span" path="hero.subtitle" />}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Contact', path: '/contact/' },
@@ -31,8 +29,8 @@ export default function ContactPage() {
       </section>
       <section className="section section--white">
         <div className="container" style={{ maxWidth: 560 }}>
-          <h2>Have a question? Say hello!</h2>
-          <p>{decodeHtml(content.paragraphs[0] || 'We look forward to hearing from you.')}</p>
+          <EditableText doc="contact" as="h2" path="formHeading" />
+          <EditableText doc="contact" as="p" path="intro" />
           <ContactForm type="contact" />
         </div>
       </section>

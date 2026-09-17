@@ -1,0 +1,29 @@
+{
+  "hero": {
+    "title": "About Hack n Stay",
+    "subtitle": "Eco farmstay, holistic horseback experiences, and community vaulting in Golden Bay, Nelson Tasman"
+  },
+  "sections": [
+    {
+      "title": "Hack Farm & Hack n Stay Golden Bay",
+      "body": [
+        "Located in beautiful Golden Bay, Hack Farm is an eco farmstay and animal-friendly campground just a short walk or ride from Patons Rock beach and serves as the perfect base for your next Horse Riding Holiday. We offer a number of holistic horse experiences from guided treks on our team of highly trained horses, to Vaulting, Horsemanship and Riding lessons or simply bring your own horse and enjoy our easily accessible trails that will allow you to explore the beauty of the ever-changing coastal landscape on horseback.",
+        "Near Abel Tasman National Park and Nelson at the top of New Zealand's South Island, we are a natural stop for guests exploring Collingwood, Farewell Spit, and Kahurangi - with horse riding always at the heart of the stay.",
+        "We offer riders of all experience levels opportunities to learn more about the foundations of good horsemanship whilst experiencing stunning coastal scenery on horseback. With a focus on teaching light and balanced riding, our guided holistic horse riding experiences are so much more than just a trail ride."
+      ]
+    },
+    {
+      "title": "Baerbel Hack",
+      "body": [
+        "Baerbel is passionate about sharing the magic of connected riding and vaulting with guests of all ages.",
+        "The 'Hack Vaulties' club first came together in 2015 under the guidance of Baerbel Hack with the aim of making horse riding accessible to riders from all walks of life - regardless of their financial means or prior experience."
+      ]
+    },
+    {
+      "title": "What we offer",
+      "body": [
+        "Guided beach and trail rides, farmstay and camping, bring-your-own-horse holidays, riding and horsemanship lessons, kids camps, and vaulting - all based at our property near Patons Rock in Golden Bay, Nelson Tasman, New Zealand."
+      ]
+    }
+  ]
+}

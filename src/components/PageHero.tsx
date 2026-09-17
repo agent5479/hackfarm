@@ -1,9 +1,10 @@
+import type { ReactNode } from 'react';
 import { optimizedUrl } from '../lib/images';
 import Breadcrumbs, { type Crumb } from './Breadcrumbs';
 
 interface PageHeroProps {
-  title: string;
-  subtitle?: string;
+  title: ReactNode;
+  subtitle?: ReactNode;
   background?: string;
   /** When set, shows Home → … trail and emits BreadcrumbList JSON-LD. */
   breadcrumbs?: Crumb[];
@@ -20,8 +21,8 @@ export default function PageHero({ title, subtitle, background, breadcrumbs }: P
         {hasCopy && (
           <div className="hero-banner__copy">
             {breadcrumbs && breadcrumbs.length >= 2 ? <Breadcrumbs items={breadcrumbs} /> : null}
-            {title && <h1 className="hero-banner__title">{title}</h1>}
-            {subtitle && <p>{subtitle}</p>}
+            {title ? <h1 className="hero-banner__title">{title}</h1> : null}
+            {subtitle ? <p>{subtitle}</p> : null}
           </div>
         )}
       </div>
@@ -31,7 +32,7 @@ export default function PageHero({ title, subtitle, background, breadcrumbs }: P
     <div className="page-hero">
       {breadcrumbs && breadcrumbs.length >= 2 ? <Breadcrumbs items={breadcrumbs} /> : null}
       <h1>{title}</h1>
-      {subtitle && <p>{subtitle}</p>}
+      {subtitle ? <p>{subtitle}</p> : null}
     </div>
   );
 }

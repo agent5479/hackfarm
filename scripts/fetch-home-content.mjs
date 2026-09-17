@@ -1,17 +1,38 @@
 /**
  * Pulls RTDB CMS docs into src/content/generated/*.json before vite build
  * so prerender embeds the owner's saved copy. Soft-fails (exit 0) if unset/empty/offline.
+ *
+ * Keep DOC_IDS in sync with src/cms/docs.ts.
  */
-import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'fs';
+import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-const DOCS = [
-  { path: 'content/home', out: join(root, 'src/content/generated/home.json'), label: 'home' },
-  { path: 'content/rides', out: join(root, 'src/content/generated/rides.json'), label: 'rides' },
+/** Must match CMS_DOC_IDS in src/cms/docs.ts */
+const DOC_IDS = [
+  'home',
+  'rides',
+  'about',
+  'accommodation',
+  'learning',
+  'vaulting',
+  'events',
+  'gifts',
+  'trails',
+  'contact',
+  'partners',
+  'volunteer',
+  'privacy',
+  'horses',
 ];
+
+const DOCS = DOC_IDS.map((id) => ({
+  path: `content/${id}`,
+  out: join(root, `src/content/generated/${id}.json`),
+  label: id,
+}));
 
 function databaseUrl() {
   const raw = (process.env.VITE_FIREBASE_DATABASE_URL || '').trim().replace(/\/$/, '');

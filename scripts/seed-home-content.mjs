@@ -1,11 +1,13 @@
 /**
- * One-time local seed: writes defaults to RTDB content/home and content/rides.
+ * Local seed: writes defaults to RTDB content/{docId} for all CMS docs.
  *
  * Requires .env.local with VITE_FIREBASE_* plus FIREBASE_SEED_EMAIL / FIREBASE_SEED_PASSWORD.
  * Skips each path if data already exists unless --force.
  *
  * Usage: npm run cms-seed-home
  *        npm run cms-seed-home -- --force
+ *
+ * Keep DOC_IDS in sync with src/cms/docs.ts.
  */
 import { readFileSync, existsSync } from 'fs';
 import { dirname, join } from 'path';
@@ -17,10 +19,28 @@ import { getDatabase, get, ref, set } from 'firebase/database';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const force = process.argv.includes('--force');
 
-const DOCS = [
-  { path: 'content/home', file: 'src/content/defaults/home.json' },
-  { path: 'content/rides', file: 'src/content/defaults/rides.json' },
+/** Must match CMS_DOC_IDS in src/cms/docs.ts */
+const DOC_IDS = [
+  'home',
+  'rides',
+  'about',
+  'accommodation',
+  'learning',
+  'vaulting',
+  'events',
+  'gifts',
+  'trails',
+  'contact',
+  'partners',
+  'volunteer',
+  'privacy',
+  'horses',
 ];
+
+const DOCS = DOC_IDS.map((id) => ({
+  path: `content/${id}`,
+  file: `src/content/defaults/${id}.json`,
+}));
 
 function loadEnvFile(filePath) {
   if (!existsSync(filePath)) return;

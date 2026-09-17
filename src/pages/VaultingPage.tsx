@@ -1,23 +1,27 @@
-import scraped from '../content/scraped-content.json';
-import { decodeHtml } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
 import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import EditableText from '../cms/EditableText';
+import { useCms } from '../cms/ContentProvider';
 
-const content = scraped.pages.vaulting;
+type VaultingDoc = {
+  intro: string[];
+};
 
 export default function VaultingPage() {
   const seo = getPageSeo('/vaulting/')!;
   usePageMeta(seo);
+  const { getDoc } = useCms();
+  const content = getDoc<VaultingDoc>('vaulting');
 
   return (
     <>
       <JsonLd data={serviceJsonLd('Vaulting', seo.description, '/vaulting/')} />
       <PageHero
-        title="Vaulting"
-        subtitle="Fun and engaging vaulting sessions for all ages"
+        title={<EditableText doc="vaulting" as="span" path="hero.title" />}
+        subtitle={<EditableText doc="vaulting" as="span" path="hero.subtitle" />}
         background="/images/uploads/2021/02/Vaulting-Poster.jpg"
         breadcrumbs={[
           { name: 'Home', path: '/' },
@@ -26,14 +30,14 @@ export default function VaultingPage() {
       />
       <section className="section section--cream">
         <div className="container">
-          {content.paragraphs.slice(0, 8).map((p, i) => (
-            <p key={i}>{decodeHtml(p)}</p>
+          {content.intro.map((_, i) => (
+            <EditableText key={i} doc="vaulting" as="p" path={`intro.${i}`} />
           ))}
         </div>
       </section>
       <section className="section section--white">
         <div className="container">
-          <h2>Hack Vaulties</h2>
+          <EditableText doc="vaulting" as="h2" path="galleryTitle" />
           <div className="card-grid">
             {Array.from({ length: 12 }, (_, i) => {
               const num = String(i + 1).padStart(2, '0');

@@ -1,6 +1,7 @@
 import PageHero from '../components/PageHero';
 import ContactForm from '../components/ContactForm';
 import { usePageMeta } from '../hooks/usePageTitle';
+import EditableText from '../cms/EditableText';
 
 export default function VolunteerPage() {
   usePageMeta({
@@ -12,10 +13,10 @@ export default function VolunteerPage() {
 
   return (
     <>
-      <PageHero title="Volunteer Request" />
+      <PageHero title={<EditableText doc="volunteer" as="span" path="hero.title" />} />
       <section className="section section--white">
         <div className="container" style={{ maxWidth: 560 }}>
-          <p>Tell us a bit about yourself and we'll get back to you 🙂</p>
+          <EditableText doc="volunteer" as="p" path="body" />
           <ContactForm type="volunteer" />
         </div>
       </section>

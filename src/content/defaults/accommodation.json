@@ -1,0 +1,142 @@
+{
+  "hero": {
+    "title": "Accommodation",
+    "subtitle": "Dog-friendly eco farmstay and campground near Takaka and Abel Tasman"
+  },
+  "intro": [
+    "Hack n Stay offers farmstay rooms, a dog-friendly campground, and bring-your-own-horse stays near Patons Rock beach in Golden Bay - a comfortable base near Abel Tasman. Guests exploring Golden Bay (including Kahurangi 500 bike riders) often extend their stay.",
+    "Accommodation options at Hack Farm",
+    "Hack farm has a number of eco-friendly accommodation options designed to help you slow down, immerse yourself in nature and enjoy the simple things in life.",
+    "Enjoy a family & pet friendly environment in our 130 year old eco-friendly farmhouse and horse ranch, or park up in one of our camping spaces!"
+  ],
+  "sections": [
+    {
+      "id": "homestead",
+      "title": "Farmstay",
+      "body": [
+        "Comfortable Rooms in a historic farmhouse",
+        "Our funky horse-inspired homestead is a traditional farmhouse and features a fully equipped Communal Kitchen, Fireplace, Living Room and Dining Area. Guests love the welcoming and friendly communal vibe of the house. Wi-Fi available to house guests.",
+        "Check in is between 3pm and 7pm, Check out is by 11:30am. Early/Late Check-ins can be organized by arrangement.",
+        "A little bit of comfort after your day of exploring Golden Bay, our Green Foal Room is the perfect choice for a private night's rest. This lovely horse-themed room is ideal for a restful stay.",
+        "Our bunkroom is located in our funky horse-themed homestead. The perfect choice for a group of friends or the budget-conscious traveller. Comfortable bunk beds give you the perfect place to rest your head after your day of adventures.",
+        "This 3x single-share room is a popular choice for friends travelling together. With funky art and a comfortable bed to rest your head, you'll have plenty of opportunities to reminisce about your day's adventures at Hack n Stay"
+      ],
+      "footer": "Book the whole house through Golden Bay Holiday Homes (check availability). Book a single room with the Book your Stay button (FareHarbor)."
+    },
+    {
+      "id": "camp-ground",
+      "title": "Camping in Golden Bay",
+      "body": [
+        "Sleep under the stars, wake up immersed in nature",
+        "Whether you're camping in your car, pitching a tent or bringing your Caravan, our Dog Friendly campground nestled amongst the fruit trees has all the Facilities you need to have an enjoyable stay under the stars.",
+        "Check in is between 3pm and 7pm, Check out is by 11:30am. Early/Late Check-ins can be organized by arrangement.",
+        "Drive in and Park up for the night for just $26.50 per person over the age of 2.",
+        "Sleep under the stars in your tent for $26.50 per person over the age of 2.",
+        "One-off payment per campsite - Winter power rates are higher"
+      ]
+    },
+    {
+      "id": "horse-stay",
+      "title": "Horse Stay",
+      "body": [
+        "Bring your own horse and enjoy a holiday away",
+        "Our vision for Hack 'n Stay has always been a getaway for you & your horse! With our guest paddocks, holding yards and arenas, we have everything you need to keep your horse comfortable while you enjoy a Horse Riding Holiday away together. Use our Hack Track to access Patons Rock Beach or even hire a guide to show you the best spots around.",
+        "Holding Yard or Grazing accommodation for your horse which includes a round pen, and covered arena usage. Hay or hard feed is extra (depending on the seasonal price)",
+        "Ride with one of our knowledgeable guides - figure out exactly where to go, hear stories of local history, culture and lore."
+      ]
+    }
+  ],
+  "facilities": "Communal kitchen, showers, rope swing, lake, climbing wall, trails to the beach, fruit trees, vegetable garden and much, much more.",
+  "faqs": {
+    "homestead": [
+      {
+        "question": "Are dogs allowed at the farmstay?",
+        "answer": "Yes. The property is dog-friendly. You are responsible for your dog throughout your stay, must clean up after them, and keep polite interactions with other guests and animals. Keep your dog in the car until they have been properly introduced to farm dog Moe, who is territorial and needs to be on a leash for safety."
+      },
+      {
+        "question": "Can I bring my own horse to stay?",
+        "answer": "Yes. You can bring your own horse to stay. Ride down to the beach, explore the trails, or book a lesson on your own horse."
+      },
+      {
+        "question": "Is food provided in the farmhouse kitchen?",
+        "answer": "The house kitchen is equipped with essentials such as coffee, tea, bread, cereal and milk. Guests need to bring their own food for main meals and snacks. The Historic Mussel Inn is nearby for meals."
+      },
+      {
+        "question": "Is Wi-Fi available for house guests?",
+        "answer": "Yes. Wi-Fi is available for house guests and the connection is stable."
+      },
+      {
+        "question": "Can I stay long-term at the homestead?",
+        "answer": "Yes. Guests can stay up to 60 days, with special weekly rates available for stays over 30 days. Call to discuss options."
+      },
+      {
+        "question": "Is the farmhouse private or shared?",
+        "answer": "Your room is private, but the lounge, living room, dining area and kitchen are shared communal facilities used by all house guests."
+      },
+      {
+        "question": "Do I need to bring bedding?",
+        "answer": "No. All bedding is provided for your stay."
+      }
+    ],
+    "camping": [
+      {
+        "question": "Are dogs allowed at the campground?",
+        "answer": "Yes. The campground is dog-friendly. Let Baerbel know at booking, keep your dog in the vehicle until introduced to farm dog Moe, clean up after them, and ensure polite interactions with other guests and animals."
+      },
+      {
+        "question": "Is powered camping available?",
+        "answer": "Yes. 16 amp power is available for a one-off set-up fee of $10. Winter rates may apply."
+      },
+      {
+        "question": "What cooking facilities does the camp kitchen have?",
+        "answer": "The camp kitchen has a portable electric stove, dishwashing area, some cups, plates and cutlery, picnic benches, and a fridge/freezer. Bring your own cooking equipment in peak season and clearly mark food in the fridge."
+      },
+      {
+        "question": "Is Wi-Fi available for campers?",
+        "answer": "No. Wi-Fi is reserved for house guests. The nearest free Wi-Fi is at the Mussel Inn."
+      },
+      {
+        "question": "How long can I camp at Hack Farm?",
+        "answer": "You can camp for a maximum of 60 days at any given time. Stays over a month have a special rate of $160/week per person that includes free laundry use."
+      },
+      {
+        "question": "Is drinking water available on site?",
+        "answer": "Yes. All taps on site have potable water and you can fill up wherever you find a tap."
+      },
+      {
+        "question": "Are showers included for campers?",
+        "answer": "Yes. Showers are included as part of your stay for paying campers."
+      },
+      {
+        "question": "Do children camp for free?",
+        "answer": "Children under 2 stay free. Book a separate slot for each member of your party over age 2. There are no additional child discounts over age 2."
+      }
+    ],
+    "byoHorse": [
+      {
+        "question": "Is there space to park a horse float?",
+        "answer": "Yes. There is plenty of space for floats to park on the property."
+      },
+      {
+        "question": "What horse facilities are available for guest horses?",
+        "answer": "The property has a 25m round yard, a covered 20x40m arena, a cowboy challenge obstacle course, wash-down bays, hitching rails, paddocks and dry lot areas. Facilities are available when not in use by the trekking team."
+      },
+      {
+        "question": "Should I bring hay and hard feed for my horse?",
+        "answer": "Yes. Grass paddocks are available, but guests are recommended to bring their own hay and hard feed."
+      },
+      {
+        "question": "Do barefoot horses need boots on the trails?",
+        "answer": "If your horse is barefoot, bring at least front boots. Beaches are soft but rocky areas can be tough on feet."
+      },
+      {
+        "question": "Where can I ride with my own horse from Hack Farm?",
+        "answer": "You can ride all along the beaches. Please check our interactive trail map for routes and tide-aware guidance - use it as a guide only, as tides and inlets are always shifting. Always check the tide times before a longer ride, and check in with Baerbel before you leave.",
+        "link": {
+          "to": "/hack-farm-trails/",
+          "label": "Open the interactive trail map"
+        }
+      }
+    ]
+  }
+}

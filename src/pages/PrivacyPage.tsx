@@ -1,18 +1,23 @@
-import scraped from '../content/scraped-content.json';
-import { decodeHtml } from '../lib/constants';
 import PageHero from '../components/PageHero';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import EditableText from '../cms/EditableText';
+import { useCms } from '../cms/ContentProvider';
 
-const content = scraped.pages.privacy;
+type PrivacyDoc = {
+  paragraphs: string[];
+};
 
 export default function PrivacyPage() {
   usePageMeta(getPageSeo('/privacy-policy/')!);
+  const { getDoc } = useCms();
+  const content = getDoc<PrivacyDoc>('privacy');
 
   return (
     <>
       <PageHero
-        title="Privacy Policy"
+        title={<EditableText doc="privacy" as="span" path="hero.title" />}
+        subtitle={<EditableText doc="privacy" as="span" path="hero.subtitle" />}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Privacy Policy', path: '/privacy-policy/' },
@@ -20,8 +25,8 @@ export default function PrivacyPage() {
       />
       <section className="section section--cream">
         <div className="container">
-          {content.paragraphs.map((p, i) => (
-            <p key={i}>{decodeHtml(p)}</p>
+          {content.paragraphs.map((_, i) => (
+            <EditableText key={i} doc="privacy" as="p" path={`paragraphs.${i}`} />
           ))}
         </div>
       </section>

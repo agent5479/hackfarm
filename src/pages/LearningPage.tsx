@@ -1,29 +1,34 @@
-import scraped from '../content/scraped-content.json';
-import { decodeHtml } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
 import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import EditableText from '../cms/EditableText';
+import { useCms } from '../cms/ContentProvider';
 
-const content = scraped.pages.learning;
-
-const LESSONS = [
-  { id: 'lessons', title: 'Arena & Beach Riding Lessons', img: '/images/uploads/2021/02/20210104_145330-1.jpg' },
-  { id: 'horsemanship', title: 'Horsemanship Lessons', img: '/images/uploads/2021/03/Horsemanship-Sillouette.png' },
-  { id: 'vaulting', title: 'Vaulting & Ride & Fly', img: '/images/uploads/2021/02/Vaulting-Poster.jpg' },
+const LESSON_IMAGES = [
+  { id: 'lessons', img: '/images/uploads/2021/02/20210104_145330-1.jpg' },
+  { id: 'horsemanship', img: '/images/uploads/2021/03/Horsemanship-Sillouette.png' },
+  { id: 'vaulting', img: '/images/uploads/2021/02/Vaulting-Poster.jpg' },
 ];
+
+type LearningDoc = {
+  intro: string[];
+  lessons: { id: string; title: string; body: string[] }[];
+};
 
 export default function LearningPage() {
   const seo = getPageSeo('/learning-experiences/')!;
   usePageMeta(seo);
+  const { getDoc } = useCms();
+  const content = getDoc<LearningDoc>('learning');
 
   return (
     <>
       <JsonLd data={serviceJsonLd('Learning Experiences', seo.description, '/learning-experiences/')} />
       <PageHero
-        title="Learning Experiences"
-        subtitle="Horsemanship, Vaulting and Riding Lessons"
+        title={<EditableText doc="learning" as="span" path="hero.title" />}
+        subtitle={<EditableText doc="learning" as="span" path="hero.subtitle" />}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Learning Experiences', path: '/learning-experiences/' },
@@ -31,25 +36,25 @@ export default function LearningPage() {
       />
       <section className="section section--cream">
         <div className="container">
-          {content.paragraphs.slice(0, 2).map((p, i) => (
-            <p key={i}>{decodeHtml(p)}</p>
+          {content.intro.map((_, i) => (
+            <EditableText key={i} doc="learning" as="p" path={`intro.${i}`} />
           ))}
         </div>
       </section>
-      {LESSONS.map((lesson, idx) => (
+      {LESSON_IMAGES.map((lesson, idx) => (
         <section key={lesson.id} id={lesson.id} className={`section ${idx % 2 === 0 ? 'section--white' : 'section--cream'}`}>
           <div className="container two-col">
             <img
               src={optimizedUrl(lesson.img, idx === 1 ? 'thumb' : 'content')}
-              alt={lesson.title}
+              alt={content.lessons[idx]?.title ?? lesson.id}
               style={{ borderRadius: 4 }}
               loading="lazy"
               decoding="async"
             />
             <div>
-              <h2>{lesson.title}</h2>
-              {content.paragraphs.slice(idx * 5 + 2, idx * 5 + 7).map((p, i) => (
-                <p key={i}>{decodeHtml(p)}</p>
+              <EditableText doc="learning" as="h2" path={`lessons.${idx}.title`} />
+              {content.lessons[idx]?.body.map((_, i) => (
+                <EditableText key={i} doc="learning" as="p" path={`lessons.${idx}.body.${i}`} />
               ))}
             </div>
           </div>

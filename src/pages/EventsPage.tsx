@@ -1,23 +1,28 @@
-import scraped from '../content/scraped-content.json';
-import { decodeHtml } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
 import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import EditableText from '../cms/EditableText';
+import { useCms } from '../cms/ContentProvider';
 
-const content = scraped.pages.events;
+type EventsDoc = {
+  body: string[];
+  secondaryBody: string[];
+};
 
 export default function EventsPage() {
   const seo = getPageSeo('/special-events/')!;
   usePageMeta(seo);
+  const { getDoc } = useCms();
+  const content = getDoc<EventsDoc>('events');
 
   return (
     <>
       <JsonLd data={serviceJsonLd('Special Events & Kids Camps', seo.description, '/special-events/')} />
       <PageHero
-        title="Special Events & Kids Camps"
-        subtitle="Fun camps and riding days"
+        title={<EditableText doc="events" as="span" path="hero.title" />}
+        subtitle={<EditableText doc="events" as="span" path="hero.subtitle" />}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Special Events', path: '/special-events/' },
@@ -25,8 +30,8 @@ export default function EventsPage() {
       />
       <section className="section section--cream">
         <div className="container">
-          {content.paragraphs.slice(0, 10).map((p, i) => (
-            <p key={i}>{decodeHtml(p)}</p>
+          {content.body.map((_, i) => (
+            <EditableText key={i} doc="events" as="p" path={`body.${i}`} />
           ))}
         </div>
       </section>
@@ -40,9 +45,9 @@ export default function EventsPage() {
             decoding="async"
           />
           <div>
-            <h2>Vaulting Sessions</h2>
-            {content.paragraphs.slice(10, 15).map((p, i) => (
-              <p key={i}>{decodeHtml(p)}</p>
+            <EditableText doc="events" as="h2" path="secondaryTitle" />
+            {content.secondaryBody.map((_, i) => (
+              <EditableText key={i} doc="events" as="p" path={`secondaryBody.${i}`} />
             ))}
           </div>
         </div>

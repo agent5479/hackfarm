@@ -9,30 +9,20 @@ import {
 } from 'react';
 import { onAuthStateChanged, type User } from 'firebase/auth';
 import { get, ref, set } from 'firebase/database';
-import { getBundledHomeContent } from '../content/homeContent';
-import { getBundledRidesContent } from '../content/ridesContent';
-import {
-  getFirebase,
-  HOME_CONTENT_PATH,
-  isFirebaseConfigured,
-  RIDES_CONTENT_PATH,
-} from '../lib/firebase';
-import {
-  getContentPath,
-  mergeHomeContent,
-  mergeRidesContent,
-  setContentPath,
-} from './merge';
-import type { CmsDoc, HomeContent, RidesContent } from './types';
+import { getFirebase, isFirebaseConfigured } from '../lib/firebase';
+import { CMS_DOC_IDS, type CmsDocId } from './docs';
+import { getContentPath, setContentPath } from './merge';
+import { getAllBundledDocs, mergeDoc, rtdbPathForDoc } from './registry';
+import type { HomeContent, RidesContent } from './types';
 
-const bundledHome = getBundledHomeContent();
-const bundledRides = getBundledRidesContent();
+type DocsMap = Record<CmsDocId, unknown>;
 
 type CmsContextValue = {
-  /** @deprecated use `home` */
+  /** @deprecated use getDoc('home') */
   content: HomeContent;
   home: HomeContent;
   rides: RidesContent;
+  getDoc: <T = unknown>(id: CmsDocId) => T;
   isEditor: boolean;
   isDirty: boolean;
   isLoading: boolean;
@@ -41,8 +31,8 @@ type CmsContextValue = {
   saveSucceeded: boolean;
   user: User | null;
   firebaseReady: boolean;
-  setField: (doc: CmsDoc, path: string, value: string) => void;
-  getField: (doc: CmsDoc, path: string) => string;
+  setField: (doc: CmsDocId, path: string, value: string) => void;
+  getField: (doc: CmsDocId, path: string) => string;
   save: () => Promise<void>;
   discard: () => void;
   clearSaveSucceeded: () => void;
@@ -55,33 +45,24 @@ function markCmsReady() {
   document.documentElement.dataset.cmsReady = '1';
 }
 
+const bundledAll = getAllBundledDocs();
+
 export function ContentProvider({ children }: { children: ReactNode }) {
   const firebaseReady = isFirebaseConfigured();
   const [user, setUser] = useState<User | null>(null);
-  const [homeBaseline, setHomeBaseline] = useState<HomeContent>(bundledHome);
-  const [homeDraft, setHomeDraft] = useState<HomeContent>(bundledHome);
-  const [ridesBaseline, setRidesBaseline] = useState<RidesContent>(bundledRides);
-  const [ridesDraft, setRidesDraft] = useState<RidesContent>(bundledRides);
+  const [baseline, setBaseline] = useState<DocsMap>(bundledAll);
+  const [draft, setDraft] = useState<DocsMap>(bundledAll);
   const [isLoading, setIsLoading] = useState(firebaseReady);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSucceeded, setSaveSucceeded] = useState(false);
 
   const isEditor = user !== null;
-  const homeDirty = useMemo(
-    () => JSON.stringify(homeDraft) !== JSON.stringify(homeBaseline),
-    [homeDraft, homeBaseline],
-  );
-  const ridesDirty = useMemo(
-    () => JSON.stringify(ridesDraft) !== JSON.stringify(ridesBaseline),
-    [ridesDraft, ridesBaseline],
-  );
-  const isDirty = homeDirty || ridesDirty;
+  const isDirty = useMemo(() => JSON.stringify(draft) !== JSON.stringify(baseline), [draft, baseline]);
 
   useEffect(() => {
     const fb = getFirebase();
     if (!fb) return;
-
     return onAuthStateChanged(fb.auth, setUser);
   }, []);
 
@@ -99,23 +80,21 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
     (async () => {
       try {
-        const [homeSnap, ridesSnap] = await Promise.all([
-          get(ref(fb.db, HOME_CONTENT_PATH)),
-          get(ref(fb.db, RIDES_CONTENT_PATH)),
-        ]);
+        const snaps = await Promise.all(
+          CMS_DOC_IDS.map((id) => get(ref(fb.db, rtdbPathForDoc(id)))),
+        );
         if (cancelled) return;
-        const home = homeSnap.exists() ? mergeHomeContent(homeSnap.val()) : bundledHome;
-        const rides = ridesSnap.exists() ? mergeRidesContent(ridesSnap.val()) : bundledRides;
-        setHomeBaseline(home);
-        setHomeDraft(home);
-        setRidesBaseline(rides);
-        setRidesDraft(rides);
+        const next = {} as DocsMap;
+        CMS_DOC_IDS.forEach((id, i) => {
+          const snap = snaps[i]!;
+          next[id] = snap.exists() ? mergeDoc(id, snap.val()) : bundledAll[id];
+        });
+        setBaseline(next);
+        setDraft(next);
       } catch {
         if (!cancelled) {
-          setHomeBaseline(bundledHome);
-          setHomeDraft(bundledHome);
-          setRidesBaseline(bundledRides);
-          setRidesDraft(bundledRides);
+          setBaseline(bundledAll);
+          setDraft(bundledAll);
         }
       } finally {
         if (!cancelled) {
@@ -130,28 +109,30 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const setField = useCallback((doc: CmsDoc, path: string, value: string) => {
-    if (doc === 'home') {
-      setHomeDraft((prev) => setContentPath(prev, path, value));
-    } else {
-      setRidesDraft((prev) => setContentPath(prev, path, value));
-    }
+  const setField = useCallback((doc: CmsDocId, path: string, value: string) => {
+    setDraft((prev) => ({
+      ...prev,
+      [doc]: setContentPath(prev[doc], path, value),
+    }));
     setSaveError(null);
     setSaveSucceeded(false);
   }, []);
 
   const getField = useCallback(
-    (doc: CmsDoc, path: string) =>
-      getContentPath(doc === 'home' ? homeDraft : ridesDraft, path),
-    [homeDraft, ridesDraft],
+    (doc: CmsDocId, path: string) => getContentPath(draft[doc], path),
+    [draft],
+  );
+
+  const getDoc = useCallback(
+    <T = unknown>(id: CmsDocId) => draft[id] as T,
+    [draft],
   );
 
   const discard = useCallback(() => {
-    setHomeDraft(homeBaseline);
-    setRidesDraft(ridesBaseline);
+    setDraft(baseline);
     setSaveError(null);
     setSaveSucceeded(false);
-  }, [homeBaseline, ridesBaseline]);
+  }, [baseline]);
 
   const clearSaveSucceeded = useCallback(() => {
     setSaveSucceeded(false);
@@ -169,15 +150,13 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     setSaveSucceeded(false);
     try {
       const writes: Promise<void>[] = [];
-      if (JSON.stringify(homeDraft) !== JSON.stringify(homeBaseline)) {
-        writes.push(set(ref(fb.db, HOME_CONTENT_PATH), homeDraft));
-      }
-      if (JSON.stringify(ridesDraft) !== JSON.stringify(ridesBaseline)) {
-        writes.push(set(ref(fb.db, RIDES_CONTENT_PATH), ridesDraft));
+      for (const id of CMS_DOC_IDS) {
+        if (JSON.stringify(draft[id]) !== JSON.stringify(baseline[id])) {
+          writes.push(set(ref(fb.db, rtdbPathForDoc(id)), draft[id]));
+        }
       }
       await Promise.all(writes);
-      setHomeBaseline(homeDraft);
-      setRidesBaseline(ridesDraft);
+      setBaseline(draft);
       setSaveSucceeded(true);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Save failed.';
@@ -185,13 +164,17 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsSaving(false);
     }
-  }, [homeDraft, homeBaseline, ridesDraft, ridesBaseline, user]);
+  }, [draft, baseline, user]);
+
+  const home = draft.home as HomeContent;
+  const rides = draft.rides as RidesContent;
 
   const value = useMemo<CmsContextValue>(
     () => ({
-      content: homeDraft,
-      home: homeDraft,
-      rides: ridesDraft,
+      content: home,
+      home,
+      rides,
+      getDoc,
       isEditor,
       isDirty,
       isLoading,
@@ -207,8 +190,9 @@ export function ContentProvider({ children }: { children: ReactNode }) {
       clearSaveSucceeded,
     }),
     [
-      homeDraft,
-      ridesDraft,
+      home,
+      rides,
+      getDoc,
       isEditor,
       isDirty,
       isLoading,

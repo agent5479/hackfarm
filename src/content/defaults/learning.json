@@ -1,0 +1,53 @@
+{
+  "hero": {
+    "title": "Learning Experiences",
+    "subtitle": "Horsemanship, Vaulting and Riding Lessons"
+  },
+  "intro": [
+    "Vaulting, Riding, Horsemanship lessons",
+    "Here at Hack n Stay, we're all about developing connections between horses and humans Both in the saddle and on the ground. By combining good horsemanship, Centered Riding and trust based leadership we're passionate about building relationships between horses and their humans."
+  ],
+  "lessons": [
+    {
+      "id": "lessons",
+      "title": "Arena & Beach Riding Lessons",
+      "body": [
+        "Balanced riding for all ages & Abilities",
+        "One of the things we often hear from our guests is a desire to learn more about our style of balanced riding. By combining Human & Horse Biomechanics, Centered Riding and Good horsemanship, our riding lessons will not only give you the confidence to have fun in the saddle but will teach you how to be an effective and ethical rider regardless of your chosen discipline.Whether you're a new rider, returning to riding, or looking to renew your confidence in the saddle; our riding lessons will help you be the best rider you can be for your horse.",
+        "A fun and engaging way to learn how to communicate with your horse. Our Cowboy challenge obstacle course has a number of challenges designed to build your confidence in the saddle and help you become an effective rider. Obstacle course also has a number of difficulties making it suitable to challenge even experienced horsefolk.",
+        "We believe that there's no better arena to learn how to ride than the golden mirrored sands of Paton's Rock Beach. This experience starts at our farmhouse and follows our hack track down to the beach where we'll split off from the ride for a one on one riding lesson.",
+        "The perfect introduction to centered riding, an arena riding lesson will help you find confidence in the saddle as you learn how to work with your horse to achieve balanced riding."
+      ]
+    },
+    {
+      "id": "horsemanship",
+      "title": "Horsemanship Lessons",
+      "body": [
+        "Connection, Intention, Leadership",
+        "Good riding starts from the ground up. Our horsemanship lessons will help you become the leader your horse deserves as we teach you the fundamentals of communication with horses. Horsemanship lessons include Groundwork, Round Penning, Obstacle Courses, Communication and Trust Development.",
+        "Help your little one learn how to take care of horses. From Grooming, to leading to the saddling and more, these sessions serve as an introduction to horse ownership and will give your child confidence around horses and peace of mind for parents.",
+        "Learn how to communicate with your horse in a manner that they understand. Our Groundwork sessions will teach you the fundamentals of natural horsemanship and cover a range of skills to develop your knowledge, build trust with your horse and to become the leader your horse deserves.",
+        "Horsemanship is the language we use to communicate with horses. Through horsemanship we learn how to develop a partnership with our horse, building a mutual language we can both understand in order to get the most out of our time together.",
+        "Our horsemanship lessons all start on the ground as we find this is the best way to help you understand the importance of body language, intent and energy. That being said we believe in translating everything we do on the ground back into the saddle so you can always combine a horsemanship session with one of our rides to get the most out of your experience.",
+        "We recommend wearing comfortable long trousers (no zip-offs) and closed shoes. A loose long sleeve shirt is also a good idea to protect yourself against the harsh sun. If you've booked a swimming ride, bring your swimmers along too.",
+        "We believe in using the best tool for the job at hand and don't subscribe to only one style of horsemanship. Over the years we've honed our toolbox and acquired new tools from a number of horsemanship practitioners."
+      ]
+    },
+    {
+      "id": "vaulting",
+      "title": "Vaulting & Ride & Fly",
+      "body": [
+        "Grace, Balance & rhythm. Learn to fly with our exceptional vaulting experiences.",
+        "Vaulting is often described as a combination of dancing and gymnastics on horseback and is considered to be the safest equestrian discipline.",
+        "We've seen time and time again how transformational the sense of confidence and self-awareness gained by finding your balance and expression on horseback has on individuals of all ages and particularly for kids and Baerbel is passionate about sharing this magic with others.",
+        "No previous experience is required for this fun and engaging activity.",
+        "Our Ride & Fly is the best combination of experiences. We start off at the homestead and ride down to beach over our farm track and through native forest as part of our Paton's Rock Beach Ride. Once on the beach the fun really begins as we split from the group and teach you how to find balance, confidence and grace on horseback with a vaulting lesson on the water's edge.",
+        "Utilising our purpose built vaulting arena we'll introduce you to the magic of flying on horseback. Within no time we'll have you standing on horseback, connecting with the rhythm and motion of your horse like never before.",
+        "Yes, vaulting is actually considered to be the safest of all equestrian sports & is proven safer than riding bicycles, playing on playground equipment, and even playing soccer due to Vaulting's 3 points of Safety.",
+        "Vaulting is suitable for riders of all ages and in fact we recommend riding in a vaulting saddle for riders under the age of 7. In no time at all your child will be flying up on the horses back as they find confidence, balance and freedom of movement.",
+        "We recommend wearing comfortable long trousers (no zip-offs) and closed shoes. A loose long sleeve shirt is also a good idea to protect yourself against the harsh sun. If you've booked a swimming ride, bring your swimmers along too.",
+        "Definitely not! Vaulting actually finds its origin in the cavalry and was originally used to display the physical prowess of the mounted soldier. Think of vaulting as an introduction to trick riding. Vaulting is loads of fun for folks of all ages and gender."
+      ]
+    }
+  ]
+}

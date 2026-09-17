@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { useCms } from '../cms/ContentProvider';
+import { CMS_EDIT_LINKS } from '../cms/docs';
 import { getFirebase } from '../lib/firebase';
 import { usePageMeta } from '../hooks/usePageTitle';
 import '../cms/cms.css';
@@ -57,10 +58,8 @@ export default function EditPage() {
         ) : user ? (
           <>
             <p className="cms-edit-status">
-              Signed in as <strong>{user.email}</strong>. Open the{' '}
-              <Link to="/">home page</Link> or{' '}
-              <Link to="/holistic-horse-rides/">rides page</Link> — outlined text is editable.
-              Save or discard from the bar at the bottom when you change something.
+              Signed in as <strong>{user.email}</strong>. Open any page below — outlined text is
+              editable. Save or discard from the bar at the bottom when you change something.
               {isDirty ? (
                 <>
                   {' '}
@@ -68,13 +67,16 @@ export default function EditPage() {
                 </>
               ) : null}
             </p>
+            <ul className="cms-edit-links">
+              {CMS_EDIT_LINKS.map((link) => (
+                <li key={link.id}>
+                  <Link to={link.path} className="btn btn--green">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
             <div className="cms-edit-form__actions">
-              <Link to="/" className="btn btn--green">
-                Edit home page
-              </Link>
-              <Link to="/holistic-horse-rides/" className="btn btn--green">
-                Edit rides page
-              </Link>
               <button type="button" className="btn btn--pink" onClick={() => void onSignOut()}>
                 Sign out
               </button>
@@ -83,7 +85,7 @@ export default function EditPage() {
         ) : (
           <>
             <p className="cms-edit-card__lead">
-              Sign in with the owner account to edit home-page text inline on the live site.
+              Sign in with the owner account to edit marketing copy inline on the live site.
             </p>
             <form className="cms-edit-form" onSubmit={(e) => void onSubmit(e)}>
               <label>

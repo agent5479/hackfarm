@@ -8,15 +8,14 @@ import {
   type MouseEvent,
 } from 'react';
 import { useCms } from './ContentProvider';
+import type { CmsDocId } from './docs';
 import { getContentPath } from './merge';
-import type { CmsDoc } from './types';
 
 type EditableTextProps = {
   path: string;
-  doc?: CmsDoc;
+  doc?: CmsDocId;
   as?: ElementType;
   className?: string;
-  /** When true, wrap value in quotes for display (testimonials). */
   quote?: boolean;
 } & Omit<HTMLAttributes<HTMLElement>, 'children' | 'contentEditable' | 'onInput' | 'suppressContentEditableWarning'>;
 
@@ -28,8 +27,8 @@ export default function EditableText({
   quote = false,
   ...rest
 }: EditableTextProps) {
-  const { home, rides, isEditor, setField } = useCms();
-  const root = doc === 'home' ? home : rides;
+  const { getDoc, isEditor, setField } = useCms();
+  const root = getDoc(doc);
   const value = getContentPath(root, path);
   const display = quote ? `"${value}"` : value;
   const ref = useRef<HTMLElement>(null);

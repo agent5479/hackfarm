@@ -139,3 +139,20 @@
 .cms-edit-status code {
   font-size: 0.85em;
 }
+
+.cms-edit-card {
+  max-width: 520px;
+}
+
+.cms-edit-links {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cms-edit-links li {
+  margin: 0;
+}

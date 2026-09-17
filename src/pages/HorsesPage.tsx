@@ -5,6 +5,7 @@ import { horseImage } from '../lib/horse-images';
 import { optimizedUrl } from '../lib/images';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import EditableText from '../cms/EditableText';
 
 export default function HorsesPage() {
   usePageMeta(getPageSeo('/our-horses/')!);
@@ -12,8 +13,8 @@ export default function HorsesPage() {
   return (
     <>
       <PageHero
-        title="Our Horses"
-        subtitle="Our equine family — your partners on the trail."
+        title={<EditableText doc="horses" as="span" path="listHero.title" />}
+        subtitle={<EditableText doc="horses" as="span" path="listHero.subtitle" />}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Our Horses', path: '/our-horses/' },
@@ -30,12 +31,12 @@ export default function HorsesPage() {
                   loading="lazy"
                   decoding="async"
                 />
-                <h3>{horse.title}</h3>
+                <EditableText doc="horses" as="h3" path={`bySlug.${horse.slug}.title`} />
               </Link>
             ))}
           </div>
           <blockquote className="testimonial" style={{ marginTop: '3rem', textAlign: 'center' }}>
-            "No one can teach riding so well as a horse" — C.S. Lewis
+            <EditableText doc="horses" as="span" path="quote" />
           </blockquote>
         </div>
       </section>

@@ -7,15 +7,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 /** Deep-merge remote data over defaults (arrays replace, objects merge). */
-export function mergeHomeContent(remote: unknown): HomeContent {
-  return mergeDeep(HOME_CONTENT_DEFAULTS, remote) as HomeContent;
-}
-
-export function mergeRidesContent(remote: unknown): RidesContent {
-  return mergeDeep(RIDES_CONTENT_DEFAULTS, remote) as RidesContent;
-}
-
-function mergeDeep(base: unknown, overlay: unknown): unknown {
+export function mergeDeep(base: unknown, overlay: unknown): unknown {
   if (overlay === undefined || overlay === null) return base;
 
   if (Array.isArray(base)) {
@@ -31,6 +23,15 @@ function mergeDeep(base: unknown, overlay: unknown): unknown {
   }
 
   return overlay;
+}
+
+/** Deep-merge remote data over defaults (arrays replace, objects merge). */
+export function mergeHomeContent(remote: unknown): HomeContent {
+  return mergeDeep(HOME_CONTENT_DEFAULTS, remote) as HomeContent;
+}
+
+export function mergeRidesContent(remote: unknown): RidesContent {
+  return mergeDeep(RIDES_CONTENT_DEFAULTS, remote) as RidesContent;
 }
 
 /** Set a dotted path on a content clone (e.g. `tiles.ride.body` or `categories.0.rides.1.description`). */

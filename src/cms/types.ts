@@ -71,4 +71,4 @@ export type RidesContent = {
   };
 };
 
-export type CmsDoc = 'home' | 'rides';
+export type CmsDoc = import('./docs').CmsDocId;
