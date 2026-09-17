@@ -26,7 +26,13 @@ export default function SitemapPage() {
 
   return (
     <>
-      <PageHero title="Sitemap" />
+      <PageHero
+        title="Sitemap"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Sitemap', path: '/sitemap/' },
+        ]}
+      />
       <section className="section section--cream">
         <div className="container">
           <ul className="sitemap-list">

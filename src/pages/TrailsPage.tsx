@@ -13,8 +13,12 @@ export default function TrailsPage() {
     <>
       <JsonLd data={serviceJsonLd('Hack Farm Trails', seo.description, '/hack-farm-trails/')} />
       <PageHero
-        title="Interactive Hack Trail Map"
-        subtitle="Bring your own horse and ride our trails"
+        title="Hack Farm Trails"
+        subtitle="BYO horse trail riding with tide-aware guidance near Patons Rock"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Hack Farm Trails', path: '/hack-farm-trails/' },
+        ]}
       />
       <section className="section section--cream">
         <div className="container">

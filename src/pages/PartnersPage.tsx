@@ -13,7 +13,14 @@ export default function PartnersPage() {
 
   return (
     <>
-      <PageHero title="Partner With Us" subtitle="Earn 10% commission on referrals" />
+      <PageHero
+        title="Partner With Us"
+        subtitle="Earn 10% commission on referrals"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Partners', path: '/partners/' },
+        ]}
+      />
       <section className="section section--cream">
         <div className="container">
           {content.paragraphs.slice(0, 5).map((p, i) => (

@@ -19,6 +19,10 @@ export default function VaultingPage() {
         title="Vaulting"
         subtitle="Fun and engaging vaulting sessions for all ages"
         background="/images/uploads/2021/02/Vaulting-Poster.jpg"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Vaulting', path: '/vaulting/' },
+        ]}
       />
       <section className="section section--cream">
         <div className="container">

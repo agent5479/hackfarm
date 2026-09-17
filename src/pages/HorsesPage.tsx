@@ -14,6 +14,10 @@ export default function HorsesPage() {
       <PageHero
         title="Our Horses"
         subtitle="Our equine family — your partners on the trail."
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Our Horses', path: '/our-horses/' },
+        ]}
       />
       <section className="section section--cream">
         <div className="container">

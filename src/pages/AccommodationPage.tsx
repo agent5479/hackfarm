@@ -100,12 +100,20 @@ export default function AccommodationPage() {
           faqPageJsonLd(ALL_ACCOMMODATION_FAQS),
         ]}
       />
-      <PageHero title={decodeHtml(content.h1s[0] || 'Accommodation')} subtitle={content.ogDesc} />
+      <PageHero
+        title="Accommodation"
+        subtitle="Dog-friendly eco farmstay and campground near Takaka and Abel Tasman"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Accommodation', path: '/accommodation/' },
+        ]}
+      />
       <section className="section section--cream">
         <div className="container">
           <p>
             Hack n Stay offers farmstay rooms, a dog-friendly campground, and bring-your-own-horse stays
-            near Patons Rock beach in Golden Bay.
+            near Patons Rock beach in Golden Bay — a comfortable base near Abel Tasman. Guests exploring
+            Golden Bay (including Kahurangi 500 bike riders) often extend their stay.
           </p>
           {content.paragraphs.slice(0, 3).map((para, i) => (
             <p key={i}>{decodeHtml(para)}</p>

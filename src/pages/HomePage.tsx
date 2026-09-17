@@ -19,7 +19,7 @@ const TILES = [
 const FEATURES = [
   {
     title: 'Beach Horse Rides',
-    subtitle: 'Holistic Horse Experiences – learn while you ride',
+    subtitle: 'Horse trekking and holistic horseback experiences — learn while you ride',
     images: [
       '/images/uploads/2021/02/20210104_145330.jpg',
       '/images/uploads/2021/02/IMG_6067-1.jpg',
@@ -53,7 +53,7 @@ const FEATURES = [
   },
   {
     title: 'Campground, Backpacker & Farmstay',
-    subtitle: 'Comfortable accommodation options to guarantee a good night’s sleep after your day of exploring.',
+    subtitle: 'Dog-friendly eco farmstay options after a day of exploring Golden Bay',
     images: [
       '/images/uploads/2021/03/20190801_Hackfarm_Panorama-rainbow.jpg',
       '/images/uploads/2021/03/20210314_153006.jpg',
@@ -131,6 +131,10 @@ export default function HomePage() {
         <div className="container" style={{ textAlign: 'center' }}>
           <h1>{decodeHtml(content.h1s[0] || '')}</h1>
           <p style={{ maxWidth: 800, margin: '1rem auto 0' }}>{decodeHtml(content.paragraphs[0] || '')}</p>
+          <p style={{ maxWidth: 800, margin: '0.75rem auto 0' }}>
+            At the top of New Zealand&apos;s South Island near Abel Tasman and Nelson — beach horseback rides,
+            farmstay, and a welcoming base for exploring Golden Bay.
+          </p>
         </div>
       </section>
 

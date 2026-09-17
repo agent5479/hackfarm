@@ -21,14 +21,18 @@ export default function AboutPage() {
           jobTitle: 'Founder, Hack n Stay Golden Bay',
           path: '/about/',
           description:
-            'Baerbel Hack founded Hack Farm / Hack n Stay Golden Bay and the Hack Vaulties club, sharing connected riding and vaulting near Paton\'s Rock in Golden Bay, Tasman, at the top of New Zealand\'s South Island near Abel Tasman National Park.',
+            'Baerbel Hack founded Hack Farm / Hack n Stay Golden Bay and the Hack Vaulties club, sharing connected riding and vaulting near Paton\'s Rock in Golden Bay, Nelson Tasman, at the top of New Zealand\'s South Island near Abel Tasman National Park.',
           image: '/images/uploads/2021/02/IMG_20190120_122312-scaled.jpg',
         })}
       />
       <PageHero
         title="About Hack n Stay"
-        subtitle="Eco farmstay, holistic horse experiences, and community vaulting in Golden Bay"
+        subtitle="Eco farmstay, holistic horseback experiences, and community vaulting in Golden Bay, Nelson Tasman"
         background="/images/uploads/2021/03/20190801_Hackfarm_Panorama-rainbow.jpg"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'About', path: '/about/' },
+        ]}
       />
       <section className="section section--cream">
         <div className="container">
@@ -38,6 +42,11 @@ export default function AboutPage() {
               home.paragraphs[0] ||
                 "Located in beautiful Golden Bay, Hack Farm is an eco farmstay and animal-friendly campground just a short walk or ride from Patons Rock beach.",
             )}
+          </p>
+          <p>
+            Near Abel Tasman National Park and Nelson at the top of New Zealand&apos;s South Island, we are a
+            natural stop for guests exploring Collingwood, Farewell Spit, and Kahurangi — with horse riding
+            always at the heart of the stay.
           </p>
           <p>
             {decodeHtml(
@@ -82,7 +91,7 @@ export default function AboutPage() {
           <p>
             Guided beach and trail rides, farmstay and camping, bring-your-own-horse holidays, riding and horsemanship
             lessons, kids camps, and vaulting — all based at our property near Patons Rock in Golden Bay,
-            New Zealand.
+            Nelson Tasman, New Zealand.
           </p>
         </div>
       </section>

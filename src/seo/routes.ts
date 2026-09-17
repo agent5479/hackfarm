@@ -35,7 +35,7 @@ export function horseSeo(
   return {
     path: horsePath(slug),
     title: name,
-    description: `${name} — one of the Hack Farm herd at Hack n Stay Golden Bay.${traitBit} Meet our horses for beach rides, lessons, and vaulting in Golden Bay, Tasman — top of New Zealand's South Island near Abel Tasman.`,
+    description: `${name} — one of the Hack Farm herd at Hack n Stay Golden Bay.${traitBit} Meet our horses for beach horseback rides, lessons, and vaulting near Abel Tasman and Nelson, New Zealand.`,
     image: DEFAULT_OG_IMAGE,
   };
 }

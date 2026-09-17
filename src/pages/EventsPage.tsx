@@ -15,7 +15,14 @@ export default function EventsPage() {
   return (
     <>
       <JsonLd data={serviceJsonLd('Special Events & Kids Camps', seo.description, '/special-events/')} />
-      <PageHero title="Special Events & Kids Camps" subtitle="Fun camps and riding days" />
+      <PageHero
+        title="Special Events & Kids Camps"
+        subtitle="Fun camps and riding days"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Special Events', path: '/special-events/' },
+        ]}
+      />
       <section className="section section--cream">
         <div className="container">
           {content.paragraphs.slice(0, 10).map((p, i) => (

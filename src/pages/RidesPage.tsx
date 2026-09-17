@@ -175,8 +175,12 @@ export default function RidesPage() {
       />
       <PageHero
         title="Holistic Horseback Experiences"
-        subtitle="Learn while you ride on stunning coastal trails"
+        subtitle="Beach horseback rides and horse trekking on coastal Golden Bay trails near Abel Tasman and Nelson"
         background="/images/uploads/2021/02/20210104_145330-1.jpg"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Holistic Horseback Experiences', path: '/holistic-horse-rides/' },
+        ]}
       />
 
       <section className="section section--cream">

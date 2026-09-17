@@ -12,7 +12,14 @@ export default function ContactPage() {
 
   return (
     <>
-      <PageHero title="Contact Us" />
+      <PageHero
+        title="Contact"
+        subtitle="Takaka, Golden Bay — Nelson Tasman, New Zealand"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Contact', path: '/contact/' },
+        ]}
+      />
       <section className="section section--cream">
         <div className="container">
           <ul style={{ listStyle: 'none', marginBottom: '2rem' }}>

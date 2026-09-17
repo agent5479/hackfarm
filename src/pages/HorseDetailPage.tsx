@@ -4,7 +4,6 @@ import { decodeHtml, HORSE_SLUGS, type HorseSlug } from '../lib/constants';
 import { horseImage } from '../lib/horse-images';
 import { optimizedUrl } from '../lib/images';
 import PageHero from '../components/PageHero';
-import { JsonLd, breadcrumbJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { horseSeo } from '../seo/routes';
 
@@ -23,14 +22,14 @@ export default function HorseDetailPage() {
 
   return (
     <>
-      <JsonLd
-        data={breadcrumbJsonLd([
+      <PageHero
+        title={horse.title}
+        breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Our Horses', path: '/our-horses/' },
           { name: horse.title, path: seo.path },
-        ])}
+        ]}
       />
-      <PageHero title={horse.title} />
       <section className="section section--cream">
         <div className="container two-col">
           <img

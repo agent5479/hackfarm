@@ -11,7 +11,13 @@ export default function PrivacyPage() {
 
   return (
     <>
-      <PageHero title="Privacy Policy" />
+      <PageHero
+        title="Privacy Policy"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Privacy Policy', path: '/privacy-policy/' },
+        ]}
+      />
       <section className="section section--cream">
         <div className="container">
           {content.paragraphs.map((p, i) => (

@@ -21,7 +21,14 @@ export default function LearningPage() {
   return (
     <>
       <JsonLd data={serviceJsonLd('Learning Experiences', seo.description, '/learning-experiences/')} />
-      <PageHero title="Learning Experiences" subtitle="Horsemanship, Vaulting and Riding Lessons" />
+      <PageHero
+        title="Learning Experiences"
+        subtitle="Horsemanship, Vaulting and Riding Lessons"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Learning Experiences', path: '/learning-experiences/' },
+        ]}
+      />
       <section className="section section--cream">
         <div className="container">
           {content.paragraphs.slice(0, 2).map((p, i) => (

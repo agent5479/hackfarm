@@ -34,7 +34,14 @@ export default function GiftsPage() {
           ),
         ]}
       />
-      <PageHero title="Gift Vouchers Available" subtitle="Give them the gift of a memorable experience" />
+      <PageHero
+        title="Horse Riding Holiday Gift Vouchers"
+        subtitle="Give them the gift of a memorable experience"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Gift Vouchers', path: '/horse-riding-holiday-gift-vouchers/' },
+        ]}
+      />
       <section className="section section--cream">
         <div className="container">
           {content.paragraphs.slice(0, 6).map((p, i) => (
