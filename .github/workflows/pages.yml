@@ -64,6 +64,8 @@ jobs:
           test -f dist/llms.txt
           test -f dist/BingSiteAuth.xml
           grep -q 'FCBD3FC589CA309B341D8ADDC3009009' dist/BingSiteAuth.xml
+          test -f dist/35782e155bff459191f86b0449bc2ab0.txt
+          grep -q '35782e155bff459191f86b0449bc2ab0' dist/35782e155bff459191f86b0449bc2ab0.txt
           test -f dist/about/index.html
           test -f dist/accommodation/index.html
           test -f dist/horse/donnie/index.html
@@ -125,3 +127,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo '{"cname":"hackfarm.co.nz"}' | gh api --method PUT repos/${{ github.repository }}/pages --input -
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Notify IndexNow (Bing)
+        continue-on-error: true
+        env:
+          INDEXNOW_KEY: 35782e155bff459191f86b0449bc2ab0
+          INDEXNOW_ORIGIN: https://hackfarm.co.nz
+          INDEXNOW_WAIT_MS: '90000'
+        run: npm run indexnow
