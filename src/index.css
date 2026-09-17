@@ -190,7 +190,7 @@ p { margin-bottom: 1rem; color: var(--color-text); }
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: center;
-  column-gap: 0.7em;
+  column-gap: 1.05em;
   row-gap: 0.1em;
   font-family: var(--font-heading);
   color: #fff;
