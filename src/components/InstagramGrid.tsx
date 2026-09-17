@@ -51,7 +51,7 @@ export default function InstagramGrid() {
             >
               <img
                 src={withBase(`/images/uploads/sb-instagram-feed-images/${post.img}`)}
-                alt={i < INSTAGRAM_POSTS.length ? abridge(post.caption) : ''}
+                alt={abridge(post.caption)}
                 loading={i < 8 ? 'eager' : 'lazy'}
                 decoding="async"
               />
