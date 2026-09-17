@@ -290,12 +290,19 @@ p { margin-bottom: 1rem; color: var(--color-text); }
 }
 
 .photo-tile h2 {
-  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-size: clamp(2.85rem, 4.75vw, 4.15rem);
   margin-bottom: 1rem;
 }
 
 .photo-tile p {
   max-width: 28rem;
+  font-size: clamp(1.1rem, 1.35vw, 1.3rem);
+  line-height: 1.45;
+}
+
+.photo-tile .btn {
+  font-size: 1.05rem;
+  padding: 0.85rem 1.6rem;
 }
 
 .feature-stratum {
