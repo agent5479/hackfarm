@@ -35,7 +35,7 @@ function buildDefaultGraph() {
     streetAddress: '22 Grant Road, Puramahoi',
     addressLocality: 'Takaka',
     postalCode: '7182',
-    addressRegion: 'Golden Bay, Nelson Tasman',
+    addressRegion: 'Golden Bay, Tasman, Nelson Tasman',
     addressCountry: 'NZ',
   };
   const geo = {
@@ -77,7 +77,7 @@ function buildDefaultGraph() {
         logo,
         parentOrganization: { '@id': `${siteUrl}#organization` },
         description:
-          'Eco farmstay, animal-friendly campground, and holistic horse experiences near Patons Rock, Golden Bay, New Zealand.',
+          'Eco farmstay, animal-friendly campground, and holistic horse experiences near Patons Rock in Golden Bay, Tasman, at the top of New Zealand\'s South Island near Abel Tasman National Park.',
       },
       {
         '@type': 'TouristAttraction',
@@ -91,7 +91,7 @@ function buildDefaultGraph() {
         sameAs,
         touristType: ['Horse riding', 'Farmstay', 'Family'],
         description:
-          'Beach and trail horse rides, vaulting, and farmstay accommodation at Hack Farm near Patons Rock.',
+          'Beach and trail horse rides, vaulting, and farmstay at Hack Farm near Patons Rock, Golden Bay — Tasman region, top of New Zealand\'s South Island, near Abel Tasman National Park.',
       },
       {
         '@type': 'WebSite',
@@ -109,7 +109,7 @@ function buildDefaultGraph() {
         operatingSystem: 'Web',
         url: WEATHER_STATION_URL,
         description:
-          'On-site FreshWDL weather station readings from Hack Farm near Patons Rock, Golden Bay.',
+          'On-site FreshWDL weather station readings from Hack Farm near Patons Rock, Golden Bay, Tasman, New Zealand.',
         provider: { '@id': `${siteUrl}#organization` },
       },
     ],

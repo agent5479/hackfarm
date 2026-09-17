@@ -49,7 +49,7 @@ export const CONTACT = {
   phone: '+64 27 525 9434',
   phoneHref: 'tel:+64275259434',
   email: 'Stay@hackfarm.co.nz',
-  address: '22 Grant Road, Puramahoi, Takaka 7182, Golden Bay, South Island, New Zealand',
+  address: '22 Grant Road, Puramahoi, Takaka 7182, Golden Bay, Tasman, top of the South Island, New Zealand',
 };
 
 export const SOCIAL = {

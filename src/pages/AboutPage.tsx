@@ -21,7 +21,7 @@ export default function AboutPage() {
           jobTitle: 'Founder, Hack n Stay Golden Bay',
           path: '/about/',
           description:
-            'Baerbel Hack founded Hack Farm / Hack n Stay Golden Bay and the Hack Vaulties club, sharing connected riding and vaulting near Paton\'s Rock, Golden Bay, New Zealand.',
+            'Baerbel Hack founded Hack Farm / Hack n Stay Golden Bay and the Hack Vaulties club, sharing connected riding and vaulting near Paton\'s Rock in Golden Bay, Tasman, at the top of New Zealand\'s South Island near Abel Tasman National Park.',
           image: '/images/uploads/2021/02/IMG_20190120_122312-scaled.jpg',
         })}
       />
