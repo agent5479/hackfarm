@@ -116,13 +116,42 @@ export default function BookingIntercept() {
 
   const renderRideCard = (ride: FareHarborRide, index: number) => {
     const isSunrise = Boolean(ride.usesTideCalendar);
+    const actionLabel = isSunrise
+      ? calendarOpen
+        ? 'Hide tide calendar'
+        : 'Check dates & book'
+      : 'Select date';
+
+    const activate = () => {
+      if (isSunrise) {
+        setCalendarOpen((open) => !open);
+        return;
+      }
+      bookOtherRide(ride.fareharborItemId, ride.title);
+    };
 
     return (
-      <article key={ride.id} id={ride.id} className={rideLayoutClass(index)}>
+      <article
+        key={ride.id}
+        id={ride.id}
+        className={`${rideLayoutClass(index)} booking-intercept__ride--interactive`}
+        role="button"
+        tabIndex={0}
+        aria-label={`${ride.title}: ${actionLabel}`}
+        aria-expanded={isSunrise ? calendarOpen : undefined}
+        aria-controls={isSunrise ? 'tide-calendar' : undefined}
+        onClick={activate}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activate();
+          }
+        }}
+      >
         <img
           className="booking-intercept__ride-image"
           src={optimizedUrl(ride.image, 'thumb')}
-          alt={ride.title}
+          alt=""
           loading={index < 2 ? undefined : 'lazy'}
           decoding="async"
         />
@@ -135,25 +164,9 @@ export default function BookingIntercept() {
             ) : (
               <span />
             )}
-            {isSunrise ? (
-              <button
-                type="button"
-                className="booking-intercept__select"
-                aria-expanded={calendarOpen}
-                aria-controls="tide-calendar"
-                onClick={() => setCalendarOpen((open) => !open)}
-              >
-                {calendarOpen ? 'Hide tide calendar' : 'Check dates & book'}
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="booking-intercept__select"
-                onClick={() => bookOtherRide(ride.fareharborItemId, ride.title)}
-              >
-                Select date
-              </button>
-            )}
+            <span className="booking-intercept__select" aria-hidden="true">
+              {actionLabel}
+            </span>
           </div>
         </div>
       </article>

@@ -17,6 +17,25 @@
   min-width: 0;
 }
 
+.booking-intercept__ride--interactive {
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.booking-intercept__ride--interactive:hover {
+  border-color: #2b7cff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.booking-intercept__ride--interactive:focus-visible {
+  outline: 2px solid #2b7cff;
+  outline-offset: 3px;
+}
+
 .booking-intercept__ride--featured {
   grid-column: span 3;
 }
@@ -113,6 +132,9 @@
 }
 
 .booking-intercept__select {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.55rem 1rem;
   border: none;
   border-radius: 4px;
@@ -121,11 +143,11 @@
   font: inherit;
   font-size: 0.9rem;
   font-weight: 500;
-  cursor: pointer;
   white-space: nowrap;
+  pointer-events: none;
 }
 
-.booking-intercept__select:hover {
+.booking-intercept__ride--interactive:hover .booking-intercept__select {
   opacity: 0.92;
 }
 
