@@ -36,13 +36,13 @@ export function absoluteAssetUrl(assetPath: string): string {
 export const SITE_NAME = 'Hack n Stay Golden Bay';
 export const SITE_ALT_NAME = 'Hack Farm';
 export const DEFAULT_DESCRIPTION =
-  'Beach horseback rides, horse trekking, and eco farmstay near Patons Rock, Golden Bay — near Abel Tasman & Nelson at the top of New Zealand\'s South Island.';
+  'Horse riding on New Zealand\'s South Island — beach horseback rides, horse trekking, and eco farmstay near Patons Rock, Golden Bay, Abel Tasman & Nelson.';
 /** 1200x630 JPEG for link previews (Facebook, iMessage, Slack, LinkedIn). */
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
 export const DEFAULT_OG_IMAGE = '/images/og/default.jpg';
 export const DEFAULT_OG_ALT =
-  'Beach horseback ride at Hack n Stay Golden Bay near Patons Rock, Abel Tasman & Nelson — top of New Zealand\'s South Island';
+  'Horse riding South Island New Zealand — beach horseback ride at Hack n Stay Golden Bay near Patons Rock, Abel Tasman & Nelson';
 
 /** Map an upload/optimized path to the generated 1200x630 social crop. */
 export function toOgImage(path?: string): string {
