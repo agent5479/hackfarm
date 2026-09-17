@@ -7,7 +7,7 @@
  *   INDEXNOW_ORIGIN  — site origin (default: https://hackfarm.co.nz)
  *   INDEXNOW_WAIT_MS — wait for key file before submit (default: 60000)
  */
-const KEY = process.env.INDEXNOW_KEY || '35782e155bff459191f86b0449bc2ab0';
+const KEY = process.env.INDEXNOW_KEY || 'dd4c6948d8594f39a49972bc3ddd922c';
 const ORIGIN = (process.env.INDEXNOW_ORIGIN || 'https://hackfarm.co.nz').replace(/\/$/, '');
 const WAIT_MS = Number(process.env.INDEXNOW_WAIT_MS ?? 60_000);
 const host = new URL(ORIGIN).host;
