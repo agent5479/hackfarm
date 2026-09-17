@@ -122,6 +122,17 @@ async function main() {
       );
       // Give meta hook a tick; ignore lingering third-party iframe traffic
       await page.waitForTimeout(150);
+      // Home: wait for CMS snapshot/live merge so prerender HTML matches RTDB
+      if (routePath === '/' || routePath === '') {
+        try {
+          await page.waitForFunction(
+            () => document.documentElement.dataset.cmsReady === '1',
+            { timeout: 8000 },
+          );
+        } catch {
+          /* baked snapshot still in first paint if live fetch is slow */
+        }
+      }
       try {
         await page.waitForLoadState('networkidle', { timeout: 5000 });
       } catch {

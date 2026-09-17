@@ -1,0 +1,114 @@
+{
+  "intro": [
+    "Here at Hack n Stay, we're passionate about sharing the magic of connected horse riding in Golden Bay. Whether you're a complete beginner or an experienced rider, we have a horse trek suited to you!",
+    "We offer riders of all experience levels opportunities to learn more about the foundations of good horsemanship whilst experiencing stunning coastal scenery of Golden Bay on horseback. With a focus on teaching light and balanced riding, our guided holistic horse riding experiences are so much more than just a trail ride.",
+    "empowering – rebalancing – finessing",
+    "Our professionally guided horse treks provide a safe and fun environment to further your riding knowledge, build confidence and challenge yourself. Whether you're looking for a Short Ride to sample the beauty of Golden Bay on horseback or an extended Full Day Ride to fully immerse yourself in the local culture, cuisine and stunning coastal scenery – we have a variety of options just for you!"
+  ],
+  "planner": {
+    "title": "What does the sunrise and tide Ride Planner do?",
+    "body": [
+      "The Ride Planner is a first-party tool for Patons Rock beach rides. It shows sunrise timing and tide clearance for Wednesday, Friday and Sunday sunrise rides so you can pick a workable week before continuing to live FareHarbor booking.",
+      "It is built for guests booking Hack n Stay guided rides at Hack Farm near Patons Rock in Golden Bay — not a generic tide table. Use it when tides matter; Hack Track on-farm rides can still be booked on any open date."
+    ]
+  },
+  "chooseTitle": "Choose your experience",
+  "categoriesLead": "Open a category to see the rides, then jump straight to booking.",
+  "categories": [
+    {
+      "id": "short-rides",
+      "title": "Short Rides",
+      "rides": [
+        {
+          "title": "Hack Track / Fairy Trail Loop Ride",
+          "description": "The perfect introduction to balanced riding for riders of all ages — a 1 hour ride through rolling farm country, native forest, and ocean views. On-farm and bushland only.",
+          "bookingHref": "#hack-track",
+          "bookingLabel": "Book Hack Track"
+        },
+        {
+          "title": "Patons Rock Beach Ride",
+          "description": "Our most popular ride for all abilities. Follow the Hack Track down to the beach and explore Golden Bay's coastal vistas.",
+          "bookingHref": "#patons-rock",
+          "bookingLabel": "Book Patons Rock"
+        },
+        {
+          "title": "Sunrise Beach Ride",
+          "description": "Ride through native forest and farm country to the beach as the sun rises over Golden Bay. Glow-worms possible on the way back when conditions allow. Wed, Fri & Sun — tide-checked.",
+          "bookingHref": "#sunrise-rides",
+          "bookingLabel": "Book sunrise"
+        },
+        {
+          "title": "Swimming / Playing with Horses in the Water",
+          "description": "Ride to Patons Rock Beach, untack, and splash in crystal-clear water with your horse. Magical and weather dependent.",
+          "bookingHref": "#swimming",
+          "bookingLabel": "Book swimming ride"
+        }
+      ]
+    },
+    {
+      "id": "full-day",
+      "title": "Full Day Rides",
+      "rides": [
+        {
+          "title": "Rangi Ride",
+          "description": "Beach, headland, estuary and reserve — up to about 4.5 hours through changing landscape, birdlife and great beaches. Intermediate to experienced riders.",
+          "bookingHref": "#rangi",
+          "bookingLabel": "Book Rangi Ride"
+        },
+        {
+          "title": "Mussel Inn – Ale Trail",
+          "description": "Beach and headland ride with river crossings to the Mussel Inn hitching rail — a drink and snack on us, then ride home before the next high tide. Tide and weather dependent.",
+          "bookingHref": "#ride-request",
+          "bookingLabel": "Request Ale Trail"
+        },
+        {
+          "title": "Collingwood Explorer",
+          "description": "Beach ride to Collingwood village past rock formations and art displays, with time for a café stop before returning. Experienced riders only — tide and weather dependent.",
+          "bookingHref": "#ride-request",
+          "bookingLabel": "Request Collingwood"
+        }
+      ]
+    },
+    {
+      "id": "multi-day",
+      "title": "Multi-Day Experiences",
+      "rides": [
+        {
+          "title": "Flexible packages with accommodation",
+          "description": "Design your own horse holiday — vaulting, riding or horsemanship with homestead accommodation included. Each night includes a full day of horseback activities tailored to your group.",
+          "bookingHref": "#ride-request",
+          "bookingLabel": "Request multi-day package"
+        }
+      ]
+    },
+    {
+      "id": "vaulting",
+      "title": "Vaulting & Ride & Fly",
+      "rides": [
+        {
+          "title": "Ride & Fly",
+          "description": "Combine trail riding with the thrill of vaulting movements — find balance, confidence and connection with the horse in a unique way.",
+          "bookingHref": "#ride-request",
+          "bookingLabel": "Request Ride & Fly"
+        },
+        {
+          "title": "Arena Lesson",
+          "description": "On-farm arena time focused on light, balanced riding and horsemanship foundations for all experience levels.",
+          "bookingHref": "#ride-request",
+          "bookingLabel": "Request arena lesson"
+        },
+        {
+          "title": "Vaulting Arena Session",
+          "description": "Vaulting lessons and experiences for all ages — dancing and gymnastics on horseback, often described as the safest equestrian discipline.",
+          "bookingHref": "#ride-request",
+          "bookingLabel": "Request vaulting session"
+        }
+      ]
+    }
+  ],
+  "request": {
+    "eyebrow": "Not sure what you need yet? Prefer to sort it out with a person first.",
+    "title": "Booking Request Form",
+    "body": "If you'd rather coordinate directly — or you're looking at a full-day, multi-day, vaulting or custom experience — send a request and we'll help you confirm times around tide and weather."
+  }
+}

@@ -1,34 +1,56 @@
 import { Link } from 'react-router-dom';
-import scraped from '../content/scraped-content.json';
-import { decodeHtml } from '../lib/constants';
 import { optimizedUrl } from '../lib/images';
 import BackgroundSlideshow from '../components/BackgroundSlideshow';
 import InstagramGrid from '../components/InstagramGrid';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
 import HeroHeadline from '../components/HeroHeadline';
+import EditableText from '../cms/EditableText';
+import { useCms } from '../cms/ContentProvider';
+import type { FeatureKey, TileKey } from '../cms/types';
 
-const content = scraped.pages.home;
-
-const TILES = [
-  { id: 'ride', title: 'Ride', img: '/images/uploads/2021/03/127142963_3918021201543032_3894975841806055644_n.jpg', link: '/holistic-horse-rides/#book-rides', btn: 'Book a Ride', color: 'btn--green', paragraphIndex: 2 },
-  { id: 'stay', title: 'Stay', img: '/images/uploads/2021/02/20210221_125542-copy.jpg', link: '/accommodation/', btn: 'View Accommodation', color: 'btn--pink', paragraphIndex: 1 },
-  { id: 'learn', title: 'Learn', img: '/images/uploads/2021/03/107601229_1530595257120739_3780438784627968956_o-1.jpg', link: '/learning-experiences/', btn: 'View Lessons', color: 'btn--orange', paragraphIndex: 3 },
+const TILE_LAYOUT: {
+  id: TileKey;
+  img: string;
+  link: string;
+  color: string;
+}[] = [
+  {
+    id: 'ride',
+    img: '/images/uploads/2021/03/127142963_3918021201543032_3894975841806055644_n.jpg',
+    link: '/holistic-horse-rides/#book-rides',
+    color: 'btn--green',
+  },
+  {
+    id: 'stay',
+    img: '/images/uploads/2021/02/20210221_125542-copy.jpg',
+    link: '/accommodation/',
+    color: 'btn--pink',
+  },
+  {
+    id: 'learn',
+    img: '/images/uploads/2021/03/107601229_1530595257120739_3780438784627968956_o-1.jpg',
+    link: '/learning-experiences/',
+    color: 'btn--orange',
+  },
 ];
 
-const FEATURES = [
+const FEATURE_LAYOUT: {
+  id: FeatureKey;
+  images: string[];
+  imageSide: 'left' | 'right';
+  link: string;
+  backdrop: { img: string; size: string; pos: string; opacity: number };
+}[] = [
   {
-    title: 'Beach Horse Rides',
-    subtitle: 'Horse trekking and holistic horseback experiences — learn while you ride',
+    id: 'beachRides',
     images: [
       '/images/uploads/2021/02/20210104_145330.jpg',
       '/images/uploads/2021/02/IMG_6067-1.jpg',
       '/images/uploads/2021/02/IMG_1921.jpg',
     ],
-    imageSide: 'left' as const,
+    imageSide: 'left',
     link: '/holistic-horse-rides/#book-rides',
-    btn: 'Book a ride',
-    paragraphs: [5, 6],
     backdrop: {
       img: '/images/uploads/2021/04/Horses-trekking-One-Color.jpg',
       size: '100%',
@@ -37,13 +59,10 @@ const FEATURES = [
     },
   },
   {
-    title: 'Vaulting Experiences',
-    subtitle: 'Fun and engaging vaulting sessions for all ages',
+    id: 'vaulting',
     images: ['/images/uploads/2021/02/IMG_20190120_122312-scaled.jpg'],
-    imageSide: 'right' as const,
+    imageSide: 'right',
     link: '/vaulting/',
-    btn: 'Learn More',
-    paragraphs: [8, 9, 10],
     backdrop: {
       img: '/images/uploads/2021/02/Sillouette-Vaulting.png',
       size: '100%',
@@ -52,18 +71,15 @@ const FEATURES = [
     },
   },
   {
-    title: 'Campground, Backpacker & Farmstay',
-    subtitle: 'Dog-friendly eco farmstay options after a day of exploring Golden Bay',
+    id: 'stay',
     images: [
       '/images/uploads/2021/03/20190801_Hackfarm_Panorama-rainbow.jpg',
       '/images/uploads/2021/03/20210314_153006.jpg',
       '/images/uploads/2021/02/20210220_163837.jpg',
       '/images/uploads/2021/02/20210221_125542-copy.jpg',
     ],
-    imageSide: 'left' as const,
+    imageSide: 'left',
     link: '/accommodation/',
-    btn: 'View Accommodation',
-    paragraphs: [12, 13],
     backdrop: {
       img: '/images/uploads/2021/02/Jumping-girl-v2.png',
       size: '100%',
@@ -72,18 +88,15 @@ const FEATURES = [
     },
   },
   {
-    title: "Kids' Camps",
-    subtitle: 'Fun camps and riding days',
+    id: 'kidsCamps',
     images: [
       '/images/uploads/2021/02/20210102_1540010.jpg',
       '/images/uploads/2021/03/107601229_1530595257120739_3780438784627968956_o-1.jpg',
       '/images/uploads/2021/03/VaultingHorseClubDay.jpg',
       '/images/uploads/2021/03/received_315581099811713.jpg',
     ],
-    imageSide: 'right' as const,
+    imageSide: 'right',
     link: '/special-events/',
-    btn: 'Learn More',
-    paragraphs: [15],
     backdrop: {
       img: '/images/uploads/2021/03/Horsemanship-Sillouette.png',
       size: '31%',
@@ -92,13 +105,10 @@ const FEATURES = [
     },
   },
   {
-    title: 'Bring your own horse!',
-    subtitle: 'Bring your own horse and enjoy a holiday away',
+    id: 'byoHorse',
     images: ['/images/uploads/2021/04/Horse-Stay-smaller.jpg'],
-    imageSide: 'left' as const,
+    imageSide: 'left',
     link: '/accommodation/#horse-stay',
-    btn: 'Book Your Horse Stay',
-    paragraphs: [17],
     backdrop: {
       img: '/images/uploads/2021/03/BYO-horse.png',
       size: 'cover',
@@ -108,15 +118,9 @@ const FEATURES = [
   },
 ];
 
-const TESTIMONIALS = [
-  { text: "Hack and stay is a real piece of heaven. The horses are really well treated and the track to the beach is amazing. But there's so much more than trekking, there's all sorts of swings for the children, a little climbing wall and you can even try some vaulting. We'll remember our stay forever!!!", author: 'Anne-Lise, Nov 2020' },
-  { text: "Hack n Stay is an amazing place to visit! The accommodation is well thought out and uniquely horse-themed and the property is stunning. You will love the views and the awesome riding tracks around the farm.", author: 'Larissa Meuller' },
-  { text: "My partner and I intended to stay 1 night with our campervan; in the end we stayed 3 nights, because we enjoyed it so much.", author: 'Merel, May 2020' },
-  { text: "Great trekking with Baerbel and her horses! It's way more than just a trek, she really teaches you horse riding!", author: 'Lucy Devos, July 2020' },
-];
-
 export default function HomePage() {
   usePageMeta(getPageSeo('/')!);
+  const { content, isEditor } = useCms();
 
   return (
     <>
@@ -129,55 +133,68 @@ export default function HomePage() {
 
       <section className="section section--cream">
         <div className="container" style={{ textAlign: 'center' }}>
-          <h1>{decodeHtml(content.h1s[0] || '')}</h1>
-          <p style={{ maxWidth: 800, margin: '1rem auto 0' }}>{decodeHtml(content.paragraphs[0] || '')}</p>
-          <p style={{ maxWidth: 800, margin: '0.75rem auto 0' }}>
-            At the top of New Zealand&apos;s South Island near Abel Tasman and Nelson — beach horseback rides,
-            farmstay, and a welcoming base for exploring Golden Bay.
-          </p>
+          <EditableText as="h1" path="hero.h1" />
+          <EditableText as="p" path="intro.lead" style={{ maxWidth: 800, margin: '1rem auto 0' }} />
+          <EditableText as="p" path="intro.location" style={{ maxWidth: 800, margin: '0.75rem auto 0' }} />
         </div>
       </section>
 
       <section className="photo-tiles">
-        {TILES.map((s) => (
+        {TILE_LAYOUT.map((s) => (
           <Link
             key={s.id}
             to={s.link}
             className="photo-tile"
             style={{ backgroundImage: `url(${optimizedUrl(s.img, 'content')})` }}
+            onClick={(e) => {
+              if (isEditor && (e.target as HTMLElement).closest?.('.cms-editable')) {
+                e.preventDefault();
+              }
+            }}
           >
-            <h2>{s.title}</h2>
-            <p>{decodeHtml(content.paragraphs[s.paragraphIndex] || '')}</p>
-            <span className={`btn ${s.color}`}>{s.btn}</span>
+            <EditableText as="h2" path={`tiles.${s.id}.title`} />
+            <EditableText as="p" path={`tiles.${s.id}.body`} />
+            <EditableText as="span" path={`tiles.${s.id}.cta`} className={`btn ${s.color}`} />
           </Link>
         ))}
       </section>
 
-      {FEATURES.map((f) => {
+      {FEATURE_LAYOUT.map((f) => {
         const photo = <BackgroundSlideshow images={f.images} />;
+        const paras = content.features[f.id].body;
         const copy = (
           <div className="feature-stratum__copy">
-            {f.backdrop && (
-              <div
-                className="feature-stratum__backdrop"
-                style={{
-                  backgroundImage: `url(${optimizedUrl(f.backdrop.img, 'content')})`,
-                  backgroundSize: f.backdrop.size,
-                  backgroundPosition: f.backdrop.pos,
-                  opacity: f.backdrop.opacity,
-                }}
-              />
-            )}
-            <h2>{f.title}</h2>
-            <p><strong>{f.subtitle}</strong></p>
-            {f.paragraphs.map((idx) => (
-              <p key={idx}>{decodeHtml(content.paragraphs[idx] || '')}</p>
+            <div
+              className="feature-stratum__backdrop"
+              style={{
+                backgroundImage: `url(${optimizedUrl(f.backdrop.img, 'content')})`,
+                backgroundSize: f.backdrop.size,
+                backgroundPosition: f.backdrop.pos,
+                opacity: f.backdrop.opacity,
+              }}
+            />
+            <EditableText as="h2" path={`features.${f.id}.title`} />
+            <p>
+              <EditableText as="strong" path={`features.${f.id}.subtitle`} />
+            </p>
+            {paras.map((_, i) => (
+              <EditableText key={`${f.id}-${i}`} as="p" path={`features.${f.id}.body.${i}`} />
             ))}
-            <Link to={f.link} className="btn btn--green">{f.btn}</Link>
+            <Link
+              to={f.link}
+              className="btn btn--green"
+              onClick={(e) => {
+                if (isEditor && (e.target as HTMLElement).closest?.('.cms-editable')) {
+                  e.preventDefault();
+                }
+              }}
+            >
+              <EditableText as="span" path={`features.${f.id}.cta`} />
+            </Link>
           </div>
         );
         return (
-          <section key={f.title} className={`feature-stratum${f.imageSide === 'right' ? ' feature-stratum--flip' : ''}`}>
+          <section key={f.id} className={`feature-stratum${f.imageSide === 'right' ? ' feature-stratum--flip' : ''}`}>
             {photo}
             {copy}
           </section>
@@ -188,10 +205,12 @@ export default function HomePage() {
         <div className="container">
           <h2 style={{ textAlign: 'center', marginBottom: '2rem' }}>What Our Guests Say</h2>
           <div className="card-grid">
-            {TESTIMONIALS.map((t) => (
-              <blockquote key={t.author} className="testimonial">
-                "{t.text}"
-                <cite>— {t.author}</cite>
+            {content.testimonials.map((_, i) => (
+              <blockquote key={i} className="testimonial">
+                <EditableText as="span" path={`testimonials.${i}.text`} quote />
+                <cite>
+                  — <EditableText as="span" path={`testimonials.${i}.author`} />
+                </cite>
               </blockquote>
             ))}
           </div>

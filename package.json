@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/optimize-images.mjs && node scripts/generate-icons.mjs && node scripts/generate-seo.mjs && tsc -b && vite build && node scripts/copy-404.mjs && node scripts/prerender.mjs",
+    "build": "node scripts/optimize-images.mjs && node scripts/generate-icons.mjs && node scripts/generate-seo.mjs && node scripts/fetch-home-content.mjs && tsc -b && vite build && node scripts/copy-404.mjs && node scripts/prerender.mjs",
+    "cms-home": "node scripts/fetch-home-content.mjs",
+    "cms-seed-home": "node scripts/seed-home-content.mjs",
     "build:oldsite-archive": "node scripts/build-oldsite-archive.mjs",
     "optimize-images": "node scripts/optimize-images.mjs",
     "icons": "node scripts/generate-icons.mjs",
@@ -18,6 +20,7 @@
     "fareharbor-availabilities": "node scripts/fetch-fareharbor-availabilities.mjs"
   },
   "dependencies": {
+    "firebase": "^12.19.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.0"

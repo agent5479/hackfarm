@@ -1,0 +1,90 @@
+{
+  "hero": {
+    "h1": "Beach Horse Rides, Campground and Farmstay accommodation in Golden Bay."
+  },
+  "intro": {
+    "lead": "Located in beautiful Golden Bay, Hack Farm is an eco farmstay and animal-friendly campground just a short walk or ride from Patons Rock beach and serves as the perfect base for your next Horse Riding Holiday. We offer a number of holistic horse experiences from guided treks on our team of highly trained horses, to Vaulting, Horsemanship and Riding lessons or simply bring your own horse and enjoy our easily accessible trails that will allow you to explore the beauty of the ever-changing coastal landscape on horseback.",
+    "location": "At the top of New Zealand's South Island near Abel Tasman and Nelson — beach horseback rides, farmstay, and a welcoming base for exploring Golden Bay."
+  },
+  "tiles": {
+    "ride": {
+      "title": "Ride",
+      "body": "Our horse riding experiences are suited for riders of all abilities. 'Hacktivities' range from 1h rides through to multi-day experiences – our rides are as fun as they are informative.",
+      "cta": "Book a Ride"
+    },
+    "stay": {
+      "title": "Stay",
+      "body": "With great outdoor facilities and comfortable accommodation, our Camping, Farmstay and Backpacker options will guarantee a good night's sleep after your day's adventure.",
+      "cta": "View Accommodation"
+    },
+    "learn": {
+      "title": "Learn",
+      "body": "Horsemanship, Vaulting and Riding Lessons. Whether you're new to riding or looking to expand your knowledge, we can equip you with the tools you need.",
+      "cta": "View Lessons"
+    }
+  },
+  "features": {
+    "beachRides": {
+      "title": "Beach Horse Rides",
+      "subtitle": "Horse trekking and holistic horseback experiences — learn while you ride",
+      "body": [
+        "We offer riders of all experience levels opportunities to learn more about the foundations of good horsemanship whilst experiencing stunning coastal scenery on horseback. With a focus on teaching light and balanced riding, our guided holistic horse riding experiences are so much more than just a trail ride.",
+        "Our professionally guided horse treks provide a safe and fun environment to further your riding knowledge, build confidence and challenge yourself."
+      ],
+      "cta": "Book a ride"
+    },
+    "vaulting": {
+      "title": "Vaulting Experiences",
+      "subtitle": "Fun and engaging vaulting sessions for all ages",
+      "body": [
+        "Vaulting is often described as a combination of dancing and gymnastics on horseback and is considered to be the safest equestrian discipline.",
+        "We've seen time and time again how transformational the sense of confidence and self-awareness gained by finding your balance and expression on horseback has on individuals of all ages and particularly for kids and Baerbel is passionate about sharing this magic with others.",
+        "No previous experience is required for this fun and engaging activity."
+      ],
+      "cta": "Learn More"
+    },
+    "stay": {
+      "title": "Campground, Backpacker & Farmstay",
+      "subtitle": "Dog-friendly eco farmstay options after a day of exploring Golden Bay",
+      "body": [
+        "Comfortable accommodation options to guarantee a good night's sleep after your day of exploring.",
+        "Enjoy a family & pet friendly environment in our 120 year old eco-friendly farmhouse and horse ranch, or park up in one of our camping spaces!"
+      ],
+      "cta": "View Accommodation"
+    },
+    "kidsCamps": {
+      "title": "Kids' Camps",
+      "subtitle": "Fun camps and riding days",
+      "body": [
+        "Our Horse Club days are the perfect introduction to the foundations of communication with your horse both on the ground and in the saddle. We help riders of all ages find confidence around horses, both in the saddle and on the ground utilising Vaulting Experience, Horsemanship Lessons and Horse Rides all situated at our Hack Farm."
+      ],
+      "cta": "Learn More"
+    },
+    "byoHorse": {
+      "title": "Bring your own horse!",
+      "subtitle": "Bring your own horse and enjoy a holiday away",
+      "body": [
+        "Our vision for Hack 'n Stay has always been a getaway for you & your horse! With our guest paddocks, holding yards and arenas, we have everything you need to keep your horse comfortable while you enjoy a Horse Riding Holiday away together. Use our Hack Track to access Patons Rock Beach or even hire a guide to show you the best spots around."
+      ],
+      "cta": "Book Your Horse Stay"
+    }
+  },
+  "testimonials": [
+    {
+      "text": "Hack and stay is a real piece of heaven. The horses are really well treated and the track to the beach is amazing. But there's so much more than trekking, there's all sorts of swings for the children, a little climbing wall and you can even try some vaulting. We'll remember our stay forever!!!",
+      "author": "Anne-Lise, Nov 2020"
+    },
+    {
+      "text": "Hack n Stay is an amazing place to visit! The accommodation is well thought out and uniquely horse-themed and the property is stunning. You will love the views and the awesome riding tracks around the farm.",
+      "author": "Larissa Meuller"
+    },
+    {
+      "text": "My partner and I intended to stay 1 night with our campervan; in the end we stayed 3 nights, because we enjoyed it so much.",
+      "author": "Merel, May 2020"
+    },
+    {
+      "text": "Great trekking with Baerbel and her horses! It's way more than just a trek, she really teaches you horse riding!",
+      "author": "Lucy Devos, July 2020"
+    }
+  ]
+}

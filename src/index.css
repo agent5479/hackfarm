@@ -270,48 +270,9 @@ p { margin-bottom: 1rem; color: var(--color-text); }
   cursor: pointer;
 }
 
-.photo-tile:hover::before {
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(18, 18, 18, 0.16) 0%,
-      rgba(18, 18, 18, 0.24) 48%,
-      rgba(18, 18, 18, 0.28) 100%
-    );
-}
-
 .photo-tile:focus-visible {
   outline: 3px solid var(--color-green, #5a8f3c);
   outline-offset: 3px;
-}
-
-.photo-tile::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(18, 18, 18, 0.22) 0%,
-      rgba(18, 18, 18, 0.3) 48%,
-      rgba(18, 18, 18, 0.34) 100%
-    );
-  transition: background 0.2s ease;
-}
-
-.photo-tile::after {
-  content: '';
-  position: absolute;
-  z-index: 0;
-  left: 50%;
-  top: 52%;
-  translate: -50% -50%;
-  width: min(26rem, 88%);
-  height: min(18rem, 72%);
-  border-radius: 1.25rem;
-  background: rgba(10, 10, 10, 0.36);
-  box-shadow: 0 0 40px 22px rgba(10, 10, 10, 0.2);
-  pointer-events: none;
 }
 
 .photo-tile > * {
@@ -323,9 +284,9 @@ p { margin-bottom: 1rem; color: var(--color-text); }
 .photo-tile p {
   color: #fff;
   text-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.9),
-    0 2px 16px rgba(0, 0, 0, 0.7),
-    0 0 2px rgba(0, 0, 0, 0.45);
+    0 1px 3px rgba(0, 0, 0, 0.95),
+    0 2px 18px rgba(0, 0, 0, 0.8),
+    0 0 3px rgba(0, 0, 0, 0.55);
 }
 
 .photo-tile h2 {
@@ -590,46 +551,80 @@ iframe.fareharbor-embed {
   font-size: 1.4rem;
 }
 
-.instagram-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 4px;
+.instagram-banner__heading {
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
-.instagram-grid__item {
-  position: relative;
+.instagram-banner__handle {
+  text-align: center;
+  margin-top: 1.25rem;
+}
+
+.instagram-marquee {
+  overflow: hidden;
+  width: 100%;
+  mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+}
+
+.instagram-marquee__track {
+  display: flex;
+  width: max-content;
+  gap: 0.65rem;
+  padding: 0.15rem 0;
+  animation: instagram-marquee-rtl 55s linear infinite;
+}
+
+.instagram-marquee:hover .instagram-marquee__track,
+.instagram-marquee:focus-within .instagram-marquee__track {
+  animation-play-state: paused;
+}
+
+.instagram-marquee__item {
+  flex: 0 0 auto;
   display: block;
+  width: clamp(7.5rem, 14vw, 10.5rem);
   aspect-ratio: 1;
   overflow: hidden;
   background: #eee;
+  border-radius: 2px;
 }
 
-.instagram-grid img {
+.instagram-marquee__item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transition: transform 0.3s;
+  display: block;
+  transition: transform 0.35s ease;
 }
 
-.instagram-grid__caption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 1.6rem 0.55rem 0.45rem;
-  background: linear-gradient(transparent, rgba(0,0,0,0.72));
-  color: #fff;
-  font-size: 0.72rem;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.instagram-marquee__item:hover img,
+.instagram-marquee__item:focus-visible img {
+  transform: scale(1.06);
 }
 
-.instagram-grid a:hover img { transform: scale(1.05); }
+@keyframes instagram-marquee-rtl {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .instagram-marquee__track {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+    justify-content: center;
+    padding-inline: 1rem;
+  }
+
+  .instagram-marquee__item[aria-hidden='true'] {
+    display: none;
+  }
+}
 
 .sitemap-list {
   list-style: none;
@@ -639,10 +634,6 @@ iframe.fareharbor-embed {
 
 .sitemap-list li { margin-bottom: 0.5rem; }
 
-@media (max-width: 900px) {
-  .instagram-grid { grid-template-columns: repeat(3, 1fr); }
-}
-
 @media (max-width: 768px) {
   .two-col { grid-template-columns: 1fr; }
   .home-hero { min-height: 420px; }
@@ -650,8 +641,4 @@ iframe.fareharbor-embed {
 
 @media (max-width: 600px) {
   .sitemap-list { columns: 1; }
-}
-
-@media (max-width: 520px) {
-  .instagram-grid { grid-template-columns: repeat(2, 1fr); }
 }

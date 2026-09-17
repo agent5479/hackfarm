@@ -38,6 +38,7 @@ Copy `.env.example` to `.env.local` and set:
 - `VITE_SITE_ORIGIN` — canonical origin without path (`https://hackfarm.co.nz`)
 - `VITE_NIWA_API_KEY` — optional live NIWA tide fetch in the Book a Ride planner
 - Or set `NIWA_API_KEY` and run `npm run tides` to write `public/data/tides.json` without exposing the key
+- `VITE_FIREBASE_*` — optional Firebase Auth + Realtime Database web config for owner inline editing of home-page text (see [docs/FIREBASE-CMS.md](docs/FIREBASE-CMS.md); includes `VITE_FIREBASE_DATABASE_URL`)
 
 ## Ride planner
 
@@ -53,6 +54,8 @@ GitHub Actions deploys **from `main`** to **https://hackfarm.co.nz**.
 
 Set repository secret `VITE_FORMS_ENDPOINT` to the Apps Script web app `/exec` URL (see [scripts/google-apps-script/README.md](scripts/google-apps-script/README.md)).
 
+For owner content editing, also set the `VITE_FIREBASE_*` repository secrets including `VITE_FIREBASE_DATABASE_URL` (see [docs/FIREBASE-CMS.md](docs/FIREBASE-CMS.md)). The site still builds without them (bundled defaults only). Soft rollback: set repository secret `VITE_CMS_DISABLED=1` and redeploy.
+
 CSS, images, and routes use a `/` base. Canonicals, `robots.txt`, and `sitemap.xml` are generated for `VITE_SITE_ORIGIN` (default `https://hackfarm.co.nz`). `public/CNAME` keeps the custom domain on GitHub Pages.
 
 See [docs/SEO-FOLLOWUP.md](docs/SEO-FOLLOWUP.md) for HTTPS, Search Console, and local-SEO follow-up.
@@ -62,9 +65,10 @@ See [docs/SEO-FOLLOWUP.md](docs/SEO-FOLLOWUP.md) for HTTPS, Search Console, and 
 `npm run build` runs:
 
 1. `scripts/generate-seo.mjs` — writes `robots.txt` + `sitemap.xml`
-2. Typecheck + Vite build
-3. `scripts/copy-404.mjs` — SPA fallback for GitHub Pages
-4. `scripts/prerender.mjs` — Playwright prerender of marketing routes into `dist/**/index.html`
+2. `scripts/fetch-home-content.mjs` — pulls RTDB `/content/home` into `src/content/generated/home.json` for prerender/SEO (no-op if unset/empty)
+3. Typecheck + Vite build
+4. `scripts/copy-404.mjs` — SPA fallback for GitHub Pages
+5. `scripts/prerender.mjs` — Playwright prerender of marketing routes into `dist/**/index.html`
 
 ## Features preserved
 
@@ -75,6 +79,7 @@ See [docs/SEO-FOLLOWUP.md](docs/SEO-FOLLOWUP.md) for HTTPS, Search Console, and 
 - Instagram grid (cached images)
 - Contact, volunteer, partner, and ride-request forms (Google Apps Script; mailto fallback)
 - 14 horse profile pages
+- Owner inline editing of home-page text via Firebase Auth + Realtime Database (`/edit/`; see [docs/FIREBASE-CMS.md](docs/FIREBASE-CMS.md))
 
 ## Future
 

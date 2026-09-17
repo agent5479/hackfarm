@@ -30,26 +30,40 @@ function abridge(text: string, max = 48) {
 }
 
 export default function InstagramGrid() {
+  const track = [...INSTAGRAM_POSTS, ...INSTAGRAM_POSTS];
+
   return (
-    <section className="section section--white">
+    <section className="section section--white instagram-banner">
       <div className="container">
-        <h2 style={{ textAlign: 'center', marginBottom: '1.5rem' }}>Follow Us on Instagram</h2>
-        <div className="instagram-grid">
-          {INSTAGRAM_POSTS.map((post) => (
-            <a key={post.url} href={post.url} target="_blank" rel="noopener noreferrer" className="instagram-grid__item">
+        <h2 className="instagram-banner__heading">Follow Us on Instagram</h2>
+      </div>
+      <div className="instagram-marquee" aria-label="Instagram photo highlights">
+        <div className="instagram-marquee__track">
+          {track.map((post, i) => (
+            <a
+              key={`${post.url}-${i}`}
+              href={post.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="instagram-marquee__item"
+              tabIndex={i >= INSTAGRAM_POSTS.length ? -1 : undefined}
+              aria-hidden={i >= INSTAGRAM_POSTS.length ? true : undefined}
+            >
               <img
                 src={withBase(`/images/uploads/sb-instagram-feed-images/${post.img}`)}
-                alt={abridge(post.caption)}
-                loading="lazy"
+                alt={i < INSTAGRAM_POSTS.length ? abridge(post.caption) : ''}
+                loading={i < 8 ? 'eager' : 'lazy'}
+                decoding="async"
               />
-              <span className="instagram-grid__caption">{abridge(post.caption)}</span>
             </a>
           ))}
         </div>
-        <p style={{ textAlign: 'center', marginTop: '1.25rem' }}>
-          <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer">@hacknstay</a>
-        </p>
       </div>
+      <p className="instagram-banner__handle">
+        <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer">
+          @hacknstay
+        </a>
+      </p>
     </section>
   );
 }

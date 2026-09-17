@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { routerBasename } from './lib/constants';
+import { ContentProvider } from './cms/ContentProvider';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
 import AccommodationPage from './pages/AccommodationPage';
@@ -18,6 +19,7 @@ import PartnersPage from './pages/PartnersPage';
 import PrivacyPage from './pages/PrivacyPage';
 import SitemapPage from './pages/SitemapPage';
 import AboutPage from './pages/AboutPage';
+import EditPage from './pages/EditPage';
 import NotFoundPage from './pages/NotFoundPage';
 import HorseSlashRedirect from './pages/HorseSlashRedirect';
 
@@ -43,46 +45,50 @@ function OldsiteArchiveEscape() {
 export default function App() {
   return (
     <BrowserRouter basename={routerBasename}>
-      <Routes>
-        <Route path="oldsitearchive/*" element={<OldsiteArchiveEscape />} />
-        <Route path="oldsitearchive" element={<OldsiteArchiveEscape />} />
-        <Route element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="about/" element={<AboutPage />} />
-          <Route path="about" element={<Navigate to="/about/" replace />} />
-          <Route path="accommodation/" element={<AccommodationPage />} />
-          <Route path="accommodation" element={<Navigate to="/accommodation/" replace />} />
-          <Route path="holistic-horse-rides/" element={<RidesPage />} />
-          <Route path="holistic-horse-rides" element={<Navigate to="/holistic-horse-rides/" replace />} />
-          <Route path="hack-farm-trails/" element={<TrailsPage />} />
-          <Route path="hack-farm-trails" element={<Navigate to="/hack-farm-trails/" replace />} />
-          <Route path="our-horses/" element={<HorsesPage />} />
-          <Route path="our-horses" element={<Navigate to="/our-horses/" replace />} />
-          <Route path="horse/:slug/" element={<HorseDetailPage />} />
-          <Route path="horse/:slug" element={<HorseSlashRedirect />} />
-          <Route path="learning-experiences/" element={<LearningPage />} />
-          <Route path="learning-experiences" element={<Navigate to="/learning-experiences/" replace />} />
-          <Route path="vaulting/" element={<VaultingPage />} />
-          <Route path="vaulting" element={<Navigate to="/vaulting/" replace />} />
-          <Route path="special-events/" element={<EventsPage />} />
-          <Route path="special-events" element={<Navigate to="/special-events/" replace />} />
-          <Route path="horse-riding-holiday-gift-vouchers/" element={<GiftsPage />} />
-          <Route path="horse-riding-holiday-gift-vouchers" element={<Navigate to="/horse-riding-holiday-gift-vouchers/" replace />} />
-          <Route path="contact/" element={<ContactPage />} />
-          <Route path="contact" element={<Navigate to="/contact/" replace />} />
-          <Route path="volunteer/" element={<VolunteerPage />} />
-          <Route path="volunteer" element={<Navigate to="/volunteer/" replace />} />
-          <Route path="partners/" element={<PartnersPage />} />
-          <Route path="partners" element={<Navigate to="/partners/" replace />} />
-          <Route path="privacy-policy/" element={<PrivacyPage />} />
-          <Route path="privacy-policy" element={<Navigate to="/privacy-policy/" replace />} />
-          <Route path="privacy-policy-2/" element={<Navigate to="/privacy-policy/" replace />} />
-          <Route path="privacy-policy-2" element={<Navigate to="/privacy-policy/" replace />} />
-          <Route path="sitemap/" element={<SitemapPage />} />
-          <Route path="sitemap" element={<Navigate to="/sitemap/" replace />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-      </Routes>
+      <ContentProvider>
+        <Routes>
+          <Route path="oldsitearchive/*" element={<OldsiteArchiveEscape />} />
+          <Route path="oldsitearchive" element={<OldsiteArchiveEscape />} />
+          <Route element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route path="about/" element={<AboutPage />} />
+            <Route path="about" element={<Navigate to="/about/" replace />} />
+            <Route path="accommodation/" element={<AccommodationPage />} />
+            <Route path="accommodation" element={<Navigate to="/accommodation/" replace />} />
+            <Route path="holistic-horse-rides/" element={<RidesPage />} />
+            <Route path="holistic-horse-rides" element={<Navigate to="/holistic-horse-rides/" replace />} />
+            <Route path="hack-farm-trails/" element={<TrailsPage />} />
+            <Route path="hack-farm-trails" element={<Navigate to="/hack-farm-trails/" replace />} />
+            <Route path="our-horses/" element={<HorsesPage />} />
+            <Route path="our-horses" element={<Navigate to="/our-horses/" replace />} />
+            <Route path="horse/:slug/" element={<HorseDetailPage />} />
+            <Route path="horse/:slug" element={<HorseSlashRedirect />} />
+            <Route path="learning-experiences/" element={<LearningPage />} />
+            <Route path="learning-experiences" element={<Navigate to="/learning-experiences/" replace />} />
+            <Route path="vaulting/" element={<VaultingPage />} />
+            <Route path="vaulting" element={<Navigate to="/vaulting/" replace />} />
+            <Route path="special-events/" element={<EventsPage />} />
+            <Route path="special-events" element={<Navigate to="/special-events/" replace />} />
+            <Route path="horse-riding-holiday-gift-vouchers/" element={<GiftsPage />} />
+            <Route path="horse-riding-holiday-gift-vouchers" element={<Navigate to="/horse-riding-holiday-gift-vouchers/" replace />} />
+            <Route path="contact/" element={<ContactPage />} />
+            <Route path="contact" element={<Navigate to="/contact/" replace />} />
+            <Route path="volunteer/" element={<VolunteerPage />} />
+            <Route path="volunteer" element={<Navigate to="/volunteer/" replace />} />
+            <Route path="partners/" element={<PartnersPage />} />
+            <Route path="partners" element={<Navigate to="/partners/" replace />} />
+            <Route path="privacy-policy/" element={<PrivacyPage />} />
+            <Route path="privacy-policy" element={<Navigate to="/privacy-policy/" replace />} />
+            <Route path="privacy-policy-2/" element={<Navigate to="/privacy-policy/" replace />} />
+            <Route path="privacy-policy-2" element={<Navigate to="/privacy-policy/" replace />} />
+            <Route path="sitemap/" element={<SitemapPage />} />
+            <Route path="sitemap" element={<Navigate to="/sitemap/" replace />} />
+            <Route path="edit/" element={<EditPage />} />
+            <Route path="edit" element={<Navigate to="/edit/" replace />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      </ContentProvider>
     </BrowserRouter>
   );
 }
