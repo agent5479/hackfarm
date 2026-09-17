@@ -39,11 +39,6 @@ export const HOMESTEAD_FAQS: FaqItem[] = [
     question: 'Do I need to bring bedding?',
     answer: 'No. All bedding is provided for your stay.',
   },
-  {
-    question: 'Can guests use the pizza oven?',
-    answer:
-      'Yes. Chat with Baerbel on or before arriving so she can take you through the lighting procedures for the pizza oven.',
-  },
 ];
 
 export const CAMPING_FAQS: FaqItem[] = [
