@@ -1,14 +1,48 @@
+/* No permanent boxes — only hint on hover/focus while signed in as editor */
 .cms-editable {
-  outline: 1px dashed rgba(61, 90, 54, 0.45);
-  outline-offset: 2px;
   cursor: text;
+  outline: 1px solid transparent;
+  outline-offset: 2px;
   border-radius: 2px;
+  transition: outline-color 0.12s ease, background-color 0.12s ease;
+}
+
+.cms-editable:hover {
+  outline-color: rgba(61, 90, 54, 0.35);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .cms-editable:focus {
   outline: 2px solid var(--color-green, #3d5a36);
   outline-offset: 2px;
   background: rgba(255, 255, 255, 0.35);
+}
+
+.cms-edit-chip {
+  position: fixed;
+  z-index: 1200;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0.85rem;
+  background: rgba(28, 28, 24, 0.88);
+  color: #f5f2ea;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+
+.cms-edit-chip__link {
+  color: #c8e6c0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cms-edit-chip__link:hover {
+  color: #fff;
 }
 
 .cms-save-bar {

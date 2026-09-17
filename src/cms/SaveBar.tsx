@@ -35,7 +35,16 @@ export default function SaveBar() {
     );
   }
 
-  if (!isDirty) return null;
+  if (!isDirty) {
+    return (
+      <div className="cms-edit-chip" role="status">
+        <span>Editing mode</span>
+        <a href="/edit/" className="cms-edit-chip__link">
+          Sign out
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="cms-save-bar" role="status" aria-live="polite">
