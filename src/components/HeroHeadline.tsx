@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { withBase } from '../lib/constants';
 
-const KEY_PHRASES = ['Stay', 'Play', 'Vault', 'Horsemanship', 'Holiday'] as const;
+const KEY_PHRASES = ['Ride', 'Stay', 'Play', 'Vault', 'Horsemanship', 'Holiday'] as const;
 
 export default function HeroHeadline() {
   const [idx, setIdx] = useState(0);

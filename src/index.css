@@ -278,6 +278,23 @@ p { margin-bottom: 1rem; color: var(--color-text); }
   padding: 5rem 1.5rem 2.5rem;
   color: #fff;
   overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.photo-tile:hover::before {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(18, 18, 18, 0.42) 0%,
+      rgba(18, 18, 18, 0.58) 48%,
+      rgba(18, 18, 18, 0.62) 100%
+    );
+}
+
+.photo-tile:focus-visible {
+  outline: 3px solid var(--color-green, #5a8f3c);
+  outline-offset: 3px;
 }
 
 .photo-tile::before {
@@ -291,6 +308,7 @@ p { margin-bottom: 1rem; color: var(--color-text); }
       rgba(18, 18, 18, 0.66) 48%,
       rgba(18, 18, 18, 0.7) 100%
     );
+  transition: background 0.2s ease;
 }
 
 .photo-tile::after {

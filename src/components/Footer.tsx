@@ -4,14 +4,6 @@ import './Footer.css';
 
 const LINK_GROUPS = [
   {
-    title: 'Accommodation',
-    links: [
-      { label: 'Campground', to: '/accommodation/#camp-ground' },
-      { label: 'Farmstay', to: '/accommodation/#homestead' },
-      { label: 'Horse Stay', to: '/accommodation/#horse-stay' },
-    ],
-  },
-  {
     title: 'Short Rides',
     links: [
       { label: 'Book a ride', to: '/holistic-horse-rides/#book-rides' },
@@ -28,6 +20,14 @@ const LINK_GROUPS = [
       { label: 'The Rangi Ride', to: '/holistic-horse-rides/#rangi' },
       { label: 'Ale Trail - Mussel Inn', to: '/holistic-horse-rides/#full-day' },
       { label: 'Collingwood Explorer', to: '/holistic-horse-rides/#full-day' },
+    ],
+  },
+  {
+    title: 'Accommodation',
+    links: [
+      { label: 'Campground', to: '/accommodation/#camp-ground' },
+      { label: 'Farmstay', to: '/accommodation/#homestead' },
+      { label: 'Horse Stay', to: '/accommodation/#horse-stay' },
     ],
   },
   {

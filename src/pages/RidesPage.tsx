@@ -259,11 +259,6 @@ export default function RidesPage() {
       <section id="book-rides" className="section section--cream">
         <div className="container">
           <h2>Book your ride</h2>
-          <p>
-            Rides are listed in the same order as FareHarbor booking. Sunrise, Patons Rock,
-            Rangi, and swimming rides need tide clearance — check the calendar first for
-            sunrise. Hack Track can be booked on any open date.
-          </p>
           <BookingIntercept />
         </div>
       </section>

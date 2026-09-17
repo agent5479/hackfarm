@@ -11,9 +11,9 @@ import HeroHeadline from '../components/HeroHeadline';
 const content = scraped.pages.home;
 
 const TILES = [
-  { id: 'stay', title: 'Stay', img: '/images/uploads/2021/02/20210221_125542-copy.jpg', link: '/accommodation/', btn: 'View Accommodation', color: 'btn--pink' },
-  { id: 'ride', title: 'Ride', img: '/images/uploads/2021/03/127142963_3918021201543032_3894975841806055644_n.jpg', link: '/holistic-horse-rides/#book-rides', btn: 'Book a Ride', color: 'btn--green' },
-  { id: 'learn', title: 'Learn', img: '/images/uploads/2021/03/107601229_1530595257120739_3780438784627968956_o-1.jpg', link: '/learning-experiences/', btn: 'View Lessons', color: 'btn--orange' },
+  { id: 'ride', title: 'Ride', img: '/images/uploads/2021/03/127142963_3918021201543032_3894975841806055644_n.jpg', link: '/holistic-horse-rides/#book-rides', btn: 'Book a Ride', color: 'btn--green', paragraphIndex: 2 },
+  { id: 'stay', title: 'Stay', img: '/images/uploads/2021/02/20210221_125542-copy.jpg', link: '/accommodation/', btn: 'View Accommodation', color: 'btn--pink', paragraphIndex: 1 },
+  { id: 'learn', title: 'Learn', img: '/images/uploads/2021/03/107601229_1530595257120739_3780438784627968956_o-1.jpg', link: '/learning-experiences/', btn: 'View Lessons', color: 'btn--orange', paragraphIndex: 3 },
 ];
 
 const FEATURES = [
@@ -135,16 +135,17 @@ export default function HomePage() {
       </section>
 
       <section className="photo-tiles">
-        {TILES.map((s, i) => (
-          <div
+        {TILES.map((s) => (
+          <Link
             key={s.id}
+            to={s.link}
             className="photo-tile"
             style={{ backgroundImage: `url(${optimizedUrl(s.img, 'content')})` }}
           >
             <h2>{s.title}</h2>
-            <p>{decodeHtml(content.paragraphs[i + 1] || '')}</p>
-            <Link to={s.link} className={`btn ${s.color}`}>{s.btn}</Link>
-          </div>
+            <p>{decodeHtml(content.paragraphs[s.paragraphIndex] || '')}</p>
+            <span className={`btn ${s.color}`}>{s.btn}</span>
+          </Link>
         ))}
       </section>
 

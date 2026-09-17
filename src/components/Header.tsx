@@ -5,15 +5,6 @@ import './Header.css';
 
 const NAV = [
   {
-    label: 'Stay',
-    to: '/accommodation/',
-    children: [
-      { label: 'Farmstay', to: '/accommodation/#homestead' },
-      { label: 'Camping', to: '/accommodation/#camp-ground' },
-      { label: 'Horse Stay', to: '/accommodation/#horse-stay' },
-    ],
-  },
-  {
     label: 'Ride',
     to: '/holistic-horse-rides/',
     children: [
@@ -23,6 +14,15 @@ const NAV = [
       { label: 'Multiday Experiences', to: '/holistic-horse-rides/#multi-day' },
       { label: 'Interactive Trail Map', to: '/hack-farm-trails/' },
       { label: 'Gift Voucher', to: '/horse-riding-holiday-gift-vouchers/' },
+    ],
+  },
+  {
+    label: 'Stay',
+    to: '/accommodation/',
+    children: [
+      { label: 'Farmstay', to: '/accommodation/#homestead' },
+      { label: 'Camping', to: '/accommodation/#camp-ground' },
+      { label: 'Horse Stay', to: '/accommodation/#horse-stay' },
     ],
   },
   { label: 'Our Horses', to: '/our-horses/' },
