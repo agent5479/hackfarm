@@ -3,6 +3,7 @@ import PageHero from '../components/PageHero';
 import { JsonLd, personJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import { isSeoPrerender } from '../seo/prerender';
 import EditableText from '../cms/EditableText';
 import { useCms } from '../cms/ContentProvider';
 
@@ -16,6 +17,7 @@ export default function AboutPage() {
   usePageMeta(seo);
   const { getDoc } = useCms();
   const about = getDoc<AboutDoc>('about');
+  const crawler = isSeoPrerender() && seo.h1;
 
   return (
     <>
@@ -25,17 +27,23 @@ export default function AboutPage() {
           jobTitle: 'Founder, Hack n Stay Golden Bay',
           path: '/about/',
           description:
-            'Baerbel Hack founded Hack Farm / Hack n Stay Golden Bay and the Hack Vaulties club, sharing connected riding and vaulting near Paton\'s Rock in Golden Bay, Nelson Tasman, at the top of New Zealand\'s South Island near Abel Tasman National Park.',
+            'Baerbel Hack founded Hack Farm / Hack n Stay Golden Bay and the Hack Vaulties club, sharing connected riding and vaulting in Golden Bay, Nelson Tasman, at the top of New Zealand\'s South Island near Abel Tasman National Park.',
           image: '/images/uploads/2021/02/IMG_20190120_122312-scaled.jpg',
         })}
       />
       <PageHero
-        title={<EditableText doc="about" as="span" path="hero.title" />}
-        subtitle={<EditableText doc="about" as="span" path="hero.subtitle" />}
+        title={
+          crawler ? seo.h1! : <EditableText doc="about" as="span" path="hero.title" />
+        }
+        subtitle={
+          crawler && seo.intro
+            ? seo.intro
+            : <EditableText doc="about" as="span" path="hero.subtitle" />
+        }
         background="/images/uploads/2021/03/20190801_Hackfarm_Panorama-rainbow.jpg"
         breadcrumbs={[
           { name: 'Home', path: '/' },
-          { name: 'About', path: '/about/' },
+          { name: 'About Hack n Stay', path: '/about/' },
         ]}
       />
       <section className="section section--cream">

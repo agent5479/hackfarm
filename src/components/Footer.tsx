@@ -25,9 +25,9 @@ const LINK_GROUPS = [
   {
     title: 'Accommodation',
     links: [
-      { label: 'Campground', to: '/accommodation/#camp-ground' },
-      { label: 'Farmstay', to: '/accommodation/#homestead' },
-      { label: 'Horse Stay', to: '/accommodation/#horse-stay' },
+      { label: 'Golden Bay campground', to: '/accommodation/#camp-ground' },
+      { label: 'Golden Bay farmstay', to: '/accommodation/#homestead' },
+      { label: 'Horse stay — bring your own horse', to: '/accommodation/#horse-stay' },
     ],
   },
   {
@@ -35,8 +35,8 @@ const LINK_GROUPS = [
     links: [
       { label: 'Horsemanship Lessons', to: '/learning-experiences/#horsemanship' },
       { label: 'Riding Lessons', to: '/learning-experiences/#lessons' },
-      { label: 'Vaulting Lessons', to: '/learning-experiences/#vaulting' },
-      { label: 'Kids Camps', to: '/special-events/' },
+      { label: 'Horse vaulting lessons', to: '/learning-experiences/#vaulting' },
+      { label: 'Kids horse camps', to: '/special-events/' },
     ],
   },
   {
@@ -63,7 +63,7 @@ export default function Footer() {
             <Link to="/">
               <img src={withBase('/images/uploads/2021/03/Hack-Farm-Logo-White.png')} alt="Hack Farm" />
             </Link>
-            <p>Hack n Stay is dedicated to those who want to enjoy the simple things in life. Bring your own horse or enjoy time with one of ours in Beautiful Golden Bay.</p>
+            <p>Hack n Stay is dedicated to those who want to enjoy the simple things in life. Bring your own horse or enjoy time with one of ours in beautiful Golden Bay, South Island, New Zealand.</p>
             <div className="footer__social">
               <a href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer">Facebook</a>
               <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>

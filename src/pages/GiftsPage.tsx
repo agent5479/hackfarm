@@ -3,6 +3,7 @@ import PageHero from '../components/PageHero';
 import { JsonLd, faqPageJsonLd, howToJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import { isSeoPrerender } from '../seo/prerender';
 import { GIFT_FAQS } from '../content/faqs';
 import EditableText from '../cms/EditableText';
 import { useCms } from '../cms/ContentProvider';
@@ -16,9 +17,11 @@ type GiftsDoc = {
 };
 
 export default function GiftsPage() {
-  usePageMeta(getPageSeo(PATH)!);
+  const seo = getPageSeo(PATH)!;
+  usePageMeta(seo);
   const { getDoc } = useCms();
   const content = getDoc<GiftsDoc>('gifts');
+  const crawler = isSeoPrerender() && seo.h1;
 
   return (
     <>
@@ -27,7 +30,7 @@ export default function GiftsPage() {
           faqPageJsonLd(GIFT_FAQS),
           howToJsonLd(
             'How to purchase and redeem a Hack n Stay gift voucher',
-            'Buy a gift card online, then redeem it when booking any ride, stay, or lesson.',
+            'Buy a gift card online, then redeem it when booking any ride, stay, or lesson at Hack n Stay in Golden Bay, New Zealand.',
             [
               {
                 name: 'Purchase a gift card',
@@ -43,11 +46,17 @@ export default function GiftsPage() {
         ]}
       />
       <PageHero
-        title={<EditableText doc="gifts" as="span" path="hero.title" />}
-        subtitle={<EditableText doc="gifts" as="span" path="hero.subtitle" />}
+        title={
+          crawler ? seo.h1! : <EditableText doc="gifts" as="span" path="hero.title" />
+        }
+        subtitle={
+          crawler && seo.intro
+            ? seo.intro
+            : <EditableText doc="gifts" as="span" path="hero.subtitle" />
+        }
         breadcrumbs={[
           { name: 'Home', path: '/' },
-          { name: 'Gift Vouchers', path: '/horse-riding-holiday-gift-vouchers/' },
+          { name: 'Horse Riding Gift Vouchers', path: PATH },
         ]}
       />
       <section className="section section--cream">

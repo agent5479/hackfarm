@@ -4,6 +4,7 @@ import InstagramGrid from '../components/InstagramGrid';
 import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import { isSeoPrerender } from '../seo/prerender';
 import EditableText from '../cms/EditableText';
 import { useCms } from '../cms/ContentProvider';
 
@@ -16,16 +17,29 @@ export default function TrailsPage() {
   usePageMeta(seo);
   const { getDoc } = useCms();
   const content = getDoc<TrailsDoc>('trails');
+  const crawler = isSeoPrerender() && seo.h1;
 
   return (
     <>
-      <JsonLd data={serviceJsonLd('Hack Farm Trails', seo.description, '/hack-farm-trails/')} />
+      <JsonLd
+        data={serviceJsonLd(
+          'Horse Trails Golden Bay — Bring Your Own Horse',
+          seo.description,
+          '/hack-farm-trails/',
+        )}
+      />
       <PageHero
-        title={<EditableText doc="trails" as="span" path="hero.title" />}
-        subtitle={<EditableText doc="trails" as="span" path="hero.subtitle" />}
+        title={
+          crawler ? seo.h1! : <EditableText doc="trails" as="span" path="hero.title" />
+        }
+        subtitle={
+          crawler && seo.intro
+            ? seo.intro
+            : <EditableText doc="trails" as="span" path="hero.subtitle" />
+        }
         breadcrumbs={[
           { name: 'Home', path: '/' },
-          { name: 'Hack Farm Trails', path: '/hack-farm-trails/' },
+          { name: 'Horse Trails Golden Bay', path: '/hack-farm-trails/' },
         ]}
       />
       <section className="section section--cream">

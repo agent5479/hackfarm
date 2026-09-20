@@ -4,6 +4,7 @@ import BackgroundSlideshow from '../components/BackgroundSlideshow';
 import InstagramGrid from '../components/InstagramGrid';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import { isSeoPrerender } from '../seo/prerender';
 import HeroHeadline from '../components/HeroHeadline';
 import EditableText from '../cms/EditableText';
 import { useCms } from '../cms/ContentProvider';
@@ -119,8 +120,10 @@ const FEATURE_LAYOUT: {
 ];
 
 export default function HomePage() {
-  usePageMeta(getPageSeo('/')!);
+  const seo = getPageSeo('/')!;
+  usePageMeta(seo);
   const { content, isEditor } = useCms();
+  const crawler = isSeoPrerender() && seo.h1;
 
   return (
     <>
@@ -133,9 +136,20 @@ export default function HomePage() {
 
       <section className="section section--cream">
         <div className="container" style={{ textAlign: 'center' }}>
-          <EditableText as="h1" path="hero.h1" />
-          <EditableText as="p" path="intro.lead" style={{ maxWidth: 800, margin: '1rem auto 0' }} />
-          <EditableText as="p" path="intro.location" style={{ maxWidth: 800, margin: '0.75rem auto 0' }} />
+          {crawler ? (
+            <>
+              <h1>{seo.h1}</h1>
+              {seo.intro ? (
+                <p style={{ maxWidth: 800, margin: '1rem auto 0' }}>{seo.intro}</p>
+              ) : null}
+            </>
+          ) : (
+            <>
+              <EditableText as="h1" path="hero.h1" />
+              <EditableText as="p" path="intro.lead" style={{ maxWidth: 800, margin: '1rem auto 0' }} />
+              <EditableText as="p" path="intro.location" style={{ maxWidth: 800, margin: '0.75rem auto 0' }} />
+            </>
+          )}
         </div>
       </section>
 

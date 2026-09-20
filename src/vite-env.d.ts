@@ -17,3 +17,8 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface Window {
+  /** Set only by Playwright prerender for the SEO dual-content layer. */
+  __SEO_PRERENDER__?: boolean;
+}

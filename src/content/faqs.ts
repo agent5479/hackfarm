@@ -14,7 +14,7 @@ export const HOMESTEAD_FAQS: FaqItem[] = [
   {
     question: 'Can I bring my own horse to stay?',
     answer:
-      'Yes. You can bring your own horse to stay. Ride down to the beach, explore the trails, or book a lesson on your own horse.',
+      'Yes. Hack n Stay in Golden Bay, New Zealand offers bring-your-own-horse accommodation. Ride down to the beach, explore the trails, or book a lesson on your own horse.',
   },
   {
     question: 'Is food provided in the farmhouse kitchen?',
@@ -106,7 +106,7 @@ export const BYO_HORSE_FAQS: FaqItem[] = [
   {
     question: 'Where can I ride with my own horse from Hack Farm?',
     answer:
-      'You can ride all along the beaches. Please check our interactive trail map for routes and tide-aware guidance — use it as a guide only, as tides and inlets are always shifting. Always check the tide times before a longer ride, and check in with Baerbel before you leave.',
+      'From Hack Farm in Golden Bay on New Zealand\'s South Island you can ride along the coastal beaches. Please check our interactive trail map for routes and tide-aware guidance — use it as a guide only, as tides and inlets are always shifting. Always check the tide times before a longer ride, and check in with Baerbel before you leave.',
     link: { to: '/hack-farm-trails/', label: 'Open the interactive trail map' },
   },
 ];
@@ -125,7 +125,8 @@ export const GIFT_FAQS: FaqItem[] = [
   },
   {
     question: 'What can I use the gift voucher for?',
-    answer: 'Any riding, learning or accommodation option on the website.',
+    answer:
+      'Any horse riding, learning, or farmstay accommodation option at Hack n Stay in Golden Bay, New Zealand.',
   },
   {
     question: 'Can I exchange my voucher for cash?',

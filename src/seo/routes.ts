@@ -7,6 +7,14 @@ export interface SeoRoute {
   title: string;
   description: string;
   image?: string;
+  /** Crawler-only H1 during Playwright prerender. */
+  h1?: string;
+  /** Crawler-only intro/subtitle during Playwright prerender. */
+  intro?: string;
+  /** Primary search intent this URL owns. */
+  primaryIntent?: string;
+  /** Optional per-route Open Graph image alt. */
+  ogAlt?: string;
 }
 
 export const PAGE_ROUTES: SeoRoute[] = routesJson as SeoRoute[];
@@ -35,7 +43,7 @@ export function horseSeo(
   return {
     path: horsePath(slug),
     title: name,
-    description: `${name} — one of the Hack Farm herd at Hack n Stay Golden Bay.${traitBit} Meet our horses for beach horseback rides, lessons, and vaulting near Abel Tasman and Nelson, New Zealand.`,
+    description: `${name} — one of the Hack Farm herd at Hack n Stay Golden Bay.${traitBit} Meet our horses for beach horseback rides, lessons, and vaulting in Golden Bay, New Zealand.`,
     image: DEFAULT_OG_IMAGE,
   };
 }

@@ -4,6 +4,7 @@ import PageHero from '../components/PageHero';
 import { JsonLd, serviceJsonLd, faqPageJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import { isSeoPrerender } from '../seo/prerender';
 import { ALL_ACCOMMODATION_FAQS } from '../content/faqs';
 import EditableText from '../cms/EditableText';
 import { useCms } from '../cms/ContentProvider';
@@ -64,21 +65,37 @@ export default function AccommodationPage() {
   usePageMeta(seo);
   const { getDoc } = useCms();
   const content = getDoc<AccommodationDoc>('accommodation');
+  const crawler = isSeoPrerender() && seo.h1;
 
   return (
     <>
       <JsonLd
         data={[
-          serviceJsonLd('Accommodation', seo.description, '/accommodation/'),
+          serviceJsonLd(
+            'Golden Bay Farmstay & Camping',
+            seo.description,
+            '/accommodation/',
+          ),
+          serviceJsonLd(
+            'Horse Stay — Bring Your Own Horse Accommodation',
+            'Bring-your-own-horse paddocks, holding yards, and arena access at Hack n Stay in Golden Bay, New Zealand.',
+            '/accommodation/',
+          ),
           faqPageJsonLd(ALL_ACCOMMODATION_FAQS),
         ]}
       />
       <PageHero
-        title={<EditableText doc="accommodation" as="span" path="hero.title" />}
-        subtitle={<EditableText doc="accommodation" as="span" path="hero.subtitle" />}
+        title={
+          crawler ? seo.h1! : <EditableText doc="accommodation" as="span" path="hero.title" />
+        }
+        subtitle={
+          crawler && seo.intro
+            ? seo.intro
+            : <EditableText doc="accommodation" as="span" path="hero.subtitle" />
+        }
         breadcrumbs={[
           { name: 'Home', path: '/' },
-          { name: 'Accommodation', path: '/accommodation/' },
+          { name: 'Golden Bay Farmstay', path: '/accommodation/' },
         ]}
       />
       <section className="section section--cream">

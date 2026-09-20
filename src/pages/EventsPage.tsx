@@ -3,6 +3,7 @@ import PageHero from '../components/PageHero';
 import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import { isSeoPrerender } from '../seo/prerender';
 import EditableText from '../cms/EditableText';
 import { useCms } from '../cms/ContentProvider';
 
@@ -16,16 +17,29 @@ export default function EventsPage() {
   usePageMeta(seo);
   const { getDoc } = useCms();
   const content = getDoc<EventsDoc>('events');
+  const crawler = isSeoPrerender() && seo.h1;
 
   return (
     <>
-      <JsonLd data={serviceJsonLd('Special Events & Kids Camps', seo.description, '/special-events/')} />
+      <JsonLd
+        data={serviceJsonLd(
+          'Kids Horse Riding Camps New Zealand',
+          seo.description,
+          '/special-events/',
+        )}
+      />
       <PageHero
-        title={<EditableText doc="events" as="span" path="hero.title" />}
-        subtitle={<EditableText doc="events" as="span" path="hero.subtitle" />}
+        title={
+          crawler ? seo.h1! : <EditableText doc="events" as="span" path="hero.title" />
+        }
+        subtitle={
+          crawler && seo.intro
+            ? seo.intro
+            : <EditableText doc="events" as="span" path="hero.subtitle" />
+        }
         breadcrumbs={[
           { name: 'Home', path: '/' },
-          { name: 'Special Events', path: '/special-events/' },
+          { name: 'Kids Horse Camps', path: '/special-events/' },
         ]}
       />
       <section className="section section--cream">

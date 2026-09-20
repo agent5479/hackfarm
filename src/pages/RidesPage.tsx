@@ -6,6 +6,7 @@ import BookingIntercept from '../components/BookingIntercept/BookingIntercept';
 import EditableText from '../cms/EditableText';
 import { useCms } from '../cms/ContentProvider';
 import { usePageMeta } from '../hooks/usePageTitle';
+import { useCrawlerCopy } from '../hooks/useCrawlerCopy';
 import { getPageSeo } from '../seo/routes';
 import { JsonLd, serviceJsonLd, softwareApplicationJsonLd } from '../components/JsonLd';
 import './RidesPage.css';
@@ -27,6 +28,11 @@ export default function RidesPage() {
   const { hash } = useLocation();
   const { rides, isEditor } = useCms();
   const [openCategory, setOpenCategory] = useState<string | null>(null);
+  const copy = useCrawlerCopy('/holistic-horse-rides/', {
+    title: 'Holistic Horseback Experiences',
+    subtitle:
+      'Beach horseback rides and horse trekking on coastal Golden Bay trails near Abel Tasman and Nelson',
+  });
 
   useEffect(() => {
     if (!hash) return;
@@ -42,26 +48,26 @@ export default function RidesPage() {
       <JsonLd
         data={[
           serviceJsonLd(
-            'Holistic Horse Rides',
+            'Horse Riding in Golden Bay',
             seo.description,
             '/holistic-horse-rides/',
           ),
           softwareApplicationJsonLd({
             name: 'Patons Rock Sunrise & Tide Ride Planner',
             description:
-              'First-party booking planner for Hack n Stay sunrise beach rides at Patons Rock. Shows sunrise timing and tide clearance for Wed, Fri and Sun rides before continuing to live FareHarbor booking.',
+              'First-party booking planner for Hack n Stay sunrise beach rides in Golden Bay. Shows sunrise timing and tide clearance for Wed, Fri and Sun rides before continuing to live FareHarbor booking.',
             path: '/holistic-horse-rides/',
             applicationCategory: 'TravelApplication',
           }),
         ]}
       />
       <PageHero
-        title="Holistic Horseback Experiences"
-        subtitle="Beach horseback rides and horse trekking on coastal Golden Bay trails near Abel Tasman and Nelson"
+        title={copy.title}
+        subtitle={copy.subtitle}
         background="/images/uploads/2021/02/20210104_145330-1.jpg"
         breadcrumbs={[
           { name: 'Home', path: '/' },
-          { name: 'Holistic Horseback Experiences', path: '/holistic-horse-rides/' },
+          { name: 'Horse Riding Golden Bay', path: '/holistic-horse-rides/' },
         ]}
       />
 

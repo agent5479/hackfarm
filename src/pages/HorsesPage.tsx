@@ -5,16 +5,25 @@ import { horseImage } from '../lib/horse-images';
 import { optimizedUrl } from '../lib/images';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import { isSeoPrerender } from '../seo/prerender';
 import EditableText from '../cms/EditableText';
 
 export default function HorsesPage() {
-  usePageMeta(getPageSeo('/our-horses/')!);
+  const seo = getPageSeo('/our-horses/')!;
+  usePageMeta(seo);
+  const crawler = isSeoPrerender() && seo.h1;
 
   return (
     <>
       <PageHero
-        title={<EditableText doc="horses" as="span" path="listHero.title" />}
-        subtitle={<EditableText doc="horses" as="span" path="listHero.subtitle" />}
+        title={
+          crawler ? seo.h1! : <EditableText doc="horses" as="span" path="listHero.title" />
+        }
+        subtitle={
+          crawler && seo.intro
+            ? seo.intro
+            : <EditableText doc="horses" as="span" path="listHero.subtitle" />
+        }
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Our Horses', path: '/our-horses/' },

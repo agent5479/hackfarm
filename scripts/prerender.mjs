@@ -105,6 +105,11 @@ async function main() {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
 
+  // SEO dual-content: scrapers get routes.json h1/intro + defaults; skip live RTDB.
+  await page.addInitScript(() => {
+    window.__SEO_PRERENDER__ = true;
+  });
+
   let ok = 0;
   for (const routePath of paths) {
     const urlPath = routePath === '/' ? base : `${base}${routePath.replace(/^\//, '')}`;
@@ -120,23 +125,18 @@ async function main() {
         },
         { timeout: 30000 },
       );
-      // Give meta hook a tick; ignore lingering third-party iframe traffic
-      await page.waitForTimeout(150);
-      // Home: wait for CMS snapshot/live merge so prerender HTML matches RTDB
-      if (routePath === '/' || routePath === '') {
-        try {
-          await page.waitForFunction(
-            () => document.documentElement.dataset.cmsReady === '1',
-            { timeout: 8000 },
-          );
-        } catch {
-          /* baked snapshot still in first paint if live fetch is slow */
-        }
-      }
+      // Meta hook + crawler H1; do not wait for Firebase (flag skips RTDB fetch)
+      await page.waitForTimeout(200);
       try {
-        await page.waitForLoadState('networkidle', { timeout: 5000 });
+        await page.waitForFunction(
+          () => {
+            const h1 = document.querySelector('h1');
+            return h1 && (h1.textContent || '').trim().length > 5;
+          },
+          { timeout: 5000 },
+        );
       } catch {
-        /* maps / embeds may keep the network busy */
+        /* some routes may lack h1 briefly */
       }
       const html = (await page.content())
         .replaceAll('https://agent5479.github.io/hackfarm', 'https://hackfarm.co.nz')

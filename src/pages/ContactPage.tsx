@@ -3,16 +3,25 @@ import PageHero from '../components/PageHero';
 import ContactForm from '../components/ContactForm';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import { isSeoPrerender } from '../seo/prerender';
 import EditableText from '../cms/EditableText';
 
 export default function ContactPage() {
-  usePageMeta(getPageSeo('/contact/')!);
+  const seo = getPageSeo('/contact/')!;
+  usePageMeta(seo);
+  const crawler = isSeoPrerender() && seo.h1;
 
   return (
     <>
       <PageHero
-        title={<EditableText doc="contact" as="span" path="hero.title" />}
-        subtitle={<EditableText doc="contact" as="span" path="hero.subtitle" />}
+        title={
+          crawler ? seo.h1! : <EditableText doc="contact" as="span" path="hero.title" />
+        }
+        subtitle={
+          crawler && seo.intro
+            ? seo.intro
+            : <EditableText doc="contact" as="span" path="hero.subtitle" />
+        }
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Contact', path: '/contact/' },

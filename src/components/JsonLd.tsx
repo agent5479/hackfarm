@@ -12,6 +12,13 @@ interface JsonLdProps {
   data?: Record<string, unknown> | Record<string, unknown>[];
 }
 
+const AREA_SERVED = [
+  { '@type': 'Place', name: 'Golden Bay' },
+  { '@type': 'AdministrativeArea', name: 'Nelson Tasman' },
+  { '@type': 'AdministrativeArea', name: 'South Island' },
+  { '@type': 'Country', name: 'New Zealand' },
+];
+
 export function JsonLd({ data }: JsonLdProps) {
   const payloads = data == null ? [buildDefaultGraph()] : Array.isArray(data) ? data : [data];
   return (
@@ -61,6 +68,8 @@ function buildDefaultGraph() {
         telephone: CONTACT.phone,
         address,
         sameAs,
+        description:
+          'Hack n Stay — horse riding and farmstay in Golden Bay on New Zealand\'s South Island.',
       },
       {
         '@type': 'LodgingBusiness',
@@ -76,8 +85,9 @@ function buildDefaultGraph() {
         image: absoluteAssetUrl(DEFAULT_OG_IMAGE),
         logo,
         parentOrganization: { '@id': `${siteUrl}#organization` },
+        areaServed: AREA_SERVED,
         description:
-          'Dog-friendly eco farmstay, animal-friendly campground, and holistic horseback experiences near Patons Rock in Golden Bay, Nelson Tasman — near Abel Tasman and Nelson at the top of New Zealand\'s South Island.',
+          'Dog-friendly eco farmstay, campground, and horse riding holidays in Golden Bay, Nelson Tasman — top of New Zealand\'s South Island near Abel Tasman and Nelson.',
       },
       {
         '@type': 'TouristAttraction',
@@ -90,8 +100,9 @@ function buildDefaultGraph() {
         geo,
         sameAs,
         touristType: ['Horse riding', 'Farmstay', 'Family'],
+        areaServed: AREA_SERVED,
         description:
-          'Beach horseback rides, horse trekking, vaulting, and farmstay at Hack Farm near Patons Rock, Golden Bay — near Abel Tasman National Park and Nelson, top of New Zealand\'s South Island.',
+          'Beach horseback rides, horse trekking, vaulting, and farmstay at Hack n Stay in Golden Bay — near Abel Tasman National Park and Nelson, top of New Zealand\'s South Island.',
       },
       {
         '@type': 'WebSite',
@@ -109,7 +120,7 @@ function buildDefaultGraph() {
         operatingSystem: 'Web',
         url: WEATHER_STATION_URL,
         description:
-          'On-site FreshWDL weather station readings from Hack Farm near Patons Rock, Golden Bay, Tasman, New Zealand.',
+          'On-site FreshWDL weather station readings from Hack Farm in Golden Bay, Tasman, New Zealand.',
         provider: { '@id': `${siteUrl}#organization` },
       },
     ],
@@ -140,10 +151,7 @@ export function serviceJsonLd(name: string, description: string, path: string) {
       name: SITE_NAME,
       url: absoluteUrl('/'),
     },
-    areaServed: {
-      '@type': 'Place',
-      name: PATONS_ROCK.label,
-    },
+    areaServed: AREA_SERVED,
     url: absoluteUrl(path),
   };
 }

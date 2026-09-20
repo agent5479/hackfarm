@@ -71,25 +71,25 @@ Sitemap: ${absoluteUrl('sitemap.xml')}
 
 const llms = `# Hack n Stay Golden Bay (Hack Farm)
 
-> Eco farmstay, dog-friendly campground, and holistic beach horseback rides near Patons Rock in Golden Bay, Nelson Tasman — near Abel Tasman and Nelson at the top of New Zealand's South Island.
+> Horse riding and farmstay in Golden Bay on New Zealand's South Island — guided beach and trail rides, eco farmstay, camping, and bring-your-own-horse accommodation near Abel Tasman and Nelson.
 
-Hack n Stay Golden Bay (also known as Hack Farm) is a first-party farmstay and guided horse experience business run by Baerbel Hack at 22 Grant Road, Puramahoi, Takaka 7182, Golden Bay, Nelson Tasman, top of the South Island, New Zealand. Phone: +64 27 525 9434. Email: Stay@hackfarm.co.nz. Ideal for international visitors combining Golden Bay horse trekking with Abel Tasman and Tasman region travel. Guests sometimes base here for the Kahurangi 500 bike trail and extend their farmstay.
+Hack n Stay Golden Bay (also known as Hack Farm) is a horse riding operator and eco farmstay run by Baerbel Hack at 22 Grant Road, Puramahoi, Takaka 7182, Golden Bay, Nelson Tasman, top of the South Island, New Zealand. Phone: +64 27 525 9434. Email: Stay@hackfarm.co.nz.
 
-Also known for: Hack Track / Fairy Trail rides, Patons Rock sunrise beach rides, swimming with horses, BYO horse trail riding, vaulting (Hack Vaulties), and riding lessons.
+Primary associations: horse riding Golden Bay · beach horseback rides · horse riding holidays New Zealand · Golden Bay farmstay and camping · horse accommodation / bring your own horse · riding lessons and horsemanship · horse vaulting (Hack Vaulties) · kids horse camps.
 
 ## Key pages
 
-- [Home](${absoluteUrl('/')}): Overview of farmstay, camping, and beach horseback rides near Patons Rock, Abel Tasman, and Nelson.
-- [About](${absoluteUrl('/about/')}): Brand and founder story — Hack Farm, Hack n Stay, Baerbel Hack, and the Hack Vaulties club.
-- [Accommodation](${absoluteUrl('/accommodation/')}): Farmstay rooms, dog-friendly campground, and bring-your-own-horse stays in Golden Bay — a base for Kahurangi 500 riders who often stay longer.
-- [Holistic Horse Rides](${absoluteUrl('/holistic-horse-rides/')}): Guided beach and trail rides with a tide-aware sunrise planner for Patons Rock near Abel Tasman.
-- [Hack Farm Trails](${absoluteUrl('/hack-farm-trails/')}): Interactive trail map and tide guidance for BYO horse riders.
-- [Our Horses](${absoluteUrl('/our-horses/')}): Meet the Hack Farm herd used for rides, lessons, and vaulting.
-- [Learning Experiences](${absoluteUrl('/learning-experiences/')}): Riding lessons, horsemanship, and vaulting for all ages.
-- [Vaulting](${absoluteUrl('/vaulting/')}): Hack Vaulties vaulting sessions with Baerbel Hack.
-- [Special Events](${absoluteUrl('/special-events/')}): Kids camps, horse club days, and special riding events.
-- [Gift Vouchers](${absoluteUrl('/horse-riding-holiday-gift-vouchers/')}): Gift cards for rides, stays, and learning experiences.
-- [Contact](${absoluteUrl('/contact/')}): Phone, email, and address for bookings and enquiries.
+- [Home](${absoluteUrl('/')}): Horse riding and farmstay in Golden Bay, New Zealand — overview of rides, stay, and learning.
+- [About](${absoluteUrl('/about/')}): Entity page — Hack n Stay, Hack Farm, Baerbel Hack, Golden Bay horse riding farmstay on the South Island.
+- [Accommodation](${absoluteUrl('/accommodation/')}): Golden Bay farmstay, dog-friendly campground, and bring-your-own-horse stays — also a stop for Kahurangi 500 bike tourers.
+- [Horse Riding](${absoluteUrl('/holistic-horse-rides/')}): Guided horse riding and horse trekking in Golden Bay — beach and trail rides, sunrise planner, multi-day horse riding holidays.
+- [Horse Trails](${absoluteUrl('/hack-farm-trails/')}): Bring-your-own-horse trail map and tide guidance in Golden Bay.
+- [Our Horses](${absoluteUrl('/our-horses/')}): Meet the Hack Farm herd used for rides, lessons, and vaulting in Golden Bay.
+- [Learning Experiences](${absoluteUrl('/learning-experiences/')}): Horse riding lessons and horsemanship in Golden Bay.
+- [Horse Vaulting](${absoluteUrl('/vaulting/')}): Horse vaulting New Zealand — Hack Vaulties in Golden Bay with Baerbel Hack.
+- [Kids Horse Camps](${absoluteUrl('/special-events/')}): Kids horse riding camps and horse club days in Golden Bay, New Zealand.
+- [Gift Vouchers](${absoluteUrl('/horse-riding-holiday-gift-vouchers/')}): Gift cards for horse riding, farmstay, and lessons in Golden Bay.
+- [Contact](${absoluteUrl('/contact/')}): Phone, email, and address — Golden Bay, South Island, New Zealand.
 - [On-site weather station](https://hackfarm.infinityfree.me/FreshWDL/FreshWDL.html): Live FreshWDL weather readings from the property.
 
 ## Social

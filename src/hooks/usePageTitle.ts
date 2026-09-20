@@ -16,6 +16,8 @@ export interface PageMetaInput {
   description?: string;
   path: string;
   image?: string;
+  /** Optional per-route Open Graph / Twitter image alt. */
+  ogAlt?: string;
   /** Defaults to index, follow when omitted (clears a prior noindex from 404). */
   robots?: string;
 }
@@ -40,12 +42,13 @@ function ensureLink(rel: string, href: string) {
   el.setAttribute('href', href);
 }
 
-export function usePageMeta({ title, description, path, image, robots }: PageMetaInput) {
+export function usePageMeta({ title, description, path, image, ogAlt, robots }: PageMetaInput) {
   useEffect(() => {
     const fullTitle = formatDocumentTitle(title);
     const desc = description || DEFAULT_DESCRIPTION;
     const url = absoluteUrl(path);
     const img = absoluteAssetUrl(toOgImage(image || DEFAULT_OG_IMAGE));
+    const alt = ogAlt || DEFAULT_OG_ALT;
 
     document.title = fullTitle;
     ensureMeta('name', 'description', desc);
@@ -58,7 +61,7 @@ export function usePageMeta({ title, description, path, image, robots }: PageMet
     ensureMeta('property', 'og:image', img);
     ensureMeta('property', 'og:image:width', String(OG_IMAGE_WIDTH));
     ensureMeta('property', 'og:image:height', String(OG_IMAGE_HEIGHT));
-    ensureMeta('property', 'og:image:alt', DEFAULT_OG_ALT);
+    ensureMeta('property', 'og:image:alt', alt);
     ensureMeta('property', 'og:type', 'website');
     ensureMeta('property', 'og:site_name', 'Hack n Stay Golden Bay');
     ensureMeta('property', 'og:locale', 'en_NZ');
@@ -67,8 +70,8 @@ export function usePageMeta({ title, description, path, image, robots }: PageMet
     ensureMeta('name', 'twitter:title', fullTitle);
     ensureMeta('name', 'twitter:description', desc);
     ensureMeta('name', 'twitter:image', img);
-    ensureMeta('name', 'twitter:image:alt', DEFAULT_OG_ALT);
-  }, [title, description, path, image, robots]);
+    ensureMeta('name', 'twitter:image:alt', alt);
+  }, [title, description, path, image, ogAlt, robots]);
 }
 
 export function useFareHarborCart(backUrl?: string) {

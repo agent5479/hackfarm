@@ -13,6 +13,7 @@ import { getFirebase, isFirebaseConfigured } from '../lib/firebase';
 import { CMS_DOC_IDS, type CmsDocId } from './docs';
 import { getContentPath, setContentPath } from './merge';
 import { getAllBundledDocs, mergeDoc, rtdbPathForDoc } from './registry';
+import { isSeoPrerender } from '../seo/prerender';
 import type { HomeContent, RidesContent } from './types';
 
 type DocsMap = Record<CmsDocId, unknown>;
@@ -52,7 +53,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [baseline, setBaseline] = useState<DocsMap>(bundledAll);
   const [draft, setDraft] = useState<DocsMap>(bundledAll);
-  const [isLoading, setIsLoading] = useState(firebaseReady);
+  const [isLoading, setIsLoading] = useState(() => firebaseReady && !isSeoPrerender());
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSucceeded, setSaveSucceeded] = useState(false);
@@ -67,6 +68,13 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    // Playwright prerender: keep bundled defaults only so scrapers see SEO corpus, not live CMS.
+    if (isSeoPrerender()) {
+      setIsLoading(false);
+      markCmsReady();
+      return;
+    }
+
     const fb = getFirebase();
     if (!fb) {
       setIsLoading(false);

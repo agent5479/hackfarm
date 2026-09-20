@@ -3,6 +3,7 @@ import PageHero from '../components/PageHero';
 import { JsonLd, serviceJsonLd } from '../components/JsonLd';
 import { usePageMeta } from '../hooks/usePageTitle';
 import { getPageSeo } from '../seo/routes';
+import { isSeoPrerender } from '../seo/prerender';
 import EditableText from '../cms/EditableText';
 import { useCms } from '../cms/ContentProvider';
 
@@ -15,17 +16,30 @@ export default function VaultingPage() {
   usePageMeta(seo);
   const { getDoc } = useCms();
   const content = getDoc<VaultingDoc>('vaulting');
+  const crawler = isSeoPrerender() && seo.h1;
 
   return (
     <>
-      <JsonLd data={serviceJsonLd('Vaulting', seo.description, '/vaulting/')} />
+      <JsonLd
+        data={serviceJsonLd(
+          'Horse Vaulting New Zealand — Hack Vaulties Golden Bay',
+          seo.description,
+          '/vaulting/',
+        )}
+      />
       <PageHero
-        title={<EditableText doc="vaulting" as="span" path="hero.title" />}
-        subtitle={<EditableText doc="vaulting" as="span" path="hero.subtitle" />}
+        title={
+          crawler ? seo.h1! : <EditableText doc="vaulting" as="span" path="hero.title" />
+        }
+        subtitle={
+          crawler && seo.intro
+            ? seo.intro
+            : <EditableText doc="vaulting" as="span" path="hero.subtitle" />
+        }
         background="/images/uploads/2021/02/Vaulting-Poster.jpg"
         breadcrumbs={[
           { name: 'Home', path: '/' },
-          { name: 'Vaulting', path: '/vaulting/' },
+          { name: 'Horse Vaulting', path: '/vaulting/' },
         ]}
       />
       <section className="section section--cream">
