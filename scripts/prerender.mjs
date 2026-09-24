@@ -104,6 +104,8 @@ async function main() {
   const origin = `http://127.0.0.1:${port}`;
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
+  // Keep build-time renders out of GA and stop gtag.js from injecting nodes into saved HTML.
+  await page.route(/googletagmanager\.com|google-analytics\.com/, (route) => route.abort());
 
   // SEO dual-content: scrapers get routes.json h1/intro + defaults; skip live RTDB.
   await page.addInitScript(() => {
