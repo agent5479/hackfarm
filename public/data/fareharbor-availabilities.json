@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T11:12:01.177Z",
+  "generatedAt": "2026-10-29T18:16:42.804Z",
   "horizonDays": 92,
   "origin": "2026-10-30",
   "itemIds": [
@@ -279,14 +279,6 @@
       "pk": -14934712,
       "startAt": "2027-01-29T06:00:00",
       "endAt": "2027-01-29T09:00:00",
-      "isBookable": true
-    },
-    {
-      "itemId": "294928",
-      "date": "2026-10-30",
-      "pk": 1753830681,
-      "startAt": "2026-10-30T09:00:00",
-      "endAt": "2026-10-30T11:00:00",
       "isBookable": true
     },
     {
@@ -2132,8 +2124,7 @@
     {
       "itemId": "294928",
       "date": "2026-10-30",
-      "status": "bookable",
-      "pk": 1753830681
+      "status": "full"
     },
     {
       "itemId": "294928",
