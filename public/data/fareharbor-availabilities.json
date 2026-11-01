@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-01T18:12:11.033Z",
+  "generatedAt": "2026-11-01T20:10:27.560Z",
   "horizonDays": 92,
   "origin": "2026-11-02",
   "itemIds": [
@@ -2157,7 +2157,7 @@
     {
       "itemId": "294928",
       "date": "2026-11-02",
-      "status": "full"
+      "status": "none"
     },
     {
       "itemId": "294928",
